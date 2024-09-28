@@ -1,6 +1,6 @@
 public class MonsterBasicMovingState : MonsterMovingState
 {
-    public override void Enter()
+    public override void Entry()
     {
     }
     public override void IStateUpdate()

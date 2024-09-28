@@ -4,33 +4,29 @@ public class PlayerMovingState : IState
 {
     private PlayerMovement _playerMovement;
     private RaycastHit hit;
-
+    private bool Moveing  = false;  
     public PlayerMovingState(PlayerMovement playerMovement)
     {
         _playerMovement = playerMovement;
     }
-    public void Enter()
+    public void Entry()
     {
         _playerMovement.SetPlayerPlane();
     }
     public void IStateUpdate()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (_playerMovement.UpdatePlayerMovePlaneCheck())
         {
-            // 메인 카메라를 통해 마우스 클릭한 곳의 ray 정보를 가져옴
-            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out hit, 1000f))
+            Moveing = true;
+        }
+        if (Moveing) 
+        {
+            if (!_playerMovement.UpdateMove())
             {
-                if (hit.transform.name.StartsWith("PlayerMovePlane"))
-                {
-                    _playerMovement.Hit = hit;
-                    _playerMovement.RemovePlayerPlane();
-                    _playerMovement.Move();
-                    GameManager.Instance.playerState = GameManager.PlayerState.Idle;
-                    GameManager.Instance.FromPlayerToMonster();
-                }
+                Moveing = false;
             }
         }
+
     }
     public void Exit()
     {

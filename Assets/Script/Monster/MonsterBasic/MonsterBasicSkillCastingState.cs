@@ -18,21 +18,13 @@ public class MonsterBasicSkillCastingState : MonsterSkillCastingState
             maxSize: 20
             );
     }
-    public override void Enter()
+    public override void Entry()
     {
         
     }
     public override void IStateUpdate()
     {
-        if (!monsterMovement.UpdateLooking(player.transform.position))
-        {
-            var skillObject = skillObjectPool.Get();
-            skillObject.transform.position = transform.TransformDirection(Vector3.forward) + transform.position;
-            skillObject.Direction = transform.TransformDirection(Vector3.forward);
-            skillObject.gameObject.SetActive(true);
-            monster.monsterState = Monster.MonsterState.Idle;
-            monster.flag = true;
-        }
+        
     }
     public override void Exit()
     {

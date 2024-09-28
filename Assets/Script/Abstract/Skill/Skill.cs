@@ -21,10 +21,10 @@ public abstract class Skill : MonoBehaviour, IState
             maxSize: 20
             );
     }
-    public abstract void Enter();
+    public abstract void Entry();
     public abstract void IStateUpdate();
     public abstract void Exit();
-
+        
     protected SkillObject CreateSkillObject()
     {
         SkillObject skillObject = Instantiate(skillObjectlPrefab).GetComponent<SkillObject>();

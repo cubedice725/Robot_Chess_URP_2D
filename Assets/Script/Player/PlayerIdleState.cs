@@ -8,7 +8,7 @@ public class PlayerIdleState : IState
     {
         _playerMovement = playerMovement;
     }
-    public void Enter()
+    public void Entry()
     {
 
     }

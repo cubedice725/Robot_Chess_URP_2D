@@ -6,7 +6,7 @@ using UnityEngine;
 
 public interface IState
 {
-    public void Enter();
+    public void Entry();
     public void IStateUpdate();
     public void Exit();
 }

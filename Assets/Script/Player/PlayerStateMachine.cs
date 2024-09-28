@@ -15,7 +15,7 @@ public class PlayerStateMachine
     public void Initialize(IState startingState)
     {
         CurrentState = startingState;
-        startingState.Enter();
+        startingState.Entry();
     }
     public void TransitionTo(IState nextState)
     {
@@ -24,7 +24,7 @@ public class PlayerStateMachine
         
         CurrentState.Exit();
         CurrentState = nextState;
-        nextState.Enter();
+        nextState.Entry();
 
     }
     public void PlayerStateMachineUpdate()

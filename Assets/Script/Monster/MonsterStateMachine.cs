@@ -17,15 +17,15 @@ public class MonsterStateMachine : MonoBehaviour
     public void Initialize(IState startingState)
     {
         CurrentState = startingState;
-        startingState.Enter();
+        startingState.Entry();
     }
     public void TransitionTo(IState nextState)
     {
         if (nextState == CurrentState)
             return;
-        CurrentState.Exit();
+        CurrentState.Exit();    
         CurrentState = nextState;
-        nextState.Enter();
+        nextState.Entry();
 
     }
     public void MonsterStateMachineUpdate()

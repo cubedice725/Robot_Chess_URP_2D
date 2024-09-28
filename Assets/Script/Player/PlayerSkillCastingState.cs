@@ -2,9 +2,9 @@ using UnityEngine;
 using static GameManager;
 public class PlayerSkillCastingState : IState
 {
-    public void Enter()
+    public void Entry()
     {
-        Instance.skillState.Enter();
+        Instance.skillState.Entry();
     }
     public void IStateUpdate()
     {

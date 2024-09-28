@@ -9,7 +9,7 @@ public class SkillBasic : Skill
         prefabObject = "Prefab/Skill/SkillBasicObject";
         base.Awake();
     }
-    public override void Enter()
+    public override void Entry()
     {
         playerMovement.SetSkillSelection();
     }
@@ -35,16 +35,6 @@ public class SkillBasic : Skill
     }
     public void Skillcasting()
     {
-        if (!playerMovement.UpdateLooking(hit.transform.position))
-        {
-            start = false;
-            var skillObject = skillObjectPool.Get();
-            skillObject.transform.position = transform.TransformDirection(Vector3.forward) + transform.position;
-            skillObject.Direction = transform.TransformDirection(Vector3.forward);
-            skillObject.gameObject.SetActive(true);
-            GameManager.Instance.playerState = GameManager.PlayerState.Idle;
-            GameManager.Instance.FromPlayerToMonster();
-        }
     }
     public override void Exit()
     {

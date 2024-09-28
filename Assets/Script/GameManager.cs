@@ -29,7 +29,6 @@ public class GameManager : MonoBehaviour
     private Stage1 stage1;
     private int count = 0;
 
-    private bool MapCheck = true;
     public bool turnStart = false;
     public bool turnEnd = false;
 
@@ -66,6 +65,7 @@ public class GameManager : MonoBehaviour
         }
         // 아래의 함수를 사용하여 씬이 전환되더라도 선언되었던 인스턴스가 파괴되지 않는다.
         DontDestroyOnLoad(gameObject);
+
         Map2D = new int[MapSizeX, MapSizeY];
 
         for (int i = 0; i < MapSizeX * MapSizeY; i++)
@@ -80,12 +80,16 @@ public class GameManager : MonoBehaviour
         Instance.monsterTurn = true;
         Instance.playerTurn = false;
     }
+    public void FromMonsterToPlayer()
+    {
+        monsterTurn = false;
+        playerTurn = true;
+    }
 
     private void Update()
     {
         if (spawnMonsters.Count > 0)
         {
-            
             if (spawnMonsters[count].GetComponent<Monster>().flag)
             {
                 if (count < spawnMonsters.Count - 1)
@@ -99,12 +103,16 @@ public class GameManager : MonoBehaviour
                         spawnMonsters[count].GetComponent<Monster>().flag = false;
                     }
                     count = 0;
-                    monsterTurn = false;
-                    playerTurn = true;
+                    FromMonsterToPlayer();
                 }
             }
         }
-        
+        else if (spawnMonsters.Count == 0)
+        {
+            FromMonsterToPlayer();
+        }
+       
+
         if (turnStart)
         {
             turnStart = false;
@@ -121,7 +129,11 @@ public class GameManager : MonoBehaviour
         if (Input.GetMouseButtonDown(0)) // 마우스 왼쪽 버튼 클릭
         {
             RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
-            Debug.Log("클릭한 오브젝트 이름: " + hit.collider.gameObject.name);
+            if(hit.collider != null)
+            {
+                Debug.Log("클릭한 오브젝트 이름: " + hit.collider.gameObject.name);
+
+            }
         }
     }
 }
