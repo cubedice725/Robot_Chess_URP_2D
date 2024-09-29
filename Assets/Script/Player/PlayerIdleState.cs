@@ -1,4 +1,5 @@
 using UnityEngine;
+using static GameManager;
 
 public class PlayerIdleState : IState
 {
@@ -14,7 +15,10 @@ public class PlayerIdleState : IState
     }
     public void IStateUpdate()
     {
-        _playerMovement.UpdatePlayerCheck();
+        if (_playerMovement.UpdatePlayerCheck())
+        {
+            Instance.playerState = PlayerState.Move;
+        }
     }
     public void Exit()
     {

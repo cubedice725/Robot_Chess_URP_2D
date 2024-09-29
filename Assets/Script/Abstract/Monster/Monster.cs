@@ -37,7 +37,7 @@ public abstract class Monster : MonoBehaviour
             monsterStateMachine.TransitionTo(monsterStateMachine.monsterSkillCastingState);
         }
         
-        monsterStateMachine.MonsterStateMachineUpdate();
+        
         
         // 몬스터 턴인 경우 개발자가 작성하여 몬스터 움직임을 설정
         UpdateMonster();
@@ -47,6 +47,10 @@ public abstract class Monster : MonoBehaviour
         {
             monsterState = MonsterState.Idle;
         }
+    }
+    public void LateUpdate()
+    {
+        monsterStateMachine.MonsterStateMachineUpdate();
     }
     public abstract void UpdateMonster();
 }

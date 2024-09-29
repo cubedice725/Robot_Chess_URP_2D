@@ -1,4 +1,5 @@
 using UnityEngine;
+using static GameManager;
 
 public class PlayerMovingState : IState
 {
@@ -11,10 +12,11 @@ public class PlayerMovingState : IState
     }
     public void Entry()
     {
-        _playerMovement.SetPlayerPlane();
+        _playerMovement.SetPlayerMovePlane();
     }
     public void IStateUpdate()
     {
+        //플레이어 판을 클릭하면
         if (_playerMovement.UpdatePlayerMovePlaneCheck())
         {
             Moveing = true;
@@ -23,6 +25,7 @@ public class PlayerMovingState : IState
         {
             if (!_playerMovement.UpdateMove())
             {
+                Instance.playerState = PlayerState.Idle;
                 Moveing = false;
             }
         }
@@ -30,6 +33,6 @@ public class PlayerMovingState : IState
     }
     public void Exit()
     {
-        _playerMovement.RemovePlayerPlane();
+        _playerMovement.RemovePlayerMovePlane();
     }
 }

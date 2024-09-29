@@ -7,25 +7,29 @@ public class PlayerMovement : AStar
 {
     private IObjectPool<PlayerMovePlane> playerMovePlanePool;
     private GameObject playerMovePlanePrefab;
-    private GameObject playerPlaneStandard;
     private List<PlayerMovePlane> playerMovePlaneList = new List<PlayerMovePlane>();
     
     private IObjectPool<SkillSelection> SkillSelectionPool;
     private GameObject SkillSelectionPrefab;
     private List<SkillSelection> skillSelectionList = new List<SkillSelection>();
+    
+    private GameObject playerPlaneStandard;
+    private Animator animator;
+    private SpriteRenderer spriteRenderer;
 
-    Vector2 targetPosition;
-
-    bool start = true;
-    int count = 1;
-    Animator animator;
     private SkillBasic skillBasic;
 
-    RaycastHit2D hit;
-    // 이동거리
-    public int MovingDistance { get; set; } = 10000;
-    Vector3Int playerPosition;
+    private RaycastHit2D hit;
+    private Vector3Int playerPosition;
+    private Vector2 targetPosition;
 
+    private bool updateMoveStart = true;
+    private int count = 1;
+
+    // 이동거리
+    public int MovingDistance { get; set; } = 4;
+    // 이동 속도
+    public float PlayerMoveSpeed { get; set; } = 1f;
     protected void Awake()
     {
         playerPlaneStandard = GameObject.Find("PlayerPlaneStandard");
@@ -49,6 +53,7 @@ public class PlayerMovement : AStar
             maxSize: 20
             );
 
+        spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
         skillBasic = GetComponent<SkillBasic>();
     }
@@ -68,9 +73,10 @@ public class PlayerMovement : AStar
         if (FinalNodeList.Count == 0)
             return false;
 
+        // 반올림을 하지 않으면 움직이고 난 후 x좌표가 1.999일때 타입케스트는 1이 된다.
         playerPosition = new Vector3Int((int)Mathf.Round(transform.position.x), (int)Mathf.Round(transform.position.y), (int)Mathf.Round(transform.position.z));
 
-        if (start)
+        if (updateMoveStart)
         {
             Instance.Map2D[playerPosition.x, playerPosition.y] = (int)MapObject.noting;
             PathFinding(
@@ -79,21 +85,23 @@ public class PlayerMovement : AStar
                 Vector3Int.zero,
                 new Vector3Int(Instance.MapSizeX, Instance.MapSizeY, 0)
             );
+
             targetPosition = new Vector2(FinalNodeList[count].x, FinalNodeList[count].y);
-            animator.SetBool("run", true);
-            start = false;
+            updateMoveStart = false;
         }
 
         float distance = Vector2.Distance(transform.position, targetPosition);
-
+        // 캐릭터가 최종적으로 움직이는 좌표의 거리, 좌표 오차는 여기서 수정
         if (distance > 0.01f)
         {
+            RunAnimation(true, targetPosition.x - transform.position.x);
             // 캐릭터를 이동
-            transform.position = Vector2.MoveTowards(transform.position, targetPosition, 1f * Time.deltaTime);
+            transform.position = Vector2.MoveTowards(transform.position, targetPosition, PlayerMoveSpeed * Time.deltaTime);
             return true;
         }
         else
         {
+            // count의 시작은 1이고, 시작하자 마자 1이 증가함으로 + 1을 함
             if (count + 1< FinalNodeList.Count)
             {
                 count++;
@@ -102,17 +110,16 @@ public class PlayerMovement : AStar
             }
             else
             {
+                RunAnimation(false);
                 playerPlaneStandard.transform.position = new Vector3(playerPosition.x, playerPosition.y, 0);
                 Instance.Map2D[playerPosition.x, playerPosition.y] = (int)MapObject.player;
                 count = 1;
-                start = true;
-                animator.SetBool("run", false); 
-                Instance.playerState = PlayerState.Idle;
+                updateMoveStart = true;
                 return false;
             }
         }
     }
-    public void UpdatePlayerCheck()
+    public bool UpdatePlayerCheck()
     {
         if (Input.GetMouseButtonDown(0))
         {
@@ -121,9 +128,10 @@ public class PlayerMovement : AStar
 
             if (hit.collider != null && hit.collider.gameObject.name == "Player")
             {
-                Instance.playerState = PlayerState.Move;
+                return true;
             }
         }
+        return false;
     }
     public bool UpdatePlayerMovePlaneCheck()
     {
@@ -133,31 +141,36 @@ public class PlayerMovement : AStar
 
             if (hit.collider != null && hit.transform.name.StartsWith("PlayerMovePlane"))
             {
-                RemovePlayerPlane();
+                RemovePlayerMovePlane();
                 return true;
             }
         }
         return false;
     }
+    
     // 플레이어 판 관련 함수
     //----------------------------------------------------------
-    public void SetPlayerPlane()
+    public void SetPlayerMovePlane()
     {
+        // 반올림을 하지 않으면 움직이고 난 후 x좌표가 1.999일때 타입케스트는 1이 된다.
         playerPosition = new Vector3Int((int)Mathf.Round(transform.position.x), (int)Mathf.Round(transform.position.y), (int)Mathf.Round(transform.position.z));
 
-        // 실제 맵이랑 플레이어가 움직이는 임의 탐색 공간의 편차
-        Vector3Int adj = new Vector3Int(playerPosition.x - MovingDistance, playerPosition.y - MovingDistance, 0);
+        // 실제 맵이랑 플레이어가 움직이는 임의 탐색 공간의 간격
+        Vector3Int interval = new Vector3Int(playerPosition.x - MovingDistance, playerPosition.y - MovingDistance, 0);
         
         // 지름 계산
         int diameter = MovingDistance * 2 + 1;
 
+        // 플레이어가 움직이는 공간을 먼저 추측하기 위해 이동거리를 기준으로 함
         for (int i = 0; i < diameter * diameter; i++)
         {
+            // 플레이어의 공간 좌표
             int playerAreaX = (i / diameter);
             int playerAreaY = (i % diameter);
 
-            int mapAreaX = adj.x + playerAreaX;
-            int mapAreaY = adj.y + playerAreaY;
+            // 실제 맵공간 좌표
+            int mapAreaX = interval.x + playerAreaX;
+            int mapAreaY = interval.y + playerAreaY;
 
             int distanceX = playerAreaX - MovingDistance;
             int distanceY = playerAreaY - MovingDistance;
@@ -177,6 +190,7 @@ public class PlayerMovement : AStar
                             Vector3Int.zero,
                             new Vector3Int(Instance.MapSizeX, Instance.MapSizeY, 0)
                         );
+                        // 경로 탐색이 잘 되었는지, 이동 거리가 적절한지
                         if (FinalNodeList.Count > 1 && FinalNodeList.Count <= MovingDistance + 1)
                         {
                             playerMovePlaneList.Add(playerMovePlanePool.Get());
@@ -188,7 +202,7 @@ public class PlayerMovement : AStar
             }
         }
     }
-    public void RemovePlayerPlane()
+    public void RemovePlayerMovePlane()
     {
         if (playerMovePlaneList.Count > 0 && playerMovePlaneList[playerMovePlaneList.Count - 1].gameObject.activeSelf == true)
         {
@@ -268,5 +282,16 @@ public class PlayerMovement : AStar
     private void OnDestroyPlayerMovePlane(PlayerMovePlane plane)
     {
         Destroy(plane.gameObject);
+    }
+    
+    // 애니메이션 관련 함수
+    //----------------------------------------------------------
+    public void RunAnimation(bool run, float direction = 0)
+    {
+        animator.SetBool("run", run);
+        if(direction != 0)
+        {
+            spriteRenderer.flipX = direction < 0;
+        }
     }
 }
