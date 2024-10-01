@@ -112,7 +112,7 @@ ScriptedImporter:
     addSortingGroup: 1
     addShadowCasters: 0
   importFileNodeState: 1
-  platformSettingsDirtyTick: 638632215368975199
+  platformSettingsDirtyTick: 638633979068582383
   textureAssetName: 
   singleSpriteImportData:
   - name: 
@@ -136,7 +136,7 @@ ScriptedImporter:
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
   animatedSpriteImportData:
-  - name: MonsterRobot_Frame_0
+  - name: Robot_Frame_0
     originalName: 
     pivot: {x: 0.4615385, y: 0}
     alignment: 9
@@ -147,7 +147,7 @@ ScriptedImporter:
       y: 124
       width: 13
       height: 21
-    spriteID: 6e969abf2f2f533458c732a69412f401
+    spriteID: 1ca7d2c778450f84da2555fd3db27c3e
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -156,7 +156,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 4, y: 124}
-  - name: MonsterRobot_Frame_1
+  - name: Robot_Frame_1
     originalName: 
     pivot: {x: 0.4615385, y: 0}
     alignment: 9
@@ -167,7 +167,7 @@ ScriptedImporter:
       y: 153
       width: 13
       height: 21
-    spriteID: c617c50be38a9e44dbc08061ef5153a5
+    spriteID: dde91ce5930992f41b8284929665e846
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -176,7 +176,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 4, y: 153}
-  - name: MonsterRobot_Frame_2
+  - name: Robot_Frame_2
     originalName: 
     pivot: {x: 0.4615385, y: 0}
     alignment: 9
@@ -187,7 +187,7 @@ ScriptedImporter:
       y: 182
       width: 13
       height: 21
-    spriteID: 9dc18bdd8fe25c14ba55fe29a47666fa
+    spriteID: 58bb32a4b915c42499c658debc8e964f
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -196,7 +196,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 4, y: 182}
-  - name: MonsterRobot_Frame_3
+  - name: Robot_Frame_3
     originalName: 
     pivot: {x: 0.4615385, y: 0}
     alignment: 9
@@ -207,7 +207,7 @@ ScriptedImporter:
       y: 211
       width: 13
       height: 21
-    spriteID: 1c621b7d6518b8e4bbf8b24f3177a81a
+    spriteID: c7d5aa2e9ca99d64792fe9a4685a3249
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -216,7 +216,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 4, y: 211}
-  - name: MonsterRobot_Frame_4
+  - name: Robot_Frame_4
     originalName: 
     pivot: {x: 0.4615385, y: 0}
     alignment: 9
@@ -227,7 +227,7 @@ ScriptedImporter:
       y: 178
       width: 13
       height: 20
-    spriteID: 9d35e86843347e645a3700b04af33a46
+    spriteID: aaa7cf549c1626948a9507e4d95d0267
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -236,7 +236,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 25, y: 178}
-  - name: MonsterRobot_Frame_5
+  - name: Robot_Frame_5
     originalName: 
     pivot: {x: 0.4615385, y: 0}
     alignment: 9
@@ -247,7 +247,7 @@ ScriptedImporter:
       y: 206
       width: 13
       height: 20
-    spriteID: 9329e670803991c4e8d6037b8ef8e358
+    spriteID: 9f0f28fb2cb19c24bb118e84f9849191
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -256,7 +256,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 25, y: 206}
-  - name: MonsterRobot_Frame_6
+  - name: Robot_Frame_6
     originalName: 
     pivot: {x: 0.4615385, y: 0}
     alignment: 9
@@ -267,7 +267,7 @@ ScriptedImporter:
       y: 4
       width: 13
       height: 20
-    spriteID: 92b1cebb62298e44ebd584635a4bcae7
+    spriteID: d15decefb7f5efb40a17a72e7c06c16b
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -276,7 +276,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 46, y: 4}
-  - name: MonsterRobot_Frame_7
+  - name: Robot_Frame_7
     originalName: 
     pivot: {x: 0.4615385, y: 0}
     alignment: 9
@@ -287,7 +287,7 @@ ScriptedImporter:
       y: 32
       width: 13
       height: 20
-    spriteID: 43b99cc71955a7947a9f35b93d0da6c1
+    spriteID: 3927935563d9b6d469e557fe2e64f156
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -296,7 +296,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 46, y: 32}
-  - name: MonsterRobot_Frame_8
+  - name: Robot_Frame_8
     originalName: 
     pivot: {x: 0.4615385, y: 0}
     alignment: 9
@@ -307,7 +307,7 @@ ScriptedImporter:
       y: 4
       width: 13
       height: 22
-    spriteID: da4a46c3360a4be489258cec012c9c05
+    spriteID: 043cd47b871501248896bf06af146f3f
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -316,7 +316,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 4, y: 4}
-  - name: MonsterRobot_Frame_9
+  - name: Robot_Frame_9
     originalName: 
     pivot: {x: 0.4615385, y: 0}
     alignment: 9
@@ -327,7 +327,7 @@ ScriptedImporter:
       y: 34
       width: 13
       height: 22
-    spriteID: 8be8e68dc304d4d49b538dbd09f681fe
+    spriteID: d9871d87d6339114298c461b3fbe21df
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -336,7 +336,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 4, y: 34}
-  - name: MonsterRobot_Frame_10
+  - name: Robot_Frame_10
     originalName: 
     pivot: {x: 0.4615385, y: 0}
     alignment: 9
@@ -347,7 +347,7 @@ ScriptedImporter:
       y: 4
       width: 13
       height: 21
-    spriteID: 4133f8d9026de7d459d0b3e79105f9cc
+    spriteID: 487efe38aed1b804d9a580ffb69d5dee
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -356,7 +356,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 25, y: 4}
-  - name: MonsterRobot_Frame_11
+  - name: Robot_Frame_11
     originalName: 
     pivot: {x: 0.4615385, y: 0}
     alignment: 9
@@ -367,7 +367,7 @@ ScriptedImporter:
       y: 33
       width: 13
       height: 21
-    spriteID: 58fc8725b1b2dfa42a95a106ad467132
+    spriteID: b4b6b07f22524cc4baddeaaa17790129
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -376,7 +376,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 25, y: 33}
-  - name: MonsterRobot_Frame_12
+  - name: Robot_Frame_12
     originalName: 
     pivot: {x: 0.4615385, y: 0}
     alignment: 9
@@ -387,7 +387,7 @@ ScriptedImporter:
       y: 64
       width: 13
       height: 22
-    spriteID: 89788582255300b48b63d6c975c12911
+    spriteID: 2611dd3e0827d054085fdcb35675958d
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -396,7 +396,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 4, y: 64}
-  - name: MonsterRobot_Frame_13
+  - name: Robot_Frame_13
     originalName: 
     pivot: {x: 0.4615385, y: 0}
     alignment: 9
@@ -407,7 +407,7 @@ ScriptedImporter:
       y: 94
       width: 13
       height: 22
-    spriteID: b90bb53b9c89a92439f83ea9ff607d18
+    spriteID: 14e348721146cb34cb69418dd0d4b0b5
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -416,7 +416,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 4, y: 94}
-  - name: MonsterRobot_Frame_14
+  - name: Robot_Frame_14
     originalName: 
     pivot: {x: 0.4615385, y: 0}
     alignment: 9
@@ -427,7 +427,7 @@ ScriptedImporter:
       y: 62
       width: 13
       height: 21
-    spriteID: 219a5cf1867e5114989c73ff5145bf9f
+    spriteID: 331883348fa382543a4195242fda6588
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -436,7 +436,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 25, y: 62}
-  - name: MonsterRobot_Frame_15
+  - name: Robot_Frame_15
     originalName: 
     pivot: {x: 0.4615385, y: 0}
     alignment: 9
@@ -447,7 +447,7 @@ ScriptedImporter:
       y: 91
       width: 13
       height: 21
-    spriteID: e1fda28c5a94f054594cfdea57b84a91
+    spriteID: 6cbd0d9e0b54ef14398d5736eebbd694
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -456,7 +456,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 25, y: 91}
-  - name: MonsterRobot_Frame_16
+  - name: Robot_Frame_16
     originalName: 
     pivot: {x: 0.4615385, y: 0}
     alignment: 9
@@ -467,7 +467,7 @@ ScriptedImporter:
       y: 120
       width: 13
       height: 21
-    spriteID: 86a1e99514bf0d445ae2493a344105b5
+    spriteID: fc2e282281e2862438c45b173e839437
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -476,7 +476,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 25, y: 120}
-  - name: MonsterRobot_Frame_17
+  - name: Robot_Frame_17
     originalName: 
     pivot: {x: 0.4615385, y: 0}
     alignment: 9
@@ -487,7 +487,7 @@ ScriptedImporter:
       y: 149
       width: 13
       height: 21
-    spriteID: dbfce41ccc4478142b415e117b0939de
+    spriteID: fe87c896352bc4646aebaa700b4fbf92
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -496,7 +496,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 25, y: 149}
-  - name: MonsterRobot_Frame_18
+  - name: Robot_Frame_18
     originalName: 
     pivot: {x: 0.4615385, y: 0}
     alignment: 9
@@ -507,7 +507,7 @@ ScriptedImporter:
       y: 60
       width: 13
       height: 20
-    spriteID: bc2989da5c3f34745b69a769903b0236
+    spriteID: 82eec3002a312d94d9bbc3c7fc44bc8b
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -516,7 +516,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 46, y: 60}
-  - name: MonsterRobot_Frame_19
+  - name: Robot_Frame_19
     originalName: 
     pivot: {x: 0.4615385, y: 0}
     alignment: 9
@@ -527,7 +527,7 @@ ScriptedImporter:
       y: 88
       width: 13
       height: 20
-    spriteID: 3e8dcfd8b7d590d4881b5b0becf28dbd
+    spriteID: 1445c35c0ec48b84da01839a836b9dd4
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -536,7 +536,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 46, y: 88}
-  - name: MonsterRobot_Frame_20
+  - name: Robot_Frame_20
     originalName: 
     pivot: {x: 0.4615385, y: 0}
     alignment: 9
@@ -547,7 +547,7 @@ ScriptedImporter:
       y: 116
       width: 13
       height: 19
-    spriteID: 7d204a66d3ec56947be8f9609964bf05
+    spriteID: 6e326c3f7d63ff1449583c3ce799853a
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -556,7 +556,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 46, y: 116}
-  - name: MonsterRobot_Frame_21
+  - name: Robot_Frame_21
     originalName: 
     pivot: {x: 0.4615385, y: 0}
     alignment: 9
@@ -567,7 +567,7 @@ ScriptedImporter:
       y: 143
       width: 13
       height: 19
-    spriteID: ae4b5b1c06f6d5d44aabb070c20a9131
+    spriteID: b57729ae9d0a82540bc1a0bb44f3366b
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -576,7 +576,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 46, y: 143}
-  - name: MonsterRobot_Frame_22
+  - name: Robot_Frame_22
     originalName: 
     pivot: {x: 0.4615385, y: 0}
     alignment: 9
@@ -587,7 +587,7 @@ ScriptedImporter:
       y: 170
       width: 13
       height: 19
-    spriteID: 9436b0e1f0405e84a928936da2805334
+    spriteID: 1bb36fa312f12344b87dabc93956dba4
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -596,7 +596,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 46, y: 170}
-  - name: MonsterRobot_Frame_23
+  - name: Robot_Frame_23
     originalName: 
     pivot: {x: 0.4615385, y: 0}
     alignment: 9
@@ -607,7 +607,7 @@ ScriptedImporter:
       y: 197
       width: 13
       height: 19
-    spriteID: 332fc827f8e73a34d9050fe9d762259b
+    spriteID: 670a32f5b46531546bab556922df3c30
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -616,7 +616,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 46, y: 197}
-  - name: MonsterRobot_Frame_24
+  - name: Robot_Frame_24
     originalName: 
     pivot: {x: 0.4615385, y: 0}
     alignment: 9
@@ -627,7 +627,7 @@ ScriptedImporter:
       y: 224
       width: 13
       height: 19
-    spriteID: 6d4892b775037e84abb269e6d0cd53f8
+    spriteID: 869fe301ee29d94488d88f6598733325
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -636,7 +636,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 46, y: 224}
-  - name: MonsterRobot_Frame_25
+  - name: Robot_Frame_25
     originalName: 
     pivot: {x: 0.4615385, y: 0}
     alignment: 9
@@ -647,7 +647,7 @@ ScriptedImporter:
       y: 4
       width: 13
       height: 19
-    spriteID: aacf7bc0fc1c9fe4ab45ea1b17b8879a
+    spriteID: f4ed44f8796e2fc4ea5c8d52a3ba33f6
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -656,7 +656,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 67, y: 4}
-  - name: MonsterRobot_Frame_26
+  - name: Robot_Frame_26
     originalName: 
     pivot: {x: 0.4615385, y: 0}
     alignment: 9
@@ -667,7 +667,7 @@ ScriptedImporter:
       y: 31
       width: 13
       height: 19
-    spriteID: 048eba2a8ff35c740898693c93f1ea0f
+    spriteID: e10548b81a4b8a44b91a2da519267db2
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -676,7 +676,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 67, y: 31}
-  - name: MonsterRobot_Frame_27
+  - name: Robot_Frame_27
     originalName: 
     pivot: {x: 0.4615385, y: 0}
     alignment: 9
@@ -687,7 +687,7 @@ ScriptedImporter:
       y: 58
       width: 13
       height: 19
-    spriteID: 9bc494e0c2df8d0498a51b4413b404f8
+    spriteID: c3c8ea47dc176924ba42db76497ac36e
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -699,13 +699,13 @@ ScriptedImporter:
   spriteSheetImportData: []
   asepriteLayers:
   - layerIndex: 0
-    guid: -1364277992
-    name: MonsterRobot
+    guid: 2038319026
+    name: Robot
     layerFlags: 0
     layerType: 0
     blendMode: 0
     cells:
-    - name: MonsterRobot_Frame_0
+    - name: Robot_Frame_0
       frameIndex: 0
       additiveSortOrder: 0
       cellRect:
@@ -713,8 +713,8 @@ ScriptedImporter:
         y: 0
         width: 13
         height: 21
-      spriteId: 6e969abf2f2f533458c732a69412f401
-    - name: MonsterRobot_Frame_1
+      spriteId: 1ca7d2c778450f84da2555fd3db27c3e
+    - name: Robot_Frame_1
       frameIndex: 1
       additiveSortOrder: 0
       cellRect:
@@ -722,8 +722,8 @@ ScriptedImporter:
         y: 0
         width: 13
         height: 21
-      spriteId: c617c50be38a9e44dbc08061ef5153a5
-    - name: MonsterRobot_Frame_2
+      spriteId: dde91ce5930992f41b8284929665e846
+    - name: Robot_Frame_2
       frameIndex: 2
       additiveSortOrder: 0
       cellRect:
@@ -731,8 +731,8 @@ ScriptedImporter:
         y: 0
         width: 13
         height: 21
-      spriteId: 9dc18bdd8fe25c14ba55fe29a47666fa
-    - name: MonsterRobot_Frame_3
+      spriteId: 58bb32a4b915c42499c658debc8e964f
+    - name: Robot_Frame_3
       frameIndex: 3
       additiveSortOrder: 0
       cellRect:
@@ -740,8 +740,8 @@ ScriptedImporter:
         y: 0
         width: 13
         height: 21
-      spriteId: 1c621b7d6518b8e4bbf8b24f3177a81a
-    - name: MonsterRobot_Frame_4
+      spriteId: c7d5aa2e9ca99d64792fe9a4685a3249
+    - name: Robot_Frame_4
       frameIndex: 4
       additiveSortOrder: 0
       cellRect:
@@ -749,8 +749,8 @@ ScriptedImporter:
         y: 0
         width: 13
         height: 20
-      spriteId: 9d35e86843347e645a3700b04af33a46
-    - name: MonsterRobot_Frame_5
+      spriteId: aaa7cf549c1626948a9507e4d95d0267
+    - name: Robot_Frame_5
       frameIndex: 5
       additiveSortOrder: 0
       cellRect:
@@ -758,8 +758,8 @@ ScriptedImporter:
         y: 0
         width: 13
         height: 20
-      spriteId: 9329e670803991c4e8d6037b8ef8e358
-    - name: MonsterRobot_Frame_6
+      spriteId: 9f0f28fb2cb19c24bb118e84f9849191
+    - name: Robot_Frame_6
       frameIndex: 6
       additiveSortOrder: 0
       cellRect:
@@ -767,8 +767,8 @@ ScriptedImporter:
         y: 0
         width: 13
         height: 20
-      spriteId: 92b1cebb62298e44ebd584635a4bcae7
-    - name: MonsterRobot_Frame_7
+      spriteId: d15decefb7f5efb40a17a72e7c06c16b
+    - name: Robot_Frame_7
       frameIndex: 7
       additiveSortOrder: 0
       cellRect:
@@ -776,8 +776,8 @@ ScriptedImporter:
         y: 0
         width: 13
         height: 20
-      spriteId: 43b99cc71955a7947a9f35b93d0da6c1
-    - name: MonsterRobot_Frame_8
+      spriteId: 3927935563d9b6d469e557fe2e64f156
+    - name: Robot_Frame_8
       frameIndex: 8
       additiveSortOrder: 0
       cellRect:
@@ -785,8 +785,8 @@ ScriptedImporter:
         y: 0
         width: 13
         height: 22
-      spriteId: da4a46c3360a4be489258cec012c9c05
-    - name: MonsterRobot_Frame_9
+      spriteId: 043cd47b871501248896bf06af146f3f
+    - name: Robot_Frame_9
       frameIndex: 9
       additiveSortOrder: 0
       cellRect:
@@ -794,8 +794,8 @@ ScriptedImporter:
         y: 0
         width: 13
         height: 22
-      spriteId: 8be8e68dc304d4d49b538dbd09f681fe
-    - name: MonsterRobot_Frame_10
+      spriteId: d9871d87d6339114298c461b3fbe21df
+    - name: Robot_Frame_10
       frameIndex: 10
       additiveSortOrder: 0
       cellRect:
@@ -803,8 +803,8 @@ ScriptedImporter:
         y: 0
         width: 13
         height: 21
-      spriteId: 4133f8d9026de7d459d0b3e79105f9cc
-    - name: MonsterRobot_Frame_11
+      spriteId: 487efe38aed1b804d9a580ffb69d5dee
+    - name: Robot_Frame_11
       frameIndex: 11
       additiveSortOrder: 0
       cellRect:
@@ -812,8 +812,8 @@ ScriptedImporter:
         y: 0
         width: 13
         height: 21
-      spriteId: 58fc8725b1b2dfa42a95a106ad467132
-    - name: MonsterRobot_Frame_12
+      spriteId: b4b6b07f22524cc4baddeaaa17790129
+    - name: Robot_Frame_12
       frameIndex: 12
       additiveSortOrder: 0
       cellRect:
@@ -821,8 +821,8 @@ ScriptedImporter:
         y: 0
         width: 13
         height: 22
-      spriteId: 89788582255300b48b63d6c975c12911
-    - name: MonsterRobot_Frame_13
+      spriteId: 2611dd3e0827d054085fdcb35675958d
+    - name: Robot_Frame_13
       frameIndex: 13
       additiveSortOrder: 0
       cellRect:
@@ -830,8 +830,8 @@ ScriptedImporter:
         y: 0
         width: 13
         height: 22
-      spriteId: b90bb53b9c89a92439f83ea9ff607d18
-    - name: MonsterRobot_Frame_14
+      spriteId: 14e348721146cb34cb69418dd0d4b0b5
+    - name: Robot_Frame_14
       frameIndex: 14
       additiveSortOrder: 0
       cellRect:
@@ -839,8 +839,8 @@ ScriptedImporter:
         y: 0
         width: 13
         height: 21
-      spriteId: 219a5cf1867e5114989c73ff5145bf9f
-    - name: MonsterRobot_Frame_15
+      spriteId: 331883348fa382543a4195242fda6588
+    - name: Robot_Frame_15
       frameIndex: 15
       additiveSortOrder: 0
       cellRect:
@@ -848,8 +848,8 @@ ScriptedImporter:
         y: 0
         width: 13
         height: 21
-      spriteId: e1fda28c5a94f054594cfdea57b84a91
-    - name: MonsterRobot_Frame_16
+      spriteId: 6cbd0d9e0b54ef14398d5736eebbd694
+    - name: Robot_Frame_16
       frameIndex: 16
       additiveSortOrder: 0
       cellRect:
@@ -857,8 +857,8 @@ ScriptedImporter:
         y: 0
         width: 13
         height: 21
-      spriteId: 86a1e99514bf0d445ae2493a344105b5
-    - name: MonsterRobot_Frame_17
+      spriteId: fc2e282281e2862438c45b173e839437
+    - name: Robot_Frame_17
       frameIndex: 17
       additiveSortOrder: 0
       cellRect:
@@ -866,8 +866,8 @@ ScriptedImporter:
         y: 0
         width: 13
         height: 21
-      spriteId: dbfce41ccc4478142b415e117b0939de
-    - name: MonsterRobot_Frame_18
+      spriteId: fe87c896352bc4646aebaa700b4fbf92
+    - name: Robot_Frame_18
       frameIndex: 18
       additiveSortOrder: 0
       cellRect:
@@ -875,8 +875,8 @@ ScriptedImporter:
         y: 0
         width: 13
         height: 20
-      spriteId: bc2989da5c3f34745b69a769903b0236
-    - name: MonsterRobot_Frame_19
+      spriteId: 82eec3002a312d94d9bbc3c7fc44bc8b
+    - name: Robot_Frame_19
       frameIndex: 19
       additiveSortOrder: 0
       cellRect:
@@ -884,8 +884,8 @@ ScriptedImporter:
         y: 0
         width: 13
         height: 20
-      spriteId: 3e8dcfd8b7d590d4881b5b0becf28dbd
-    - name: MonsterRobot_Frame_20
+      spriteId: 1445c35c0ec48b84da01839a836b9dd4
+    - name: Robot_Frame_20
       frameIndex: 20
       additiveSortOrder: 0
       cellRect:
@@ -893,8 +893,8 @@ ScriptedImporter:
         y: 0
         width: 13
         height: 19
-      spriteId: 7d204a66d3ec56947be8f9609964bf05
-    - name: MonsterRobot_Frame_21
+      spriteId: 6e326c3f7d63ff1449583c3ce799853a
+    - name: Robot_Frame_21
       frameIndex: 21
       additiveSortOrder: 0
       cellRect:
@@ -902,8 +902,8 @@ ScriptedImporter:
         y: 0
         width: 13
         height: 19
-      spriteId: ae4b5b1c06f6d5d44aabb070c20a9131
-    - name: MonsterRobot_Frame_22
+      spriteId: b57729ae9d0a82540bc1a0bb44f3366b
+    - name: Robot_Frame_22
       frameIndex: 22
       additiveSortOrder: 0
       cellRect:
@@ -911,8 +911,8 @@ ScriptedImporter:
         y: 0
         width: 13
         height: 19
-      spriteId: 9436b0e1f0405e84a928936da2805334
-    - name: MonsterRobot_Frame_23
+      spriteId: 1bb36fa312f12344b87dabc93956dba4
+    - name: Robot_Frame_23
       frameIndex: 23
       additiveSortOrder: 0
       cellRect:
@@ -920,8 +920,8 @@ ScriptedImporter:
         y: 0
         width: 13
         height: 19
-      spriteId: 332fc827f8e73a34d9050fe9d762259b
-    - name: MonsterRobot_Frame_24
+      spriteId: 670a32f5b46531546bab556922df3c30
+    - name: Robot_Frame_24
       frameIndex: 24
       additiveSortOrder: 0
       cellRect:
@@ -929,8 +929,8 @@ ScriptedImporter:
         y: 0
         width: 13
         height: 19
-      spriteId: 6d4892b775037e84abb269e6d0cd53f8
-    - name: MonsterRobot_Frame_25
+      spriteId: 869fe301ee29d94488d88f6598733325
+    - name: Robot_Frame_25
       frameIndex: 25
       additiveSortOrder: 0
       cellRect:
@@ -938,8 +938,8 @@ ScriptedImporter:
         y: 0
         width: 13
         height: 19
-      spriteId: aacf7bc0fc1c9fe4ab45ea1b17b8879a
-    - name: MonsterRobot_Frame_26
+      spriteId: f4ed44f8796e2fc4ea5c8d52a3ba33f6
+    - name: Robot_Frame_26
       frameIndex: 26
       additiveSortOrder: 0
       cellRect:
@@ -947,8 +947,8 @@ ScriptedImporter:
         y: 0
         width: 13
         height: 19
-      spriteId: 048eba2a8ff35c740898693c93f1ea0f
-    - name: MonsterRobot_Frame_27
+      spriteId: e10548b81a4b8a44b91a2da519267db2
+    - name: Robot_Frame_27
       frameIndex: 27
       additiveSortOrder: 0
       cellRect:
@@ -956,7 +956,7 @@ ScriptedImporter:
         y: 0
         width: 13
         height: 19
-      spriteId: 9bc494e0c2df8d0498a51b4413b404f8
+      spriteId: c3c8ea47dc176924ba42db76497ac36e
     linkedCells: []
     parentIndex: -1
   platformSettings:

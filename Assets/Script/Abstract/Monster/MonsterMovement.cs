@@ -1,11 +1,12 @@
 using UnityEngine;
 using static GameManager;
 
-public abstract class MonsterMovement : AStar
+public class MonsterMovement : AStar
 {
     int count = 1;
     protected Monster monster;
-    public bool start = true; Player player;
+    public bool start = true;
+    Player player;
     protected  void Awake()
     {
         monster = GetComponent<Monster>();

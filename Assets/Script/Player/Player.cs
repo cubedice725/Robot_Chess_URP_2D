@@ -14,7 +14,7 @@ public class Player : MonoBehaviour
         playerStateMachine = new PlayerStateMachine(playerMovement);
         playerStateMachine.Initialize(playerStateMachine.playerIdleState);
     }
-    private void LateUpdate()
+    private void Update()
     {
         // 플레이어 턴이 아니면 작동안함
         if (!Instance.playerTurn)

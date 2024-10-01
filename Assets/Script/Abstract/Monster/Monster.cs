@@ -12,33 +12,35 @@ public abstract class Monster : MonoBehaviour
         Move,
         Skill
     }
+    public IState monsterSkillCastingState;
+    public IState monsterMovingState;
+    public IState monsterIdleState;
+
     public MonsterState monsterState = MonsterState.Idle;
     public MonsterStateMachine monsterStateMachine;
     public MonsterMovement monsterMovement;
     public virtual void Awake()
     {
         monsterMovement = GetComponent<MonsterMovement>();
-        monsterStateMachine = GetComponent<MonsterStateMachine>();
-        monsterStateMachine.Initialize(monsterStateMachine.monsterIdleState);
+        monsterStateMachine = new MonsterStateMachine();
+        monsterStateMachine.Initialize(monsterIdleState);
     }
     public void Update()
     {
         //몬스터 턴과 상관없이 움직임
         if (monsterState == MonsterState.Idle)
         {
-            monsterStateMachine.TransitionTo(monsterStateMachine.monsterIdleState);
+            monsterStateMachine.TransitionTo(monsterIdleState);
         }
         else if (monsterState == MonsterState.Move)
         {
-            monsterStateMachine.TransitionTo(monsterStateMachine.monsterMovingState);
+            monsterStateMachine.TransitionTo(monsterMovingState);
         }
         else if (monsterState == MonsterState.Skill)
         {
-            monsterStateMachine.TransitionTo(monsterStateMachine.monsterSkillCastingState);
+            monsterStateMachine.TransitionTo(monsterSkillCastingState);
         }
-        
-        
-        
+        monsterStateMachine.MonsterStateMachineUpdate();
         // 몬스터 턴인 경우 개발자가 작성하여 몬스터 움직임을 설정
         UpdateMonster();
 
@@ -47,10 +49,6 @@ public abstract class Monster : MonoBehaviour
         {
             monsterState = MonsterState.Idle;
         }
-    }
-    public void LateUpdate()
-    {
-        monsterStateMachine.MonsterStateMachineUpdate();
     }
     public abstract void UpdateMonster();
 }

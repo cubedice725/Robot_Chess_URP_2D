@@ -18,23 +18,20 @@ public class GameManager : MonoBehaviour
         player,
         moster
     }
-
     public int MapSizeX { get; set; } = 11;
     public int MapSizeY { get; set; } = 15;
     public int[,] Map2D { get; set; }
 
     public List<GameObject> spawnMonsters = new List<GameObject>();
-    public Skill skillState;
+    public IState skillState;
 
-    private Stage1 stage1;
     private int count = 0;
-
-    public bool turnStart = false;
-    public bool turnEnd = false;
 
     public bool monsterTurn = false;
     public bool playerTurn = true;
     public PlayerState playerState = PlayerState.Idle;
+
+    private Stage1 stage1;
 
     public static GameManager Instance
     {
@@ -66,6 +63,7 @@ public class GameManager : MonoBehaviour
         // 아래의 함수를 사용하여 씬이 전환되더라도 선언되었던 인스턴스가 파괴되지 않는다.
         DontDestroyOnLoad(gameObject);
 
+        // 맵에 대한 정보를 갱신
         Map2D = new int[MapSizeX, MapSizeY];
 
         for (int i = 0; i < MapSizeX * MapSizeY; i++)
@@ -74,7 +72,11 @@ public class GameManager : MonoBehaviour
         }
         stage1 = GetComponent<Stage1>();
     }
+    private void Start()
+    {
+        stage1.Opening();
 
+    }
     public void FromPlayerToMonster()
     {
         Instance.monsterTurn = true;
@@ -112,29 +114,18 @@ public class GameManager : MonoBehaviour
             FromMonsterToPlayer();
         }
        
-
-        if (turnStart)
-        {
-            turnStart = false;
-            turnEnd = true;
-        }
-        if(Input.GetMouseButtonDown(1))
-        {
-            monsterTurn = false;
-        }
-        if (turnEnd && Instance.playerState == PlayerState.Idle)
-        {
-            turnEnd = false;
-        }
-        if (Input.GetMouseButtonDown(0)) // 마우스 왼쪽 버튼 클릭
-        {
-            RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
-            if(hit.collider != null)
-            {
-                Debug.Log("클릭한 오브젝트 이름: " + hit.collider.gameObject.name);
-
-            }
-        }
+        //if(Input.GetMouseButtonDown(1))
+        //{
+        //    monsterTurn = false;
+        //}
+        //if (Input.GetMouseButtonDown(0)) // 마우스 왼쪽 버튼 클릭
+        //{
+        //    RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
+        //    if(hit.collider != null)
+        //    {
+        //        Debug.Log("클릭한 오브젝트 이름: " + hit.collider.gameObject.name);
+        //    }
+        //}
     }
 }
 

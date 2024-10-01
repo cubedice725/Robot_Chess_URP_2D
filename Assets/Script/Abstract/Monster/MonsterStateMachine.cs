@@ -1,19 +1,7 @@
-using UnityEngine;
-
-public class MonsterStateMachine : MonoBehaviour
+public class MonsterStateMachine
 {
     public IState CurrentState { get; private set; }
 
-    public IState monsterSkillCastingState;
-    public IState monsterMovingState;
-    public IState monsterIdleState;
-
-    public virtual void Awake() 
-    {
-        monsterIdleState = GetComponent<MonsterIdleState>();
-        monsterSkillCastingState = GetComponent<MonsterSkillCastingState>();
-        monsterMovingState = GetComponent<MonsterMovingState>();
-    }
     public void Initialize(IState startingState)
     {
         CurrentState = startingState;
