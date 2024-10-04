@@ -17,10 +17,11 @@ public class PlayerIdleState : IState
     {
         if (_playerMovement.UpdatePlayerCheck())
         {
-            Instance.playerState = PlayerState.Move;
+            Instance.playerState = State.Move;
         }
     }
-    public void Exit()
+    public bool Exit()
     {
+        return false;
     }
 }

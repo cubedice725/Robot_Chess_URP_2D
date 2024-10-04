@@ -5,7 +5,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     private static GameManager _instance;
-    public enum PlayerState
+    public enum State
     { 
         Idle,
         Move,
@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour
 
     public bool monsterTurn = false;
     public bool playerTurn = true;
-    public PlayerState playerState = PlayerState.Idle;
+    public State playerState = State.Idle;
 
     private Stage1 stage1;
 
@@ -71,11 +71,12 @@ public class GameManager : MonoBehaviour
             Map2D[i / MapSizeY, i % MapSizeY] = (int)MapObject.noting;
         }
         stage1 = GetComponent<Stage1>();
+        
+
     }
     private void Start()
     {
         stage1.Opening();
-
     }
     public void FromPlayerToMonster()
     {
@@ -109,10 +110,10 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
-        else if (spawnMonsters.Count == 0)
-        {
-            FromMonsterToPlayer();
-        }
+        //else if (spawnMonsters.Count == 0)
+        //{
+        //    FromMonsterToPlayer();
+        //}
        
         //if(Input.GetMouseButtonDown(1))
         //{

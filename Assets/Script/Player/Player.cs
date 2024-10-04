@@ -6,7 +6,7 @@ public class Player : MonoBehaviour
 {
     private PlayerStateMachine playerStateMachine;
     private PlayerMovement playerMovement;
-    public PlayerState playerState = PlayerState.Idle;
+    public State state = State.Idle;
 
     private void Awake()
     {
@@ -16,20 +16,16 @@ public class Player : MonoBehaviour
     }
     private void Update()
     {
-        // 플레이어 턴이 아니면 작동안함
-        if (!Instance.playerTurn)
-            return;
-
         //현재 상태를 통해 동작을 바꿔줌
-        if (Instance.playerState == PlayerState.Idle) 
+        if (Instance.playerState == State.Idle) 
         {
             playerStateMachine.TransitionTo(playerStateMachine.playerIdleState);
         }
-        else if (Instance.playerState == PlayerState.Move)
+        else if (Instance.playerState == State.Move)
         {
             playerStateMachine.TransitionTo(playerStateMachine.playerMovingState);
         }
-        else if (Instance.playerState == PlayerState.Skill)
+        else if (Instance.playerState == State.Skill)
         {
             playerStateMachine.TransitionTo(playerStateMachine.playerSkillCastingState);
         }

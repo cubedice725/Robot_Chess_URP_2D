@@ -11,7 +11,8 @@ public class RobotSkillCastingState : MonoBehaviour, IState
     public void IStateUpdate()
     {
     }
-    public void Exit()
+    public bool Exit()
     {
+        return false;
     }
 }

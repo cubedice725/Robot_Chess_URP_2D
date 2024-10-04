@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Pool;
 using static GameManager;
 
 public class PlayerMovement : AStar
@@ -9,8 +8,9 @@ public class PlayerMovement : AStar
     private MyObjectPool playerMovePlane;
 
     private List<MyObject> skillSelectionList = new List<MyObject>();
-    private MyObjectPool SkillSelection;
+    private MyObjectPool selection;
 
+    private GameObject myObjectlPoolPrefab;
     private GameObject playerPlaneStandard;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
@@ -23,30 +23,29 @@ public class PlayerMovement : AStar
     private int count = 1;
 
     // 이동거리
-    public int MovingDistance { get; set; } = 4;
+    public int MoveDistance { get; set; } = 4;
     // 이동 속도
     public float PlayerMoveSpeed { get; set; } = 1f;
     protected void Awake()
     {
         playerPlaneStandard = GameObject.Find("PlayerPlaneStandard");
 
-        playerMovePlane = GetComponent<MyObjectPool>();
+        myObjectlPoolPrefab = Resources.Load("Prefab/MyObjectPool", typeof(GameObject)) as GameObject;
+
+        playerMovePlane = Instantiate(myObjectlPoolPrefab).GetComponent<MyObjectPool>();
         playerMovePlane.Initialize("Prefab/Player/PlayerMovePlane", 500);
 
-        SkillSelection = GetComponent<MyObjectPool>();
-        SkillSelection.Initialize("Prefab/Skill/Selection", 20);
+        selection = Instantiate(myObjectlPoolPrefab).GetComponent<MyObjectPool>();
+        selection.Initialize("Prefab/Skill/Selection", 20);
 
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
     }
-    public void OnClickSkillTest()
+    public void Update()
     {
-        if (Instance.skillState == null)
-        {
-            Instance.playerState = PlayerState.Skill;
-        }
+        // 반올림을 하지 않으면 움직이고 난 후 x좌표가 1.999일때 타입케스트는 1이 된다.
+        playerPosition = new Vector3Int((int)Mathf.Round(transform.position.x), (int)Mathf.Round(transform.position.y), (int)Mathf.Round(transform.position.z));
     }
-
     // 플레이어 움직임 관련 함수
     //----------------------------------------------------------
     public bool UpdateMove()
@@ -55,13 +54,12 @@ public class PlayerMovement : AStar
             return false;
 
         // 반올림을 하지 않으면 움직이고 난 후 x좌표가 1.999일때 타입케스트는 1이 된다.
-        playerPosition = new Vector3Int((int)Mathf.Round(transform.position.x), (int)Mathf.Round(transform.position.y), (int)Mathf.Round(transform.position.z));
 
         if (updateMoveStart)
         {
             Instance.Map2D[playerPosition.x, playerPosition.y] = (int)MapObject.noting;
             PathFinding(
-                new Vector3Int(playerPosition.x, playerPosition.y, 0),
+                playerPosition,
                 new Vector3Int((int)hit.transform.position.x, (int)hit.transform.position.y, 0),
                 Vector3Int.zero,
                 new Vector3Int(Instance.MapSizeX, Instance.MapSizeY, 0)
@@ -101,6 +99,8 @@ public class PlayerMovement : AStar
     }
     public bool UpdatePlayerCheck()
     {
+        if (!Instance.playerTurn) return false;
+
         if (Input.GetMouseButtonDown(0))
         {
             Instance.Map2D[(int)transform.position.x, (int)transform.position.y] = (int)MapObject.noting;
@@ -115,6 +115,8 @@ public class PlayerMovement : AStar
     }
     public bool UpdatePlayerMovePlaneCheck()
     {
+        if (!Instance.playerTurn) return false;
+
         if (Input.GetMouseButtonDown(0))
         {
             hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
@@ -132,14 +134,11 @@ public class PlayerMovement : AStar
     //----------------------------------------------------------
     public void SetPlayerMovePlane()
     {
-        // 반올림을 하지 않으면 움직이고 난 후 x좌표가 1.999일때 타입케스트는 1이 된다.
-        playerPosition = new Vector3Int((int)Mathf.Round(transform.position.x), (int)Mathf.Round(transform.position.y), (int)Mathf.Round(transform.position.z));
-
         // 실제 맵이랑 플레이어가 움직이는 임의 탐색 공간의 간격
-        Vector3Int interval = new Vector3Int(playerPosition.x - MovingDistance, playerPosition.y - MovingDistance, 0);
+        Vector3Int interval = new Vector3Int(playerPosition.x - MoveDistance, playerPosition.y - MoveDistance, 0);
         
         // 지름 계산
-        int diameter = MovingDistance * 2 + 1;
+        int diameter = MoveDistance * 2 + 1;
 
         // 플레이어가 움직이는 공간을 먼저 추측하기 위해 이동거리를 기준으로 함
         for (int i = 0; i < diameter * diameter; i++)
@@ -152,26 +151,26 @@ public class PlayerMovement : AStar
             int mapAreaX = interval.x + playerAreaX;
             int mapAreaY = interval.y + playerAreaY;
 
-            int distanceX = playerAreaX - MovingDistance;
-            int distanceY = playerAreaY - MovingDistance;
+            int distanceX = playerAreaX - MoveDistance;
+            int distanceY = playerAreaY - MoveDistance;
             // 맵안 이고 플레이어가 아닌곳
-            if ((mapAreaX > 0 && mapAreaY > 0 && mapAreaX < Instance.MapSizeX && mapAreaY < Instance.MapSizeY) && (playerAreaX != MovingDistance || playerAreaY != MovingDistance))
+            if ((mapAreaX > 0 && mapAreaY > 0 && mapAreaX < Instance.MapSizeX && mapAreaY < Instance.MapSizeY) && (playerAreaX != MoveDistance || playerAreaY != MoveDistance))
             {
                 // 해당 공간에 벽이나 몬스터가 아닌곳
                 if (Instance.Map2D[mapAreaX, mapAreaY] != (int)MapObject.wall && Instance.Map2D[mapAreaX, mapAreaY] != (int)MapObject.moster)
                 {
                     // 플레이어가 움직일수 있는 거리 안 즉 원안에 있는지
-                    if (Mathf.FloorToInt(Mathf.Sqrt((distanceX * distanceX) + (distanceY * distanceY))) <= MovingDistance)
+                    if (Mathf.FloorToInt(Mathf.Sqrt((distanceX * distanceX) + (distanceY * distanceY))) <= MoveDistance)
                     {
                         // 경로 탐색
                         PathFinding(
-                            new Vector3Int(playerPosition.x, playerPosition.y, 0),
+                            playerPosition,
                             new Vector3Int(mapAreaX, mapAreaY, 0),
                             Vector3Int.zero,
                             new Vector3Int(Instance.MapSizeX, Instance.MapSizeY, 0)
                         );
                         // 경로 탐색이 잘 되었는지, 이동 거리가 적절한지
-                        if (FinalNodeList.Count > 1 && FinalNodeList.Count <= MovingDistance + 1)
+                        if (FinalNodeList.Count > 1 && FinalNodeList.Count <= MoveDistance + 1)
                         {
                             playerMovePlaneList.Add(playerMovePlane.pool.Get());
                             playerMovePlaneList[playerMovePlaneList.Count - 1].transform.parent = playerPlaneStandard.transform;
@@ -202,7 +201,7 @@ public class PlayerMovement : AStar
     {
         for (int i = 0; i < Instance.spawnMonsters.Count; i++)
         {
-            skillSelectionList.Add(SkillSelection.pool.Get());
+            skillSelectionList.Add(selection.pool.Get());
             skillSelectionList[i].transform.position = Instance.spawnMonsters[i].transform.position;
             skillSelectionList[i].transform.parent = Instance.spawnMonsters[i].transform;
         }

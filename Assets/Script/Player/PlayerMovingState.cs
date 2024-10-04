@@ -25,14 +25,19 @@ public class PlayerMovingState : IState
         {
             if (!_playerMovement.UpdateMove())
             {
-                Instance.playerState = PlayerState.Idle;
-                Moveing = false;
+                Instance.playerState = State.Idle;
             }
         }
 
     }
-    public void Exit()
+    public bool Exit()
     {
         _playerMovement.RemovePlayerMovePlane();
+        if (Moveing)
+        {
+            Moveing = false;
+            return true;
+        }
+        return false;
     }
 }

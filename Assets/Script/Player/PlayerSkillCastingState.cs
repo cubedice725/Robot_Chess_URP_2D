@@ -10,9 +10,10 @@ public class PlayerSkillCastingState : IState
     {
         Instance.skillState.IStateUpdate();
     }
-    public void Exit()
+    public bool Exit()
     {
         Instance.skillState.Exit();
         Instance.skillState = null;
+        return false;
     }
 }

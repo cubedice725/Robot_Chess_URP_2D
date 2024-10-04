@@ -1,6 +1,12 @@
 using UnityEngine;
 using UnityEngine.Pool;
 
+// 사용시 주의사항
+// 풀 2개를 동시에 사용시 아래 내용과 같이 사용하지 않으면 pool을 공유하게 됨
+//
+// ObjectPool = Instantiate(myObjectlPoolPrefab).GetComponent<MyObjectPool>();
+// playerMovePlane.Initialize("Prefab/Object", 500);
+// 
 public class MyObjectPool: MonoBehaviour
 {
     public ObjectPool<MyObject> pool;

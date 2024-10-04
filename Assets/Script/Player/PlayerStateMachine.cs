@@ -19,10 +19,12 @@ public class PlayerStateMachine
     }
     public void TransitionTo(IState nextState)
     {
-        if (nextState == CurrentState)
-            return;
+        if (nextState == CurrentState) return;
         
-        CurrentState.Exit();
+        if (CurrentState.Exit())
+        {
+            GameManager.Instance.FromPlayerToMonster();
+        }
         CurrentState = nextState;
         nextState.Entry();
 
