@@ -12,11 +12,11 @@ public class RobotMovingState : IState
     {
         if (!_monsterMovement.UpdateMove())
         {
-            _monsterMovement.MonsterIdleState();
+            _monsterMovement.IdleState();
         }
     }
     public bool Exit()
     {
-        return false;
+        return true;
     }
 }

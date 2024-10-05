@@ -79,8 +79,9 @@ public class PlayerMovement : AStar
         }
         else
         {
+            // 도착하면 FinalNodeList가 남아 있는지 확인
             // count의 시작은 1이고, 시작하자 마자 1이 증가함으로 + 1을 함
-            if (count + 1< FinalNodeList.Count)
+            if (count + 1 < FinalNodeList.Count)
             {
                 count++;
                 targetPosition = new Vector2(FinalNodeList[count].x, FinalNodeList[count].y);
@@ -230,5 +231,19 @@ public class PlayerMovement : AStar
         {
             spriteRenderer.flipX = direction < 0;
         }
+    }
+    // 상태변환 관련 함수
+    //----------------------------------------------------------
+    public void IdleState()
+    {
+        Instance.playerState = State.Idle;
+    }
+    public void MoveState()
+    {
+        Instance.playerState = State.Move;
+    }
+    public void SkillState()
+    {
+        Instance.playerState = State.Skill;
     }
 }

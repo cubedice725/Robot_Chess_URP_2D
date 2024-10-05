@@ -71,24 +71,11 @@ public class GameManager : MonoBehaviour
             Map2D[i / MapSizeY, i % MapSizeY] = (int)MapObject.noting;
         }
         stage1 = GetComponent<Stage1>();
-        
-
     }
     private void Start()
     {
         stage1.Opening();
     }
-    public void FromPlayerToMonster()
-    {
-        Instance.monsterTurn = true;
-        Instance.playerTurn = false;
-    }
-    public void FromMonsterToPlayer()
-    {
-        monsterTurn = false;
-        playerTurn = true;
-    }
-
     private void Update()
     {
         if (spawnMonsters.Count > 0)
@@ -110,11 +97,11 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
-        //else if (spawnMonsters.Count == 0)
-        //{
-        //    FromMonsterToPlayer();
-        //}
-       
+        else if (spawnMonsters.Count == 0)
+        {
+            FromMonsterToPlayer();
+        }
+
         //if(Input.GetMouseButtonDown(1))
         //{
         //    monsterTurn = false;
@@ -127,6 +114,16 @@ public class GameManager : MonoBehaviour
         //        Debug.Log("클릭한 오브젝트 이름: " + hit.collider.gameObject.name);
         //    }
         //}
+    }
+    public void FromPlayerToMonster()
+    {
+        Instance.monsterTurn = true;
+        Instance.playerTurn = false;
+    }
+    public void FromMonsterToPlayer()
+    {
+        monsterTurn = false;
+        playerTurn = true;
     }
 }
 

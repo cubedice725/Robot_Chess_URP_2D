@@ -4,6 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(RobotSkillCastingState))]
 public class Robot : Monster
 {
+    public override int MovingDistance { get; set; } = 1;
     bool start = true;
     public override void Awake()
     {
@@ -13,8 +14,11 @@ public class Robot : Monster
         monsterSkillCastingState = GetComponent<RobotSkillCastingState>();
         monsterStateMachine.Initialize(monsterIdleState);
     }
+    
     public override void UpdateMonster()
     {
+        //if (GameManager.Instance.spawnMonsters[Num-1].GetComponent<Monster>().state == ) {
+        // 몬스터 턴이되면 한번만 작동
         if(GameManager.Instance.monsterTurn && start)
         {
             if (monsterMovement.AttackNavigation())
@@ -27,6 +31,7 @@ public class Robot : Monster
             }
             start = false;
         }
+        // 몬스터 턴이 끝나면 한번만 작동
         if (!GameManager.Instance.monsterTurn && !start)
         {
             state = State.Idle;

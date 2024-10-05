@@ -25,7 +25,7 @@ public class PlayerMovingState : IState
         {
             if (!_playerMovement.UpdateMove())
             {
-                Instance.playerState = State.Idle;
+                _playerMovement.IdleState();
             }
         }
 

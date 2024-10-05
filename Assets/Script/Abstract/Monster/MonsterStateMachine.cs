@@ -1,7 +1,11 @@
 public class MonsterStateMachine
 {
+    public Monster _monster;
     public IState CurrentState { get; private set; }
-
+    public MonsterStateMachine(Monster monster)
+    {
+        _monster = monster;
+    }
     public void Initialize(IState startingState)
     {
         CurrentState = startingState;
@@ -11,7 +15,10 @@ public class MonsterStateMachine
     {
         if (nextState == CurrentState)
             return;
-        CurrentState.Exit();    
+        if (CurrentState.Exit())
+        {
+            _monster.flag = true;
+        }
         CurrentState = nextState;
         nextState.Entry();
 

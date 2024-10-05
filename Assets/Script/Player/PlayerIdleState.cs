@@ -17,7 +17,7 @@ public class PlayerIdleState : IState
     {
         if (_playerMovement.UpdatePlayerCheck())
         {
-            Instance.playerState = State.Move;
+            _playerMovement.MoveState();
         }
     }
     public bool Exit()

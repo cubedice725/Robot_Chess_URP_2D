@@ -16,6 +16,10 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 22100000, guid: a60e77cf3fd2ec44caf449b365be9e46, type: 2}
+    - target: {fileID: 3626916397498700004, guid: 3fe9f32cabcea8246bb03f275145e367, type: 3}
+      propertyPath: m_SpriteSortPoint
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: 3fe9f32cabcea8246bb03f275145e367, type: 3}
       propertyPath: m_LocalScale.x
       value: 3.5
@@ -26,11 +30,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: 3fe9f32cabcea8246bb03f275145e367, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: 3fe9f32cabcea8246bb03f275145e367, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: 3fe9f32cabcea8246bb03f275145e367, type: 3}
       propertyPath: m_LocalPosition.z
@@ -70,7 +74,7 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: -2253911629886400664, guid: 3fe9f32cabcea8246bb03f275145e367, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 5207365440239679612}
+      addedObject: {fileID: 1172457897595780924}
     - targetCorrespondingSourceObject: {fileID: -2253911629886400664, guid: 3fe9f32cabcea8246bb03f275145e367, type: 3}
       insertIndex: -1
       addedObject: {fileID: 668487172346204383}
@@ -86,7 +90,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: -2253911629886400664, guid: 3fe9f32cabcea8246bb03f275145e367, type: 3}
   m_PrefabInstance: {fileID: 2173744966558375771}
   m_PrefabAsset: {fileID: 0}
---- !u!61 &5207365440239679612
+--- !u!61 &1172457897595780924
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -118,10 +122,10 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.005000001, y: 0.105}
+  m_Offset: {x: 0.005000001, y: -0.055}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.4615385, y: 0}
+    pivot: {x: 0.4615385, y: 0.7619048}
     oldSize: {x: 0.13, y: 0.21}
     newSize: {x: 0.13, y: 0.21}
     adaptiveTilingThreshold: 0.5
@@ -146,7 +150,6 @@ MonoBehaviour:
   FinalNodeList: []
   OpenList: []
   ClosedList: []
-  start: 1
 --- !u!114 &1282192008555559206
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -172,5 +175,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flag: 0
-  monsterState: 0
+  state: 0
   monsterMovement: {fileID: 0}

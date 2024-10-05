@@ -1,5 +1,3 @@
-using AnimationImporter.PyxelEdit;
-using TMPro;
 using UnityEngine;
 using static GameManager;
 
@@ -23,6 +21,10 @@ public class MonsterMovement : AStar
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
+    public void Update()
+    {
+        monsterPosition = new Vector3Int((int)Mathf.Round(transform.position.x), (int)Mathf.Round(transform.position.y), (int)Mathf.Round(transform.position.z));
+    }
     // 실제 몬스터가 움직임
     public virtual bool UpdateMove()
     {
@@ -30,23 +32,31 @@ public class MonsterMovement : AStar
         if (FinalNodeList.Count == 0)
             return false;
 
+        if(count == 1)
+        {
+            Instance.Map2D[monsterPosition.x, monsterPosition.y] = (int)MapObject.noting;
+            Instance.Map2D[FinalNodeList[monster.MovingDistance].x, FinalNodeList[monster.MovingDistance].y] = (int)MapObject.moster;
+        }
+
         // MovingDistance을 통해 행동을 제약
         if (count <= monster.MovingDistance)
         {
-            monsterPosition = new Vector3Int((int)Mathf.Round(transform.position.x), (int)Mathf.Round(transform.position.y), (int)Mathf.Round(transform.position.z));
-
-            Instance.Map2D[monsterPosition.x, monsterPosition.y] = (int)MapObject.noting;
+            // 플레이어까지 가기위한 노드를 한 지점으로 하여,
+            // 목표까지 대각선으로 막힌곳을 뚤어 가는게 아닌
+            // 실제로 움직이는것처럼 하기위한 시작
             if (updateMoveStart)
             {
                 targetPosition = new Vector2(FinalNodeList[count].x, FinalNodeList[count].y);
                 updateMoveStart = false;
             }
+
             // 다음 위치까지 움직임
             transform.position = Vector2.MoveTowards(transform.position, targetPosition, MoveSpeed * Time.deltaTime);
             float distance = Vector2.Distance(transform.position, targetPosition);
-            // 다음 위치까지 몬스터의 움직임이 거리가 0.1 아래이면 도착이라 판단
+            // 노드의 거리가 0.01 아래이면 도착이라 판단
             if (distance > 0.01f)
             {
+                // 애니메이션
                 RunAnimation(true, targetPosition.x - transform.position.x);
                 // 캐릭터를 이동
                 transform.position = Vector2.MoveTowards(transform.position, targetPosition, MoveSpeed * Time.deltaTime);
@@ -54,8 +64,9 @@ public class MonsterMovement : AStar
             }
             else
             {
+                // 도착하면 FinalNodeList가 남아 있는지 확인
                 // count의 시작은 1이고, 시작하자 마자 1이 증가함으로 + 1을 함
-                if (count + 1 < FinalNodeList.Count)
+                if (count + 2 < FinalNodeList.Count)
                 {
                     count++;
                     targetPosition = new Vector2(FinalNodeList[count].x, FinalNodeList[count].y);
@@ -64,7 +75,6 @@ public class MonsterMovement : AStar
                 else
                 {
                     RunAnimation(false);
-                    Instance.Map2D[monsterPosition.x, monsterPosition.y] = (int)MapObject.moster;
                     count = 1;
                     updateMoveStart = true;
                     return false;
@@ -75,14 +85,13 @@ public class MonsterMovement : AStar
         {
             RunAnimation(false);
             count = 1;
+            updateMoveStart = true;
             return false;
         }
     }
     // 공격 사거리 확인을 위한 함수
     public bool AttackNavigation()
     {
-        monsterPosition = new Vector3Int((int)Mathf.Round(transform.position.x), (int)Mathf.Round(transform.position.y), (int)Mathf.Round(transform.position.z));
-
         // 몬스터의 경우 자기 위치가 비어있어야 탐색 가능
         Instance.Map2D[monsterPosition.x, monsterPosition.y] = (int)MapObject.noting;
         
@@ -93,8 +102,8 @@ public class MonsterMovement : AStar
             Vector3Int.zero,
             new Vector3Int(Instance.MapSizeX, Instance.MapSizeY, 0)
             );
-        Instance.Map2D[monsterPosition.x, monsterPosition.y] = (int)MapObject.moster;
 
+        Instance.Map2D[monsterPosition.x, monsterPosition.y] = (int)MapObject.moster;
         // 사거리 안에 있는지 확인
         if (FinalNodeList.Count < monster.AttackDistance + 3 && FinalNodeList.Count != 0)
         {
@@ -102,15 +111,15 @@ public class MonsterMovement : AStar
         }
         return false;
     }
-    public void MonsterIdleState()
+    public void IdleState()
     {
         monster.state = Monster.State.Idle;
     }
-    public void MonsterMoveState()
+    public void MoveState()
     {
         monster.state = Monster.State.Move;
     }
-    public void MonsterSkillState()
+    public void SkillState()
     {
         monster.state = Monster.State.Skill;
     }

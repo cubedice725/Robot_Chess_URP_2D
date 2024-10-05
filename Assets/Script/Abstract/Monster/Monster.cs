@@ -1,9 +1,10 @@
 using UnityEngine;
 
-public abstract class Monster : MonoBehaviour
+public class Monster : MonoBehaviour
 {
     // 몬스터의 행동이 끝날 경우 True로 바꿔야함
     public bool flag = false;
+    public int Num { get; set; }
     public virtual int AttackDistance { get; set; } = 1;
     public virtual int MovingDistance { get; set; } = 1;
     public enum State
@@ -22,7 +23,7 @@ public abstract class Monster : MonoBehaviour
     public virtual void Awake()
     {
         monsterMovement = GetComponent<MonsterMovement>();
-        monsterStateMachine = new MonsterStateMachine();
+        monsterStateMachine = new MonsterStateMachine(this);
     }
     public void Update()
     {
@@ -45,5 +46,5 @@ public abstract class Monster : MonoBehaviour
         monsterStateMachine.MonsterStateMachineUpdate();
         
     }
-    public abstract void UpdateMonster();
+    public virtual void UpdateMonster() { }
 }

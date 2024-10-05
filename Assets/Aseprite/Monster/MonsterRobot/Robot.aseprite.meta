@@ -90,7 +90,7 @@ ScriptedImporter:
     importHiddenLayers: 0
     layerImportMode: 1
     defaultPivotSpace: 0
-    defaultPivotAlignment: 7
+    defaultPivotAlignment: 0
     customPivotPosition: {x: 0.5, y: 0.5}
     mosaicPadding: 4
     spritePadding: 0
@@ -103,7 +103,7 @@ ScriptedImporter:
     importHiddenLayers: 0
     layerImportMode: 1
     defaultPivotSpace: 0
-    defaultPivotAlignment: 7
+    defaultPivotAlignment: 0
     customPivotPosition: {x: 0.5, y: 0.5}
     mosaicPadding: 4
     spritePadding: 0
@@ -112,7 +112,7 @@ ScriptedImporter:
     addSortingGroup: 1
     addShadowCasters: 0
   importFileNodeState: 1
-  platformSettingsDirtyTick: 638633979068582383
+  platformSettingsDirtyTick: 638637413770498882
   textureAssetName: 
   singleSpriteImportData:
   - name: 
@@ -138,7 +138,7 @@ ScriptedImporter:
   animatedSpriteImportData:
   - name: Robot_Frame_0
     originalName: 
-    pivot: {x: 0.4615385, y: 0}
+    pivot: {x: 0.4615385, y: 0.7619048}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -158,7 +158,7 @@ ScriptedImporter:
     uvTransform: {x: 4, y: 124}
   - name: Robot_Frame_1
     originalName: 
-    pivot: {x: 0.4615385, y: 0}
+    pivot: {x: 0.4615385, y: 0.7619048}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -178,7 +178,7 @@ ScriptedImporter:
     uvTransform: {x: 4, y: 153}
   - name: Robot_Frame_2
     originalName: 
-    pivot: {x: 0.4615385, y: 0}
+    pivot: {x: 0.4615385, y: 0.7619048}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -198,7 +198,7 @@ ScriptedImporter:
     uvTransform: {x: 4, y: 182}
   - name: Robot_Frame_3
     originalName: 
-    pivot: {x: 0.4615385, y: 0}
+    pivot: {x: 0.4615385, y: 0.7619048}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -218,7 +218,7 @@ ScriptedImporter:
     uvTransform: {x: 4, y: 211}
   - name: Robot_Frame_4
     originalName: 
-    pivot: {x: 0.4615385, y: 0}
+    pivot: {x: 0.4615385, y: 0.8}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -238,7 +238,7 @@ ScriptedImporter:
     uvTransform: {x: 25, y: 178}
   - name: Robot_Frame_5
     originalName: 
-    pivot: {x: 0.4615385, y: 0}
+    pivot: {x: 0.4615385, y: 0.8}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -258,7 +258,7 @@ ScriptedImporter:
     uvTransform: {x: 25, y: 206}
   - name: Robot_Frame_6
     originalName: 
-    pivot: {x: 0.4615385, y: 0}
+    pivot: {x: 0.4615385, y: 0.8}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -278,7 +278,7 @@ ScriptedImporter:
     uvTransform: {x: 46, y: 4}
   - name: Robot_Frame_7
     originalName: 
-    pivot: {x: 0.4615385, y: 0}
+    pivot: {x: 0.4615385, y: 0.8}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -298,7 +298,7 @@ ScriptedImporter:
     uvTransform: {x: 46, y: 32}
   - name: Robot_Frame_8
     originalName: 
-    pivot: {x: 0.4615385, y: 0}
+    pivot: {x: 0.4615385, y: 0.72727275}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -318,7 +318,7 @@ ScriptedImporter:
     uvTransform: {x: 4, y: 4}
   - name: Robot_Frame_9
     originalName: 
-    pivot: {x: 0.4615385, y: 0}
+    pivot: {x: 0.4615385, y: 0.72727275}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -338,7 +338,7 @@ ScriptedImporter:
     uvTransform: {x: 4, y: 34}
   - name: Robot_Frame_10
     originalName: 
-    pivot: {x: 0.4615385, y: 0}
+    pivot: {x: 0.4615385, y: 0.7619048}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -358,7 +358,7 @@ ScriptedImporter:
     uvTransform: {x: 25, y: 4}
   - name: Robot_Frame_11
     originalName: 
-    pivot: {x: 0.4615385, y: 0}
+    pivot: {x: 0.4615385, y: 0.7619048}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -378,7 +378,7 @@ ScriptedImporter:
     uvTransform: {x: 25, y: 33}
   - name: Robot_Frame_12
     originalName: 
-    pivot: {x: 0.4615385, y: 0}
+    pivot: {x: 0.4615385, y: 0.72727275}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -398,7 +398,7 @@ ScriptedImporter:
     uvTransform: {x: 4, y: 64}
   - name: Robot_Frame_13
     originalName: 
-    pivot: {x: 0.4615385, y: 0}
+    pivot: {x: 0.4615385, y: 0.72727275}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -418,7 +418,7 @@ ScriptedImporter:
     uvTransform: {x: 4, y: 94}
   - name: Robot_Frame_14
     originalName: 
-    pivot: {x: 0.4615385, y: 0}
+    pivot: {x: 0.4615385, y: 0.7619048}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -438,7 +438,7 @@ ScriptedImporter:
     uvTransform: {x: 25, y: 62}
   - name: Robot_Frame_15
     originalName: 
-    pivot: {x: 0.4615385, y: 0}
+    pivot: {x: 0.4615385, y: 0.7619048}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -458,7 +458,7 @@ ScriptedImporter:
     uvTransform: {x: 25, y: 91}
   - name: Robot_Frame_16
     originalName: 
-    pivot: {x: 0.4615385, y: 0}
+    pivot: {x: 0.4615385, y: 0.7619048}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -478,7 +478,7 @@ ScriptedImporter:
     uvTransform: {x: 25, y: 120}
   - name: Robot_Frame_17
     originalName: 
-    pivot: {x: 0.4615385, y: 0}
+    pivot: {x: 0.4615385, y: 0.7619048}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -498,7 +498,7 @@ ScriptedImporter:
     uvTransform: {x: 25, y: 149}
   - name: Robot_Frame_18
     originalName: 
-    pivot: {x: 0.4615385, y: 0}
+    pivot: {x: 0.4615385, y: 0.8}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -518,7 +518,7 @@ ScriptedImporter:
     uvTransform: {x: 46, y: 60}
   - name: Robot_Frame_19
     originalName: 
-    pivot: {x: 0.4615385, y: 0}
+    pivot: {x: 0.4615385, y: 0.8}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -538,7 +538,7 @@ ScriptedImporter:
     uvTransform: {x: 46, y: 88}
   - name: Robot_Frame_20
     originalName: 
-    pivot: {x: 0.4615385, y: 0}
+    pivot: {x: 0.4615385, y: 0.84210527}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -558,7 +558,7 @@ ScriptedImporter:
     uvTransform: {x: 46, y: 116}
   - name: Robot_Frame_21
     originalName: 
-    pivot: {x: 0.4615385, y: 0}
+    pivot: {x: 0.4615385, y: 0.84210527}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -578,7 +578,7 @@ ScriptedImporter:
     uvTransform: {x: 46, y: 143}
   - name: Robot_Frame_22
     originalName: 
-    pivot: {x: 0.4615385, y: 0}
+    pivot: {x: 0.4615385, y: 0.84210527}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -598,7 +598,7 @@ ScriptedImporter:
     uvTransform: {x: 46, y: 170}
   - name: Robot_Frame_23
     originalName: 
-    pivot: {x: 0.4615385, y: 0}
+    pivot: {x: 0.4615385, y: 0.84210527}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -618,7 +618,7 @@ ScriptedImporter:
     uvTransform: {x: 46, y: 197}
   - name: Robot_Frame_24
     originalName: 
-    pivot: {x: 0.4615385, y: 0}
+    pivot: {x: 0.4615385, y: 0.84210527}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -638,7 +638,7 @@ ScriptedImporter:
     uvTransform: {x: 46, y: 224}
   - name: Robot_Frame_25
     originalName: 
-    pivot: {x: 0.4615385, y: 0}
+    pivot: {x: 0.4615385, y: 0.84210527}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -658,7 +658,7 @@ ScriptedImporter:
     uvTransform: {x: 67, y: 4}
   - name: Robot_Frame_26
     originalName: 
-    pivot: {x: 0.4615385, y: 0}
+    pivot: {x: 0.4615385, y: 0.84210527}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -678,7 +678,7 @@ ScriptedImporter:
     uvTransform: {x: 67, y: 31}
   - name: Robot_Frame_27
     originalName: 
-    pivot: {x: 0.4615385, y: 0}
+    pivot: {x: 0.4615385, y: 0.84210527}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
