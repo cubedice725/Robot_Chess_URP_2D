@@ -57,7 +57,6 @@ public class PlayerMovement : AStar
 
         if (updateMoveStart)
         {
-            Instance.Map2D[playerPosition.x, playerPosition.y] = (int)MapObject.noting;
             PathFinding(
                 playerPosition,
                 new Vector3Int((int)hit.transform.position.x, (int)hit.transform.position.y, 0),
@@ -104,7 +103,6 @@ public class PlayerMovement : AStar
 
         if (Input.GetMouseButtonDown(0))
         {
-            Instance.Map2D[(int)transform.position.x, (int)transform.position.y] = (int)MapObject.noting;
             hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
 
             if (hit.collider != null && hit.collider.gameObject.name == "Player")

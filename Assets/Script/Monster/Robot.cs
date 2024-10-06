@@ -17,9 +17,21 @@ public class Robot : Monster
     
     public override void UpdateMonster()
     {
-        //if (GameManager.Instance.spawnMonsters[Num-1].GetComponent<Monster>().state == ) {
+        if (GameManager.Instance.monsterTurn && start)
+        {
+            if (Num != 0)
+            {
+                Num -= 1;
+            }
+        }
+        if(Num == 0)
+        {
+            
+        }
+        else if ((GameManager.Instance.spawnMonsters[Num].GetComponent<Monster>().state != State.Move) || (GameManager.Instance.spawnMonsters[Num].GetComponent<Monster>().state != State.Skill)) return;
+        
         // 몬스터 턴이되면 한번만 작동
-        if(GameManager.Instance.monsterTurn && start)
+        if (GameManager.Instance.monsterTurn && start)
         {
             if (monsterMovement.AttackNavigation())
             {
@@ -31,6 +43,7 @@ public class Robot : Monster
             }
             start = false;
         }
+
         // 몬스터 턴이 끝나면 한번만 작동
         if (!GameManager.Instance.monsterTurn && !start)
         {

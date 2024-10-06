@@ -123,6 +123,14 @@ public class MonsterMovement : AStar
     {
         monster.state = Monster.State.Skill;
     }
+    public void LookPlayerAnimation()
+    {
+        float direction = player.transform.position.x - monsterPosition.x;
+        if (direction != 0)
+        {
+            spriteRenderer.flipX = direction < 0;
+        }
+    }
     public void RunAnimation(bool run, float direction = 0)
     {
         animator.SetBool("run", run);
