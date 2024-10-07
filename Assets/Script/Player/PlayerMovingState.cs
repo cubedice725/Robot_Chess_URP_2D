@@ -12,12 +12,12 @@ public class PlayerMovingState : IState
     }
     public void Entry()
     {
-        _playerMovement.SetPlayerMovePlane();
+        _playerMovement.SetMovePlane();
     }
     public void IStateUpdate()
     {
         //플레이어 판을 클릭하면
-        if (_playerMovement.UpdatePlayerMovePlaneCheck())
+        if (_playerMovement.UpdateMovePlaneCheck())
         {
             Moveing = true;
         }
@@ -32,7 +32,7 @@ public class PlayerMovingState : IState
     }
     public bool Exit()
     {
-        _playerMovement.RemovePlayerMovePlane();
+        _playerMovement.RemoveMovePlane();
         if (Moveing)
         {
             Moveing = false;

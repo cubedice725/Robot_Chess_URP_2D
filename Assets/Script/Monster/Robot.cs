@@ -33,6 +33,7 @@ public class Robot : Monster
         // 몬스터 턴이되면 한번만 작동
         if (GameManager.Instance.monsterTurn && start)
         {
+            // 사거리 안에 있으면 스킬 아니면 움직임
             if (monsterMovement.AttackNavigation())
             {
                 state = State.Skill;

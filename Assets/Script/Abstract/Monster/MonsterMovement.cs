@@ -34,6 +34,7 @@ public class MonsterMovement : AStar
 
         if(count == 1)
         {
+            // 몬스터 벽취급이기에 자신의 자리를 비운후 자신이 갈 곳을 미리 지정하여 겹치지 않게함
             Instance.Map2D[monsterPosition.x, monsterPosition.y] = (int)MapObject.noting;
             Instance.Map2D[FinalNodeList[monster.MovingDistance].x, FinalNodeList[monster.MovingDistance].y] = (int)MapObject.moster;
         }
@@ -123,6 +124,7 @@ public class MonsterMovement : AStar
     {
         monster.state = Monster.State.Skill;
     }
+    // 가만히 있을때 플레이어를 바라보는 애니메이션
     public void LookPlayerAnimation()
     {
         float direction = player.transform.position.x - monsterPosition.x;
@@ -131,6 +133,7 @@ public class MonsterMovement : AStar
             spriteRenderer.flipX = direction < 0;
         }
     }
+    // 걸어갈때 필요한 애니메이션
     public void RunAnimation(bool run, float direction = 0)
     {
         animator.SetBool("run", run);

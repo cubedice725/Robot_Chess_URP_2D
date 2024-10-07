@@ -14,3 +14,6 @@ public class MyObject : MonoBehaviour
         _ManagedPool.Release(this);
     }
 }
+
+
+

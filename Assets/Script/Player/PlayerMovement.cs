@@ -4,8 +4,8 @@ using static GameManager;
 
 public class PlayerMovement : AStar
 {
-    private List<MyObject> playerMovePlaneList = new List<MyObject>();
-    private MyObjectPool playerMovePlane;
+    private List<MyObject> movePlaneList = new List<MyObject>();
+    private MyObjectPool movePlane;
 
     private List<MyObject> skillSelectionList = new List<MyObject>();
     private MyObjectPool selection;
@@ -32,8 +32,8 @@ public class PlayerMovement : AStar
 
         myObjectlPoolPrefab = Resources.Load("Prefab/MyObjectPool", typeof(GameObject)) as GameObject;
 
-        playerMovePlane = Instantiate(myObjectlPoolPrefab).GetComponent<MyObjectPool>();
-        playerMovePlane.Initialize("Prefab/Player/PlayerMovePlane", 500);
+        movePlane = Instantiate(myObjectlPoolPrefab).GetComponent<MyObjectPool>();
+        movePlane.Initialize("Prefab/Player/movePlane", 500);
 
         selection = Instantiate(myObjectlPoolPrefab).GetComponent<MyObjectPool>();
         selection.Initialize("Prefab/Skill/Selection", 20);
@@ -112,7 +112,7 @@ public class PlayerMovement : AStar
         }
         return false;
     }
-    public bool UpdatePlayerMovePlaneCheck()
+    public bool UpdateMovePlaneCheck()
     {
         if (!Instance.playerTurn) return false;
 
@@ -120,9 +120,9 @@ public class PlayerMovement : AStar
         {
             hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
 
-            if (hit.collider != null && hit.transform.name.StartsWith("PlayerMovePlane"))
+            if (hit.collider != null && hit.transform.name.StartsWith("MovePlane"))
             {
-                RemovePlayerMovePlane();
+                RemoveMovePlane();
                 return true;
             }
         }
@@ -131,7 +131,7 @@ public class PlayerMovement : AStar
     
     // 플레이어 판 관련 함수
     //----------------------------------------------------------
-    public void SetPlayerMovePlane()
+    public void SetMovePlane()
     {
         // 실제 맵이랑 플레이어가 움직이는 임의 탐색 공간의 간격
         Vector3Int interval = new Vector3Int(playerPosition.x - MoveDistance, playerPosition.y - MoveDistance, 0);
@@ -171,24 +171,24 @@ public class PlayerMovement : AStar
                         // 경로 탐색이 잘 되었는지, 이동 거리가 적절한지
                         if (FinalNodeList.Count > 1 && FinalNodeList.Count <= MoveDistance + 1)
                         {
-                            playerMovePlaneList.Add(playerMovePlane.pool.Get());
-                            playerMovePlaneList[playerMovePlaneList.Count - 1].transform.parent = playerPlaneStandard.transform;
-                            playerMovePlaneList[playerMovePlaneList.Count - 1].transform.position = new Vector3(mapAreaX, mapAreaY, 0);
+                            movePlaneList.Add(movePlane.pool.Get());
+                            movePlaneList[movePlaneList.Count - 1].transform.parent = playerPlaneStandard.transform;
+                            movePlaneList[movePlaneList.Count - 1].transform.position = new Vector3(mapAreaX, mapAreaY, 0);
                         }
                     }
                 }
             }
         }
     }
-    public void RemovePlayerMovePlane()
+    public void RemoveMovePlane()
     {
-        if (playerMovePlaneList.Count > 0 && playerMovePlaneList[playerMovePlaneList.Count - 1].gameObject.activeSelf == true)
+        if (movePlaneList.Count > 0 && movePlaneList[movePlaneList.Count - 1].gameObject.activeSelf == true)
         {
-            for (int i = 0; i < playerMovePlaneList.Count; i++)
+            for (int i = 0; i < movePlaneList.Count; i++)
             {
-                if (playerMovePlaneList[i].gameObject.activeSelf == true)
+                if (movePlaneList[i].gameObject.activeSelf == true)
                 {
-                    playerMovePlaneList[i].Destroy();
+                    movePlaneList[i].Destroy();
                 }
             }
         }
