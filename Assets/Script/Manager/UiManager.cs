@@ -7,7 +7,6 @@ public class UiManager : MonoBehaviour
 {
     public void OnClickSkillTest()
     {
-        print("Å¬¸¯");
         if (!Instance.playerTurn) return;
 
         if (Instance.skillState != null)

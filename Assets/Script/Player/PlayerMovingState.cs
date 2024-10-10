@@ -5,7 +5,7 @@ public class PlayerMovingState : IState
 {
     private PlayerMovement _playerMovement;
     private RaycastHit hit;
-    private bool Moveing  = false;  
+    private bool moveUse  = false;  
     public PlayerMovingState(PlayerMovement playerMovement)
     {
         _playerMovement = playerMovement;
@@ -19,9 +19,9 @@ public class PlayerMovingState : IState
         //플레이어 판을 클릭하면
         if (_playerMovement.UpdateMovePlaneCheck())
         {
-            Moveing = true;
+            moveUse = true;
         }
-        if (Moveing) 
+        if (moveUse) 
         {
             if (!_playerMovement.UpdateMove())
             {
@@ -33,9 +33,9 @@ public class PlayerMovingState : IState
     public bool Exit()
     {
         _playerMovement.RemoveMovePlane();
-        if (Moveing)
+        if (moveUse)
         {
-            Moveing = false;
+            moveUse = false;
             return true;
         }
         return false;

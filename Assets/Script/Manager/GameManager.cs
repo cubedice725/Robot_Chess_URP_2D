@@ -100,10 +100,6 @@ public class GameManager : MonoBehaviour
             FromMonsterToPlayer();
         }
 
-        //if(Input.GetMouseButtonDown(1))
-        //{
-        //    monsterTurn = false;
-        //}
         //if (Input.GetMouseButtonDown(0)) // 마우스 왼쪽 버튼 클릭
         //{
         //    RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);

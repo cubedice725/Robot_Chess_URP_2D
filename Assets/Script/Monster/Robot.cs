@@ -5,8 +5,11 @@ using UnityEngine;
 public class Robot : Monster
 {
     public override int MovingDistance { get => movingDistance; set => movingDistance = value; }
-    bool start = true;
+    public override float MoveSpeed { get => moveSpeed; set => moveSpeed = value; }
+    private float moveSpeed = 0.7f;
     private int movingDistance = 1;
+
+    bool start = true;
 
     public override void Awake()
     {

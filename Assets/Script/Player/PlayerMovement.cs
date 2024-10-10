@@ -23,7 +23,7 @@ public class PlayerMovement : AStar
     private int count = 1;
 
     // 이동거리
-    public int MoveDistance { get; set; } = 4;
+    public int MoveDistance { get; set; } = 100;
     // 이동 속도
     public float PlayerMoveSpeed { get; set; } = 1f;
     protected void Awake()
@@ -40,6 +40,7 @@ public class PlayerMovement : AStar
 
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
+
     }
     public void Update()
     {
@@ -120,7 +121,7 @@ public class PlayerMovement : AStar
         {
             hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
 
-            if (hit.collider != null && hit.transform.name.StartsWith("MovePlane"))
+            if (hit.collider != null && hit.collider.transform.name.StartsWith("MovePlane"))
             {
                 RemoveMovePlane();
                 return true;
@@ -196,16 +197,16 @@ public class PlayerMovement : AStar
 
     // 스킬 판 관련 함수
     //----------------------------------------------------------
-    public void SetSkillSelection()
+    public void SetSelection()
     {
         for (int i = 0; i < Instance.spawnMonsters.Count; i++)
         {
             skillSelectionList.Add(selection.pool.Get());
-            skillSelectionList[i].transform.position = Instance.spawnMonsters[i].transform.position;
+            skillSelectionList[i].transform.position = Instance.spawnMonsters[i].transform.position - Vector3.forward;
             skillSelectionList[i].transform.parent = Instance.spawnMonsters[i].transform;
         }
     }
-    public void RemoveSkillSelection()
+    public void RemoveSelection()
     {
         if (skillSelectionList.Count > 0 && skillSelectionList[skillSelectionList.Count - 1].gameObject.activeSelf == true)
         {

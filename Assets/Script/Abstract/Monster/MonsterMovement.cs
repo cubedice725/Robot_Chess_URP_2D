@@ -1,3 +1,4 @@
+using UnityEditor.VisionOS;
 using UnityEngine;
 using static GameManager;
 
@@ -13,7 +14,6 @@ public class MonsterMovement : AStar
     protected bool updateMoveStart = true;
     protected int count = 1;
 
-    public float MoveSpeed { get; set; } = 1f;
     public void Awake()
     {
         monster = GetComponent<Monster>();
@@ -52,7 +52,7 @@ public class MonsterMovement : AStar
             }
 
             // 다음 위치까지 움직임
-            transform.position = Vector2.MoveTowards(transform.position, targetPosition, MoveSpeed * Time.deltaTime);
+            transform.position = Vector2.MoveTowards(transform.position, targetPosition, monster.MoveSpeed * Time.deltaTime);
             float distance = Vector2.Distance(transform.position, targetPosition);
             // 노드의 거리가 0.01 아래이면 도착이라 판단
             if (distance > 0.01f)
@@ -60,7 +60,7 @@ public class MonsterMovement : AStar
                 // 애니메이션
                 RunAnimation(true, targetPosition.x - transform.position.x);
                 // 캐릭터를 이동
-                transform.position = Vector2.MoveTowards(transform.position, targetPosition, MoveSpeed * Time.deltaTime);
+                transform.position = Vector2.MoveTowards(transform.position, targetPosition, monster.MoveSpeed * Time.deltaTime);
                 return true;
             }
             else
@@ -141,5 +141,14 @@ public class MonsterMovement : AStar
         {
             spriteRenderer.flipX = direction < 0;
         }
+    }
+    public void Die()
+    {
+        if (monster.state == Monster.State.Move)
+        {
+            Instance.Map2D[FinalNodeList[monster.MovingDistance].x, FinalNodeList[monster.MovingDistance].y] = (int)MapObject.noting;
+        }
+
+        animator.SetTrigger("die");
     }
 }
