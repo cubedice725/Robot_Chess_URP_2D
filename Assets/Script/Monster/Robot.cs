@@ -4,8 +4,10 @@ using UnityEngine;
 [RequireComponent(typeof(RobotSkillCastingState))]
 public class Robot : Monster
 {
-    public override int MovingDistance { get; set; } = 1;
+    public override int MovingDistance { get => movingDistance; set => movingDistance = value; }
     bool start = true;
+    private int movingDistance = 1;
+
     public override void Awake()
     {
         base.Awake();

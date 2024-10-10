@@ -36,7 +36,7 @@ public class PlayerMovement : AStar
         movePlane.Initialize("Prefab/Player/movePlane", 500);
 
         selection = Instantiate(myObjectlPoolPrefab).GetComponent<MyObjectPool>();
-        selection.Initialize("Prefab/Skill/Selection", 20);
+        selection.Initialize("Prefab/Selection", 20);
 
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();

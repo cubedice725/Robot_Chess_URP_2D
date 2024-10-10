@@ -6,7 +6,6 @@ public class Player : MonoBehaviour
 {
     private PlayerStateMachine playerStateMachine;
     private PlayerMovement playerMovement;
-    public State state = State.Idle;
 
     private void Awake()
     {
@@ -16,6 +15,7 @@ public class Player : MonoBehaviour
     }
     private void Update()
     {
+        FindSkillObject();
         //현재 상태를 통해 동작을 바꿔줌
         if (Instance.playerState == State.Idle) 
         {
@@ -30,5 +30,18 @@ public class Player : MonoBehaviour
             playerStateMachine.TransitionTo(playerStateMachine.playerSkillCastingState);
         }
         playerStateMachine.PlayerStateMachineUpdate();
+    }
+    private void FindSkillObject()
+    {
+        if (transform.childCount != 0)
+        {
+            Instance.skillState = transform.GetChild(0).GetComponent<IState>();
+            TransitionTo(Instance.skillState);
+        }
+    }
+    public void TransitionTo(IState nextState)
+    {
+        if (nextState == Instance.skillState) return;
+        Instance.skillState = nextState;
     }
 }
