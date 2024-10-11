@@ -13,17 +13,17 @@ public class PlayerMovement : AStar
     private GameObject myObjectlPoolPrefab;
     private GameObject playerPlaneStandard;
     private Animator animator;
-    private SpriteRenderer spriteRenderer;
 
     private RaycastHit2D hit;
     private Vector3Int playerPosition;
     private Vector2 targetPosition;
 
     private bool updateMoveStart = true;
+    private float xAxis = 0;
     private int count = 1;
 
     // 이동거리
-    public int MoveDistance { get; set; } = 100;
+    public int MoveDistance { get; set; } = 4;
     // 이동 속도
     public float PlayerMoveSpeed { get; set; } = 1f;
     protected void Awake()
@@ -38,7 +38,6 @@ public class PlayerMovement : AStar
         selection = Instantiate(myObjectlPoolPrefab).GetComponent<MyObjectPool>();
         selection.Initialize("Prefab/Selection", 20);
 
-        spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
 
     }
@@ -223,12 +222,45 @@ public class PlayerMovement : AStar
 
     // 애니메이션 관련 함수
     //----------------------------------------------------------
+    
+    public void LookMonsterAnimation(float target)
+    {
+        float direction = target - transform.position.x;
+
+        if (direction == 0) return;
+        if (xAxis == Mathf.Sign(direction)) return;
+
+        xAxis = Mathf.Sign(direction);
+
+        if (Mathf.Sign(direction) < 0)
+        {
+            // 왼쪽 방향
+            transform.localScale = new Vector3(-Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+        }
+        else
+        {
+            // 오른쪽 방향
+            transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+        }
+    }
+
     public void RunAnimation(bool run, float direction = 0)
     {
         animator.SetBool("run", run);
-        if(direction != 0)
+        if (direction == 0) return;
+        if (xAxis == Mathf.Sign(direction)) return;
+
+        xAxis = Mathf.Sign(direction);
+
+        if (Mathf.Sign(direction) < 0)
         {
-            spriteRenderer.flipX = direction < 0;
+            // 왼쪽 방향
+            transform.localScale = new Vector3(-Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+        }
+        else
+        {
+            // 오른쪽 방향
+            transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
         }
     }
     // 상태변환 관련 함수

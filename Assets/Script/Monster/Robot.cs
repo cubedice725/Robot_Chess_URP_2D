@@ -22,21 +22,8 @@ public class Robot : Monster
     
     public override void UpdateMonster()
     {
-        if (GameManager.Instance.monsterTurn && start)
-        {
-            if (Num != 0)
-            {
-                Num -= 1;
-            }
-        }
-        if(Num == 0)
-        {
-            
-        }
-        else if ((GameManager.Instance.spawnMonsters[Num].GetComponent<Monster>().state != State.Move) || (GameManager.Instance.spawnMonsters[Num].GetComponent<Monster>().state != State.Skill)) return;
-        
-        // 몬스터 턴이되면 한번만 작동
-        if (GameManager.Instance.monsterTurn && start)
+        // 몬스터 턴이되면 한번만 작동, Authority를 통해 권한이 있을경우 움직임
+        if (GameManager.Instance.monsterTurn && start && GameManager.Instance.spawnMonsters[Num].GetComponent<Monster>().Authority)
         {
             // 사거리 안에 있으면 스킬 아니면 움직임
             if (monsterMovement.AttackNavigation())

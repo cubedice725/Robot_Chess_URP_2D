@@ -209,18 +209,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: AK47
       objectReference: {fileID: 0}
-    - target: {fileID: 4485617230055009970, guid: 06f8eda798c787348b61abbaeeae8b4f, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.019
-      objectReference: {fileID: 0}
-    - target: {fileID: 4660355824429093838, guid: 06f8eda798c787348b61abbaeeae8b4f, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.09999999
-      objectReference: {fileID: 0}
-    - target: {fileID: 4660355824429093838, guid: 06f8eda798c787348b61abbaeeae8b4f, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.09999999
-      objectReference: {fileID: 0}
     - target: {fileID: 4660355824429093838, guid: 06f8eda798c787348b61abbaeeae8b4f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.08371424

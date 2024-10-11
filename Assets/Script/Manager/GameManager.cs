@@ -18,19 +18,28 @@ public class GameManager : MonoBehaviour
         player,
         moster
     }
+
+    public List<GameObject> spawnMonsters = new List<GameObject>();
+    private Stage1 stage1;
+
+    public State playerState = State.Idle;
+    public IState skillState;
+
+    private int monsterFlagCount = 0;
+    private int monsterAuthorityCount = 0;
+
+    public bool monsterTurn = false;
+    public bool playerTurn = true;
+    public bool changePlayerTurn = false;
+    public bool changeMonsterTurn = false;
+
+
     public int MapSizeX { get; set; } = 11;
     public int MapSizeY { get; set; } = 15;
     public int[,] Map2D { get; set; }
 
-    public List<GameObject> spawnMonsters = new List<GameObject>();
-    private int count = 0;
-    public bool monsterTurn = false;
-    public bool playerTurn = true;
-    public IState skillState;
-    public State playerState = State.Idle;
-
-    private Stage1 stage1;
-
+    // 필드에 오브젝트 존재여부 확인
+    public bool MyObjectActivate { get; set; } = false;
     public static GameManager Instance
     {
         get
@@ -78,19 +87,32 @@ public class GameManager : MonoBehaviour
     {
         if (spawnMonsters.Count > 0)
         {
-            if (spawnMonsters[count].GetComponent<Monster>().flag)
+            if (!spawnMonsters[monsterAuthorityCount].GetComponent<Monster>().Authority)
             {
-                if (count < spawnMonsters.Count - 1)
+                if (monsterAuthorityCount < spawnMonsters.Count - 1)
                 {
-                    count++;
+                    monsterAuthorityCount++;
+                    spawnMonsters[monsterAuthorityCount].GetComponent<Monster>().Authority = true;
                 }
                 else
                 {
-                    for (count = 0; count < spawnMonsters.Count; count++)
+                    spawnMonsters[0].GetComponent<Monster>().Authority = true;
+                    monsterAuthorityCount = 0;
+                }
+            }
+            if (spawnMonsters[monsterFlagCount].GetComponent<Monster>().Flag)
+            {
+                if (monsterFlagCount < spawnMonsters.Count - 1)
+                {
+                    monsterFlagCount++;
+                }
+                else
+                {
+                    for (monsterFlagCount = 0; monsterFlagCount < spawnMonsters.Count; monsterFlagCount++)
                     {
-                        spawnMonsters[count].GetComponent<Monster>().flag = false;
+                        spawnMonsters[monsterFlagCount].GetComponent<Monster>().Flag = false;
                     }
-                    count = 0;
+                    monsterFlagCount = 0;
                     FromMonsterToPlayer();
                 }
             }
@@ -99,7 +121,24 @@ public class GameManager : MonoBehaviour
         {
             FromMonsterToPlayer();
         }
-
+        if (changePlayerTurn)
+        {
+            if (!MyObjectActivate)
+            {
+                changePlayerTurn = false;
+                monsterTurn = true;
+                playerTurn = false;
+            }
+        }
+        if (changeMonsterTurn)
+        {
+            if (!MyObjectActivate)
+            {
+                changeMonsterTurn = false;
+                monsterTurn = false;
+                playerTurn = true;
+            }
+        }
         //if (Input.GetMouseButtonDown(0)) // 마우스 왼쪽 버튼 클릭
         //{
         //    RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
@@ -111,13 +150,11 @@ public class GameManager : MonoBehaviour
     }
     public void FromPlayerToMonster()
     {
-        Instance.monsterTurn = true;
-        Instance.playerTurn = false;
+        changePlayerTurn = true;
     }
     public void FromMonsterToPlayer()
     {
-        monsterTurn = false;
-        playerTurn = true;
+        changeMonsterTurn = true;
     }
 }
 

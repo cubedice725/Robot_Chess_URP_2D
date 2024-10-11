@@ -6,11 +6,12 @@ public class MonsterMovement : AStar
 {
     protected Animator animator;
     protected Monster monster;
-    protected SpriteRenderer spriteRenderer;
     protected Player player;
+
     protected Vector3Int monsterPosition;
     protected Vector2 targetPosition;
 
+    private float xAxis = 0;
     protected bool updateMoveStart = true;
     protected int count = 1;
 
@@ -19,7 +20,6 @@ public class MonsterMovement : AStar
         monster = GetComponent<Monster>();
         player = FindObjectOfType<Player>();
         animator = GetComponent<Animator>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
     }
     public void Update()
     {
@@ -37,6 +37,7 @@ public class MonsterMovement : AStar
             // 몬스터 벽취급이기에 자신의 자리를 비운후 자신이 갈 곳을 미리 지정하여 겹치지 않게함
             Instance.Map2D[monsterPosition.x, monsterPosition.y] = (int)MapObject.noting;
             Instance.Map2D[FinalNodeList[monster.MovingDistance].x, FinalNodeList[monster.MovingDistance].y] = (int)MapObject.moster;
+            monster.Authority = false;
         }
 
         // MovingDistance을 통해 행동을 제약
@@ -128,18 +129,41 @@ public class MonsterMovement : AStar
     public void LookPlayerAnimation()
     {
         float direction = player.transform.position.x - monsterPosition.x;
-        if (direction != 0)
+
+        if (direction == 0) return;
+        if (xAxis == Mathf.Sign(direction)) return;
+
+        xAxis = Mathf.Sign(direction);
+
+        if (Mathf.Sign(direction) < 0)
         {
-            spriteRenderer.flipX = direction < 0;
+            // 왼쪽 방향
+            transform.localScale = new Vector3(-Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+        }
+        else
+        {
+            // 오른쪽 방향
+            transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
         }
     }
     // 걸어갈때 필요한 애니메이션
     public void RunAnimation(bool run, float direction = 0)
     {
         animator.SetBool("run", run);
-        if (direction != 0)
+        if (direction == 0) return;
+        if (xAxis == Mathf.Sign(direction)) return;
+
+        xAxis = Mathf.Sign(direction);
+
+        if (Mathf.Sign(direction) < 0)
         {
-            spriteRenderer.flipX = direction < 0;
+            // 왼쪽 방향
+            transform.localScale = new Vector3(-Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+        }
+        else
+        {
+            // 오른쪽 방향
+            transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
         }
     }
     public void Die()

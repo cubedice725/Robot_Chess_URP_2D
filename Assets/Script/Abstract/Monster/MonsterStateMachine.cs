@@ -17,7 +17,7 @@ public class MonsterStateMachine
             return;
         if (CurrentState.Exit())
         {
-            _monster.flag = true;
+            _monster.Flag = true;
         }
         CurrentState = nextState;
         nextState.Entry();

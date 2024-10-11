@@ -36,53 +36,46 @@ public class PlayerCamera : MonoBehaviour
     {
         Vector3 mousePosition = Input.mousePosition;
 
-        // 카메라 왼쪽으로 천천히
+        // 좌측
         if (mousePosition.x <= 0)
         {
             CamFollowNull();
             cam.transform.Translate(-Time.deltaTime * mouseSpeed, 0, 0);
         }
-        // 카메라 왼쪽으로 빨리
-        else if (mousePosition.x <= 100)
+        else if (mousePosition.x <= 50)
         {
             CamFollowNull();
             cam.transform.Translate(-Time.deltaTime * mouseSpeed / 10, 0, 0);
         }
-
-        // 카메라 오른쪽으로 천천히
+        //우측
         else if (mousePosition.x >= Screen.width - 1)
         {
             CamFollowNull();
             cam.transform.Translate(Time.deltaTime * mouseSpeed, 0, 0);
         }
-        // 카메라 오른쪽으로 빨리
-        else if (mousePosition.x >= Screen.width - 100)
+        else if (mousePosition.x >= Screen.width - 50)
         {
             CamFollowNull();
             cam.transform.Translate(Time.deltaTime * mouseSpeed / 10, 0, 0);
         }
-
-        // 카메라 위로 천천히
+        //아래
         if (mousePosition.y <= 0)
         {
             CamFollowNull();
             cam.transform.Translate(0, -Time.deltaTime * mouseSpeed, 0);
         }
-        // 카메라 위로 빨리
-        else if (mousePosition.y <= 100)
+        else if (mousePosition.y <= 50)
         {
             CamFollowNull();
             cam.transform.Translate(0, -Time.deltaTime * mouseSpeed/10, 0);
         }
-
-        // 카메라 아래로 천천히
+        // 위
         else if (mousePosition.y >= Screen.height - 1)
         {
             CamFollowNull();
             cam.transform.Translate(0, Time.deltaTime * mouseSpeed, 0);
         }
-        // 카메라 아래로 빨리
-        else if (mousePosition.y >= Screen.height - 100)
+        else if (mousePosition.y >= Screen.height - 50)
         {
             CamFollowNull();
             cam.transform.Translate(0, Time.deltaTime * mouseSpeed/10, 0);
@@ -102,9 +95,9 @@ public class PlayerCamera : MonoBehaviour
         {
             cam.m_Lens.OrthographicSize = 3;
         }
-        if (cam.m_Lens.OrthographicSize > 6)
+        if (cam.m_Lens.OrthographicSize > 7)
         {
-            cam.m_Lens.OrthographicSize = 6;
+            cam.m_Lens.OrthographicSize = 7;
         }
     }
 

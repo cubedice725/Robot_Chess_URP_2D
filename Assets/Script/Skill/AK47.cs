@@ -1,6 +1,7 @@
 using Unity.Burst.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class AK47 : MyObjectPool, IState
 {
@@ -27,7 +28,9 @@ public class AK47 : MyObjectPool, IState
             hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
             if (hit.collider != null && hit.collider.transform.name.StartsWith("Selection"))
             {
+                GameManager.Instance.MyObjectActivate = true;
                 playerMovement.RemoveSelection();
+                playerMovement.LookMonsterAnimation(hit.collider.transform.position.x);
                 skillUse = true;
                 start = true;
             }
@@ -41,9 +44,14 @@ public class AK47 : MyObjectPool, IState
             // 타겟 방향 계산
             Vector3 direction = hit.transform.position - transform.position;
             direction.Normalize(); // 방향 벡터 정규화
-
-            // 목표 회전 각도 계산
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+            // 좌측일경우 총을 반대로 돌림
+            if (Mathf.Sign(transform.parent.localScale.x) < 0)
+            {
+                angle  += 180;
+            }
+            
             Quaternion targetRotation = Quaternion.Euler(new Vector3(0, 0, angle));
 
             // 현재 회전 각도와 목표 각도 차이 계산
@@ -57,10 +65,29 @@ public class AK47 : MyObjectPool, IState
             }
             else
             {
+                // 좌측일경우 총알을 원래 방향으로 돌림
+                if (Mathf.Sign(transform.parent.localScale.x) < 0)
+                {
+                    angle += 180;
+                }
+
                 MyObject bullet = pool.Get();
                 bullet.transform.position = transform.GetChild(0).transform.position;
-                bullet.transform.rotation = transform.GetChild(0).transform.rotation;
+                bullet.transform.rotation = Quaternion.Euler(new Vector3(0,0,angle));
                 start = false;
+            }
+        }
+        else if (skillUse)
+        {
+            if (transform.rotation != Quaternion.Euler(new Vector3(0, 0, 0)))
+            {
+                transform.rotation = Quaternion.Slerp(
+                transform.rotation,
+                Quaternion.Euler(new Vector3(0, 0, 0)),
+                rotationSpeed * Time.deltaTime);
+            }
+            else
+            {
                 playerMovement.IdleState();
             }
         }

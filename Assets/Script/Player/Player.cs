@@ -33,6 +33,7 @@ public class Player : MonoBehaviour
     }
     private void FindSkillObject()
     {
+        // 플레이어는 스킬을 사용하기 위해 무언가를 착용했는 의미로 자식 오브젝트가 있는지 확인
         if (transform.childCount != 0)
         {
             Instance.skillState = transform.GetChild(0).GetComponent<IState>();

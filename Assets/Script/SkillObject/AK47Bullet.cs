@@ -21,6 +21,7 @@ public class AK47Bullet : MonoBehaviour
             {
                 collision.gameObject.GetComponent<Monster>().HP -= 1;
             }
+            GameManager.Instance.MyObjectActivate = false;
             MyObject.Destroy();
         }
     }
