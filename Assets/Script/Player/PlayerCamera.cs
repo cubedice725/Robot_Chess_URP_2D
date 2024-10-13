@@ -4,7 +4,6 @@ using UnityEngine;
 public class PlayerCamera : MonoBehaviour
 {
     private CinemachineVirtualCamera cam;
-    private Player player;
 
     private float scrollSpeed = 2000.0f;
     private float mouseSpeed = 100f;
@@ -12,14 +11,13 @@ public class PlayerCamera : MonoBehaviour
     private void Awake()
     {
         cam = GetComponent<CinemachineVirtualCamera>();
-        player = FindObjectOfType<Player>();
     }
     private void Update()
     {
         // 화면 따라가기
         if (Input.GetKeyDown("space"))
         {
-            cam.Follow = player.transform;
+            cam.Follow = GameManager.Instance.player.transform;
         }
     }
     private void LateUpdate()

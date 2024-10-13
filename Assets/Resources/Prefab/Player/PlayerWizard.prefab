@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerWizard
       objectReference: {fileID: 0}
+    - target: {fileID: 3626916397498700004, guid: 270d1676cd76709469a809c4e43fafb1, type: 3}
+      propertyPath: m_SortingOrder
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: 270d1676cd76709469a809c4e43fafb1, type: 3}
       propertyPath: m_LocalScale.x
       value: 3.5

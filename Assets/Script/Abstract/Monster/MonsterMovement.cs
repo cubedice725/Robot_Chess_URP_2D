@@ -6,7 +6,6 @@ public class MonsterMovement : AStar
 {
     protected Animator animator;
     protected Monster monster;
-    protected Player player;
 
     protected Vector3Int monsterPosition;
     protected Vector2 targetPosition;
@@ -18,7 +17,6 @@ public class MonsterMovement : AStar
     public void Awake()
     {
         monster = GetComponent<Monster>();
-        player = FindObjectOfType<Player>();
         animator = GetComponent<Animator>();
     }
     public void Update()
@@ -100,7 +98,7 @@ public class MonsterMovement : AStar
         // 탐색
         PathFinding(
             monsterPosition,
-            new Vector3Int((int)Mathf.Round(player.transform.position.x), (int)Mathf.Round(player.transform.position.y), (int)Mathf.Round(player.transform.position.z)),
+            new Vector3Int((int)Mathf.Round(Instance.player.transform.position.x), (int)Mathf.Round(Instance.player.transform.position.y), (int)Mathf.Round(Instance.player.transform.position.z)),
             Vector3Int.zero,
             new Vector3Int(Instance.MapSizeX, Instance.MapSizeY, 0)
             );
@@ -113,22 +111,11 @@ public class MonsterMovement : AStar
         }
         return false;
     }
-    public void IdleState()
-    {
-        monster.state = Monster.State.Idle;
-    }
-    public void MoveState()
-    {
-        monster.state = Monster.State.Move;
-    }
-    public void SkillState()
-    {
-        monster.state = Monster.State.Skill;
-    }
+
     // 가만히 있을때 플레이어를 바라보는 애니메이션
     public void LookPlayerAnimation()
     {
-        float direction = player.transform.position.x - monsterPosition.x;
+        float direction = Instance.player.transform.position.x - monsterPosition.x;
 
         if (direction == 0) return;
         if (xAxis == Mathf.Sign(direction)) return;
@@ -174,5 +161,17 @@ public class MonsterMovement : AStar
         }
 
         animator.SetTrigger("die");
+    }
+    public void IdleState()
+    {
+        monster.state = Monster.State.Idle;
+    }
+    public void MoveState()
+    {
+        monster.state = Monster.State.Move;
+    }
+    public void SkillState()
+    {
+        monster.state = Monster.State.Skill;
     }
 }

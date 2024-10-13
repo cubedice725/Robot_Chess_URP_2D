@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    private static GameManager _instance;
     public enum State
     { 
         Idle,
@@ -18,8 +17,10 @@ public class GameManager : MonoBehaviour
         player,
         moster
     }
+    private static GameManager _instance;
 
     public List<GameObject> spawnMonsters = new List<GameObject>();
+
     private Stage1 stage1;
 
     public State playerState = State.Idle;
@@ -33,7 +34,8 @@ public class GameManager : MonoBehaviour
     public bool changePlayerTurn = false;
     public bool changeMonsterTurn = false;
 
-
+    public Player player { get; set; }
+    public PoolManager poolManager { get; set; }
     public int MapSizeX { get; set; } = 11;
     public int MapSizeY { get; set; } = 15;
     public int[,] Map2D { get; set; }
@@ -77,6 +79,7 @@ public class GameManager : MonoBehaviour
         {
             Map2D[i / MapSizeY, i % MapSizeY] = (int)MapObject.noting;
         }
+        player = FindObjectOfType<Player>();
         stage1 = GetComponent<Stage1>();
     }
     private void Start()

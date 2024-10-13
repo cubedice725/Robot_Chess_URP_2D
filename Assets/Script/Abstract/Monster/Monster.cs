@@ -35,11 +35,14 @@ public class Monster : MonoBehaviour
 
     public MonsterStateMachine monsterStateMachine;
     public MonsterMovement monsterMovement;
-
+    public BoxCollider2D boxCollider2D;
+    public Rigidbody2D rigi2D;
     public virtual void Awake()
     {
         monsterMovement = GetComponent<MonsterMovement>();
         monsterStateMachine = new MonsterStateMachine(this);
+        boxCollider2D = GetComponent<BoxCollider2D>();
+        rigi2D = GetComponent<Rigidbody2D>();
     }
     public void Update()
     {
@@ -71,6 +74,8 @@ public class Monster : MonoBehaviour
         }
         if (Die)
         {
+            boxCollider2D.enabled = false;
+            rigi2D.simulated = false;
             // 사망하면 spawnMonsters에 남아있기 때문에 권한이랑 플래그는 항상 다음으로 넘길수 있도록함
             Authority = false;
             Flag = true;
