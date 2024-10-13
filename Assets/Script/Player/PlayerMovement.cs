@@ -5,12 +5,8 @@ using static GameManager;
 public class PlayerMovement : AStar
 {
     private List<MyObject> movePlaneList = new List<MyObject>();
-    private MyObjectPool movePlane;
-
     private List<MyObject> skillSelectionList = new List<MyObject>();
-    private MyObjectPool selection;
 
-    private GameObject myObjectlPoolPrefab;
     private GameObject playerPlaneStandard;
     private Animator animator;
 
@@ -29,17 +25,7 @@ public class PlayerMovement : AStar
     protected void Awake()
     {
         playerPlaneStandard = GameObject.Find("PlayerPlaneStandard");
-
-        myObjectlPoolPrefab = Resources.Load("Prefab/MyObjectPool", typeof(GameObject)) as GameObject;
-
-        movePlane = Instantiate(myObjectlPoolPrefab).GetComponent<MyObjectPool>();
-        movePlane.Initialize("Prefab/Player/movePlane", 500);
-
-        selection = Instantiate(myObjectlPoolPrefab).GetComponent<MyObjectPool>();
-        selection.Initialize("Prefab/Selection", 20);
-
         animator = GetComponent<Animator>();
-
     }
     public void Update()
     {
@@ -171,7 +157,7 @@ public class PlayerMovement : AStar
                         // 경로 탐색이 잘 되었는지, 이동 거리가 적절한지
                         if (FinalNodeList.Count > 1 && FinalNodeList.Count <= MoveDistance + 1)
                         {
-                            movePlaneList.Add(movePlane.pool.Get());
+                            movePlaneList.Add(Instance.poolManager.SelectPool(PoolManager.Prefabs.movePlane).Get());
                             movePlaneList[movePlaneList.Count - 1].transform.parent = playerPlaneStandard.transform;
                             movePlaneList[movePlaneList.Count - 1].transform.position = new Vector3(mapAreaX, mapAreaY, 0);
                         }
@@ -200,7 +186,7 @@ public class PlayerMovement : AStar
     {
         for (int i = 0; i < Instance.spawnMonsters.Count; i++)
         {
-            skillSelectionList.Add(selection.pool.Get());
+            skillSelectionList.Add(Instance.poolManager.SelectPool(PoolManager.Prefabs.Selection).Get());
             skillSelectionList[i].transform.position = Instance.spawnMonsters[i].transform.position - Vector3.forward;
             skillSelectionList[i].transform.parent = Instance.spawnMonsters[i].transform;
         }

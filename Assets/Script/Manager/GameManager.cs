@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Unity.Burst.CompilerServices;
+using UnityEditor.EditorTools;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -20,6 +21,8 @@ public class GameManager : MonoBehaviour
     private static GameManager _instance;
 
     public List<GameObject> spawnMonsters = new List<GameObject>();
+    public List<GameObject> deadMonsters = new List<GameObject>();
+
 
     private Stage1 stage1;
 
@@ -80,6 +83,7 @@ public class GameManager : MonoBehaviour
             Map2D[i / MapSizeY, i % MapSizeY] = (int)MapObject.noting;
         }
         player = FindObjectOfType<Player>();
+        poolManager = GetComponent<PoolManager>();
         stage1 = GetComponent<Stage1>();
     }
     private void Start()

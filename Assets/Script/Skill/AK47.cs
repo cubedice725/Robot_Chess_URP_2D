@@ -1,9 +1,6 @@
-using Unity.Burst.CompilerServices;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UIElements;
 
-public class AK47 : MyObjectPool, IState
+public class AK47 : MonoBehaviour, IState
 {
     PlayerMovement playerMovement;
     RaycastHit2D hit;
@@ -14,7 +11,6 @@ public class AK47 : MyObjectPool, IState
     float accuracy = 0.001f;
     private void Awake()
     {
-        Initialize("Prefab/SkillObject/AK47Bullet", 20);
         playerMovement = FindObjectOfType<PlayerMovement>();
     }
     public void Entry()
@@ -71,7 +67,7 @@ public class AK47 : MyObjectPool, IState
                     angle += 180;
                 }
 
-                MyObject bullet = pool.Get();
+                MyObject bullet = GameManager.Instance.poolManager.SelectPool(PoolManager.Prefabs.AK47Bullet).Get();
                 bullet.transform.position = transform.GetChild(0).transform.position;
                 bullet.transform.rotation = Quaternion.Euler(new Vector3(0,0,angle));
                 start = false;
