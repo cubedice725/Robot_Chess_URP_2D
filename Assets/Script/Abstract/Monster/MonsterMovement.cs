@@ -1,3 +1,4 @@
+using System.Threading;
 using UnityEditor.VisionOS;
 using UnityEngine;
 using static GameManager;
@@ -32,10 +33,13 @@ public class MonsterMovement : AStar
 
         if(count == 1)
         {
+            print(Instance.Map2D[monsterPosition.x, monsterPosition.y]);
+
+            print(monsterPosition.x+","+monsterPosition.y);
             // 몬스터 벽취급이기에 자신의 자리를 비운후 자신이 갈 곳을 미리 지정하여 겹치지 않게함
             Instance.Map2D[monsterPosition.x, monsterPosition.y] = (int)MapObject.noting;
             Instance.Map2D[FinalNodeList[monster.MovingDistance].x, FinalNodeList[monster.MovingDistance].y] = (int)MapObject.moster;
-            monster.Authority = false;
+            Authority(false);
         }
 
         // MovingDistance을 통해 행동을 제약
@@ -86,6 +90,7 @@ public class MonsterMovement : AStar
             RunAnimation(false);
             count = 1;
             updateMoveStart = true;
+            LookPlayerAnimation();
             return false;
         }
     }
@@ -173,5 +178,9 @@ public class MonsterMovement : AStar
     public void SkillState()
     {
         monster.state = Monster.State.Skill;
+    }
+    public void Authority(bool value)
+    {
+        monster.Authority = value;
     }
 }

@@ -1,3 +1,4 @@
+using System.Threading;
 using UnityEngine;
 
 public class RobotSkillCastingState : MonoBehaviour, IState
@@ -10,6 +11,7 @@ public class RobotSkillCastingState : MonoBehaviour, IState
     public void Entry()
     {
         print("АјАн");
+        monsterMovement.Authority(false);
         monsterMovement.IdleState();
     }
     public void IStateUpdate()

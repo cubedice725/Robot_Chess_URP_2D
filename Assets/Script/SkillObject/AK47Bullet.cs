@@ -3,7 +3,7 @@ using UnityEngine;
 public class AK47Bullet : MonoBehaviour
 {
     MyObject MyObject;
-    float speed = 50;
+    float speed = 30;
     private void Awake()
     {
         MyObject = GetComponent<MyObject>();

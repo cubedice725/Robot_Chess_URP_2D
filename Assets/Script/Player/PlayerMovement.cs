@@ -5,7 +5,7 @@ using static GameManager;
 public class PlayerMovement : AStar
 {
     private List<MyObject> movePlaneList = new List<MyObject>();
-    private List<MyObject> skillSelectionList = new List<MyObject>();
+    private List<MyObject> selectionList = new List<MyObject>();
 
     private GameObject playerPlaneStandard;
     private Animator animator;
@@ -168,15 +168,11 @@ public class PlayerMovement : AStar
     }
     public void RemoveMovePlane()
     {
-        if (movePlaneList.Count > 0 && movePlaneList[movePlaneList.Count - 1].gameObject.activeSelf == true)
+        // RemoveAt으로 인해 0번째에 값들이 계속 존재함
+        while (movePlaneList.Count > 0)
         {
-            for (int i = 0; i < movePlaneList.Count; i++)
-            {
-                if (movePlaneList[i].gameObject.activeSelf == true)
-                {
-                    movePlaneList[i].Destroy();
-                }
-            }
+            movePlaneList[0].Destroy();
+            movePlaneList.RemoveAt(0);
         }
     }
 
@@ -186,24 +182,18 @@ public class PlayerMovement : AStar
     {
         for (int i = 0; i < Instance.spawnMonsters.Count; i++)
         {
-            skillSelectionList.Add(Instance.poolManager.SelectPool(PoolManager.Prefabs.Selection).Get());
-            skillSelectionList[i].transform.position = Instance.spawnMonsters[i].transform.position - Vector3.forward;
-            skillSelectionList[i].transform.parent = Instance.spawnMonsters[i].transform;
+            selectionList.Add(Instance.poolManager.SelectPool(PoolManager.Prefabs.Selection).Get());
+            selectionList[i].transform.position = Instance.spawnMonsters[i].transform.position;
         }
     }
     public void RemoveSelection()
     {
-        if (skillSelectionList.Count > 0 && skillSelectionList[skillSelectionList.Count - 1].gameObject.activeSelf == true)
+        // RemoveAt으로 인해 0번째에 값들이 계속 존재함
+        while (selectionList.Count > 0)
         {
-            for (int i = 0; i < Instance.spawnMonsters.Count; i++)
-            {
-                if (skillSelectionList[i].gameObject.activeSelf == true)
-                {
-                    skillSelectionList[i].Destroy();
-                }
-            }
+            selectionList[0].Destroy();
+            selectionList.RemoveAt(0);
         }
-
     }
 
     // 애니메이션 관련 함수

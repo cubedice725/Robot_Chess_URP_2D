@@ -13,7 +13,6 @@ public class Monster : MonoBehaviour
     // 어떠한 행동을 하기 위해서는 Authority에 true가 몬스터에게 있어야함
     // 즉 권한을 가지면 몬스터가 움직여도 된다는 의미(스킬도 Authority를 가져야함)
     public bool Authority { get; set; } = false;
-    public int Num { get; set; }
     public virtual int AttackDistance { get; set; } = 1;
     public virtual int MovingDistance { get; set; } = 1;
     public virtual float MoveSpeed { get; set; } = 1f;
@@ -46,20 +45,13 @@ public class Monster : MonoBehaviour
     }
     public void Update()
     {
-        // 사망판정
-        if (HP <= 0 && !Die)
-        {
-            // 가만히 있으면 해당 자리에 몬스터가 맵에 남아있는걸 방지하기 위해 만듦
-            if (state == State.Idle) 
-            {
-                Instance.Map2D[(int)Mathf.Round(transform.position.x), (int)Mathf.Round(transform.position.y)] = (int)MapObject.noting;
-            }
-            // 사망 애니메이션은 반복적으로 true를 받으면 멈춤 그렇기에 사망은 한번만해야함
-            Die = true;
-            // 사망 애니메이션과 나중에 갈 목적지에 있는 몬스터를 맵에서 지움
-            monsterMovement.Die();
-        }
-        //몬스터 턴과 상관없이 움직임
+        // 게임 시스템은 Authority을 통해 Flag로 간다.
+        // 즉 Authority가 True이면 무조건 False가 된후에 Flag가 True가 된다.
+        // Authority, Flag가 둘다 True가 되는경우는 없다.
+        // Die && Authority && Flag의 경우를 만드는 곳은 GameManager이다.
+        if (Die && Authority && Flag) return;
+
+        // 어떠한 경우에 상태 변환이 될지 모르기에 상태 변환을 가장 먼저 해야함
         if (state == State.Idle)
         {
             monsterStateMachine.TransitionTo(monsterIdleState);
@@ -72,18 +64,34 @@ public class Monster : MonoBehaviour
         {
             monsterStateMachine.TransitionTo(monsterSkillCastingState);
         }
-        if (Die)
+        // 사망판정
+        if (HP <= 0 && !Die)
         {
+            // 가만히 있으면 해당 자리에 몬스터가 맵에 남아있는걸 방지하기 위해 만듦
+            if (state == State.Idle) 
+            {
+                Instance.Map2D[(int)Mathf.Round(transform.position.x), (int)Mathf.Round(transform.position.y)] = (int)MapObject.noting;
+            }
             boxCollider2D.enabled = false;
             rigi2D.simulated = false;
-            // 사망하면 spawnMonsters에 남아있기 때문에 권한이랑 플래그는 항상 다음으로 넘길수 있도록함
+
+            // 사망 애니메이션은 반복적으로 true를 받으면 멈춤 그렇기에 사망은 한번만해야함
+            Die = true;
+            // 사망 애니메이션과 나중에 갈 목적지에 있는 몬스터를 맵에서 지움
+            monsterMovement.Die();
+        }
+
+        // 사망 이후 Authority이 들어오면 이를 넘기기위함
+        if (Die && Authority)
+        {
             Authority = false;
             Flag = true;
-            return;
         }
-        // 몬스터 턴인 경우 개발자가 작성하여 몬스터 움직임을 설정
-        UpdateMonster();
 
+        // 몬스터의 상태변환을 만들기 위함
+        UpdateMonster();
+        // 몬스터의 상태 클래스에 연결되어있음
+        // ex(MonsterStateMachine -> MonsterMovingState)
         monsterStateMachine.MonsterStateMachineUpdate();
     }
     public virtual void UpdateMonster() { }

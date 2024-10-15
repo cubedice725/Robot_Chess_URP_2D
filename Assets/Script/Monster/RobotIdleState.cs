@@ -10,7 +10,6 @@ public class RobotIdleState : IState
     }
     public void IStateUpdate()
     {
-        _monsterMovement.LookPlayerAnimation();
     }
     public bool Exit()
     {

@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    // 몬스터는 활동(MovingState, SkillState)이 끝난 구간에 Authority = false로 끝남을 알려야함
     public enum State
     { 
         Idle,
@@ -22,7 +23,6 @@ public class GameManager : MonoBehaviour
 
     public List<GameObject> spawnMonsters = new List<GameObject>();
     public List<GameObject> deadMonsters = new List<GameObject>();
-
 
     private Stage1 stage1;
 
@@ -82,6 +82,7 @@ public class GameManager : MonoBehaviour
         {
             Map2D[i / MapSizeY, i % MapSizeY] = (int)MapObject.noting;
         }
+
         player = FindObjectOfType<Player>();
         poolManager = GetComponent<PoolManager>();
         stage1 = GetComponent<Stage1>();
@@ -92,37 +93,65 @@ public class GameManager : MonoBehaviour
     }
     private void Update()
     {
+        // 스폰된 몬스터가 존재한다면
         if (spawnMonsters.Count > 0)
         {
-            if (!spawnMonsters[monsterAuthorityCount].GetComponent<Monster>().Authority)
+            // 몬스터가 움직이는 권한이 없다면 다음 몬스터가 움직여도 된다고 판단
+            if (!GetSpawnMonsterComponent(monsterAuthorityCount).Authority)
             {
+                // 다음으로 권한을 넘김
                 if (monsterAuthorityCount < spawnMonsters.Count - 1)
                 {
                     monsterAuthorityCount++;
-                    spawnMonsters[monsterAuthorityCount].GetComponent<Monster>().Authority = true;
+                    GetSpawnMonsterComponent(monsterAuthorityCount).Authority = true;
                 }
+                // 움직이는 권한을 스폰된 몬스터에 다 확인이 끝나면
                 else
                 {
-                    spawnMonsters[0].GetComponent<Monster>().Authority = true;
-                    monsterAuthorityCount = 0;
-                }
-            }
-            if (spawnMonsters[monsterFlagCount].GetComponent<Monster>().Flag)
-            {
-                if (monsterFlagCount < spawnMonsters.Count - 1)
-                {
-                    monsterFlagCount++;
-                }
-                else
-                {
-                    for (monsterFlagCount = 0; monsterFlagCount < spawnMonsters.Count; monsterFlagCount++)
+                    //print("권한 전부 넘어감," + monsterAuthorityCount);
+                    // 움직임이 완전히 종료된 몬스터를 확인
+                    if (GetSpawnMonsterComponent(monsterFlagCount).Flag)
                     {
-                        spawnMonsters[monsterFlagCount].GetComponent<Monster>().Flag = false;
+                        // 다음으로 확인
+                        if (monsterFlagCount < spawnMonsters.Count - 1)
+                        {
+                            monsterFlagCount++;
+                        }
+                        else
+                        {
+                            //print("플래그 ALL TRUE," + monsterFlagCount);
+                            // 사망한 몬스터를 확인하고 처리, 역반복문은 Remove로 인해 count의 오차발생을 방지
+                            for (int count = spawnMonsters.Count - 1; count >= 0; count--)
+                            {
+                                if (GetSpawnMonsterComponent(count).Die)
+                                {
+                                    // Monster.cs에 Update()주석을 참고하면 좋다.
+                                    GetSpawnMonsterComponent(count).Authority = true;
+                                    deadMonsters.Add(spawnMonsters[count]);
+                                    spawnMonsters.RemoveAt(count);
+                                    //print("사망처리 완료," + count);
+                                }
+                            }
+                            // 사망한 몬스터를 처리한후 spawnMonsters에는 몬스터가 없을수 있음
+                            if (spawnMonsters.Count > 0)
+                            {
+                                // 사망한 몬스터 Flag 내리기
+                                for (monsterFlagCount = 0; monsterFlagCount < spawnMonsters.Count; monsterFlagCount++)
+                                {
+                                    GetSpawnMonsterComponent(monsterFlagCount).Flag = false;
+                                }
+                                GetSpawnMonsterComponent(0).Authority = true;
+                            }
+                            
+                            monsterFlagCount = 0;
+                            monsterAuthorityCount = 0;
+                            FromMonsterToPlayer();
+                        }
                     }
-                    monsterFlagCount = 0;
-                    FromMonsterToPlayer();
+                    
                 }
             }
+            
         }
         else if (spawnMonsters.Count == 0)
         {
@@ -154,6 +183,10 @@ public class GameManager : MonoBehaviour
         //        Debug.Log("클릭한 오브젝트 이름: " + hit.collider.gameObject.name);
         //    }
         //}
+    }
+    public Monster GetSpawnMonsterComponent(int index)
+    {
+        return spawnMonsters[index].GetComponent<Monster>();
     }
     public void FromPlayerToMonster()
     {
