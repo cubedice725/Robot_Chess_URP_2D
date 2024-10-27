@@ -36,8 +36,6 @@ public class PlayerMovement : AStar
     //----------------------------------------------------------
     public bool UpdateMove()
     {
-        if (FinalNodeList.Count == 0)
-            return false;
 
         // 반올림을 하지 않으면 움직이고 난 후 x좌표가 1.999일때 타입케스트는 1이 된다.
 

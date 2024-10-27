@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using Unity.Burst.CompilerServices;
 using UnityEditor.EditorTools;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class GameManager : MonoBehaviour
 {
@@ -42,6 +44,9 @@ public class GameManager : MonoBehaviour
     public int MapSizeX { get; set; } = 11;
     public int MapSizeY { get; set; } = 15;
     public int[,] Map2D { get; set; }
+
+    public float[] monsterDistances;
+
 
     // 필드에 오브젝트 존재여부 확인
     public bool MyObjectActivate { get; set; } = false;
@@ -90,27 +95,29 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         stage1.Opening();
+        monsterDistances = new float[spawnMonsters.Count];
+
     }
     private void Update()
     {
         // 스폰된 몬스터가 존재한다면
-        if (spawnMonsters.Count > 0)
+        if (spawnMonsters.Count > 0 && monsterTurn)
         {
             // 몬스터가 움직이는 권한이 없다면 다음 몬스터가 움직여도 된다고 판단
-            if (!GetSpawnMonsterComponent(monsterAuthorityCount).Authority)
+            if (!spawnMonsters[monsterAuthorityCount].GetComponent<Monster>().Authority)
             {
                 // 다음으로 권한을 넘김
                 if (monsterAuthorityCount < spawnMonsters.Count - 1)
                 {
                     monsterAuthorityCount++;
-                    GetSpawnMonsterComponent(monsterAuthorityCount).Authority = true;
+                    spawnMonsters[monsterAuthorityCount].GetComponent<Monster>().Authority = true;
                 }
                 // 움직이는 권한을 스폰된 몬스터에 다 확인이 끝나면
                 else
                 {
                     //print("권한 전부 넘어감," + monsterAuthorityCount);
                     // 움직임이 완전히 종료된 몬스터를 확인
-                    if (GetSpawnMonsterComponent(monsterFlagCount).Flag)
+                    if (spawnMonsters[monsterFlagCount].GetComponent<Monster>().Flag)
                     {
                         // 다음으로 확인
                         if (monsterFlagCount < spawnMonsters.Count - 1)
@@ -123,10 +130,10 @@ public class GameManager : MonoBehaviour
                             // 사망한 몬스터를 확인하고 처리, 역반복문은 Remove로 인해 count의 오차발생을 방지
                             for (int count = spawnMonsters.Count - 1; count >= 0; count--)
                             {
-                                if (GetSpawnMonsterComponent(count).Die)
+                                if (spawnMonsters[count].GetComponent<Monster>().Die)
                                 {
                                     // Monster.cs에 Update()주석을 참고하면 좋다.
-                                    GetSpawnMonsterComponent(count).Authority = true;
+                                    spawnMonsters[count].GetComponent<Monster>().Authority = true;
                                     deadMonsters.Add(spawnMonsters[count]);
                                     spawnMonsters.RemoveAt(count);
                                     //print("사망처리 완료," + count);
@@ -138,9 +145,8 @@ public class GameManager : MonoBehaviour
                                 // 사망한 몬스터 Flag 내리기
                                 for (monsterFlagCount = 0; monsterFlagCount < spawnMonsters.Count; monsterFlagCount++)
                                 {
-                                    GetSpawnMonsterComponent(monsterFlagCount).Flag = false;
+                                    spawnMonsters[monsterFlagCount].GetComponent<Monster>().Flag = false;
                                 }
-                                GetSpawnMonsterComponent(0).Authority = true;
                             }
                             
                             monsterFlagCount = 0;
@@ -161,6 +167,13 @@ public class GameManager : MonoBehaviour
         {
             if (!MyObjectActivate)
             {
+                for (int index = 0; index < spawnMonsters.Count; index++)
+                {
+                    monsterDistances[index] = Vector2.Distance(player.transform.position, spawnMonsters[index].transform.position);
+                }
+                InsertionSort();
+                spawnMonsters[0].GetComponent<Monster>().Authority = true;
+
                 changePlayerTurn = false;
                 monsterTurn = true;
                 playerTurn = false;
@@ -184,9 +197,31 @@ public class GameManager : MonoBehaviour
         //    }
         //}
     }
-    public Monster GetSpawnMonsterComponent(int index)
+    public void InsertionSort()
     {
-        return spawnMonsters[index].GetComponent<Monster>();
+        int j = 0;
+        float key = 0;
+        GameObject gameObject = null;
+        for (int i = 1; i < spawnMonsters.Count; i++)
+        {
+            key = monsterDistances[i];
+            gameObject = spawnMonsters[i];
+            for (j = i - 1; j >= 0; j--)
+            {
+                if (monsterDistances[j] > key)
+                {
+                    monsterDistances[j + 1] = monsterDistances[j];
+                    spawnMonsters[j + 1] = spawnMonsters[j];
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            monsterDistances[j + 1] = key;
+            spawnMonsters[j + 1] = gameObject;
+        }
     }
     public void FromPlayerToMonster()
     {

@@ -29,13 +29,13 @@ public class MonsterMovement : AStar
     {
         // 길을 못찾는 경우
         if (FinalNodeList.Count == 0)
-            return false;
-
-        if(count == 1)
         {
-            print(Instance.Map2D[monsterPosition.x, monsterPosition.y]);
+            Authority(false);
+            return false;
+        }
 
-            print(monsterPosition.x+","+monsterPosition.y);
+        if (count == 1)
+        {
             // 몬스터 벽취급이기에 자신의 자리를 비운후 자신이 갈 곳을 미리 지정하여 겹치지 않게함
             Instance.Map2D[monsterPosition.x, monsterPosition.y] = (int)MapObject.noting;
             Instance.Map2D[FinalNodeList[monster.MovingDistance].x, FinalNodeList[monster.MovingDistance].y] = (int)MapObject.moster;
@@ -109,6 +109,12 @@ public class MonsterMovement : AStar
             );
 
         Instance.Map2D[monsterPosition.x, monsterPosition.y] = (int)MapObject.moster;
+
+        if (FinalNodeList.Count == 0)
+        {
+            return false;
+        }
+
         // 사거리 안에 있는지 확인
         if (FinalNodeList.Count < monster.AttackDistance + 3 && FinalNodeList.Count != 0)
         {

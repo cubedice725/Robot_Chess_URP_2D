@@ -15,7 +15,6 @@ public class Stage1 : MonoBehaviour
     {
         GameObject MonsterObject = Instantiate(monster, new Vector3(1, 13, 0), Quaternion.Euler(Vector3.zero));
         GameManager.Instance.spawnMonsters.Add(MonsterObject);
-        MonsterObject.GetComponent<Monster>().Authority = true;
 
         MonsterObject = Instantiate(monster, new Vector3(2, 13, 0), Quaternion.Euler(Vector3.zero));
         GameManager.Instance.spawnMonsters.Add(MonsterObject);
