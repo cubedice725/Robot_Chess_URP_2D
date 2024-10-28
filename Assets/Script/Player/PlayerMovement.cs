@@ -247,7 +247,7 @@ public class PlayerMovement : AStar
     {
         Instance.playerState = State.Move;
     }
-    public void SkillState()
+    public void MainSkillState()
     {
         Instance.playerState = State.Skill;
     }
