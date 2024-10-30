@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Reflection;
 using Unity.Burst.CompilerServices;
 using UnityEditor.EditorTools;
 using UnityEngine;
@@ -25,8 +27,7 @@ public class GameManager : MonoBehaviour
 
     public List<GameObject> spawnMonsters = new List<GameObject>();
     public List<GameObject> deadMonsters = new List<GameObject>();
-
-    private Stage1 stage1;
+    public List<float> monsterDistances = new List<float>();
 
     public State playerState = State.Idle;
     public IState skillState;
@@ -41,11 +42,9 @@ public class GameManager : MonoBehaviour
 
     public Player player { get; set; }
     public PoolManager poolManager { get; set; }
-    public int MapSizeX { get; set; } = 11;
-    public int MapSizeY { get; set; } = 15;
+    public int MapSizeX { get; set; } = 12;
+    public int MapSizeY { get; set; } = 12;
     public int[,] Map2D { get; set; }
-
-    public float[] monsterDistances;
 
 
     // 필드에 오브젝트 존재여부 확인
@@ -90,14 +89,8 @@ public class GameManager : MonoBehaviour
 
         player = FindObjectOfType<Player>();
         poolManager = GetComponent<PoolManager>();
-        stage1 = GetComponent<Stage1>();
     }
-    private void Start()
-    {
-        stage1.Opening();
-        monsterDistances = new float[spawnMonsters.Count];
-
-    }
+    
     private void Update()
     {
         // 스폰된 몬스터가 존재한다면
@@ -167,9 +160,10 @@ public class GameManager : MonoBehaviour
         {
             if (!MyObjectActivate)
             {
+                monsterDistances = new List<float>();
                 for (int index = 0; index < spawnMonsters.Count; index++)
                 {
-                    monsterDistances[index] = Vector2.Distance(player.transform.position, spawnMonsters[index].transform.position);
+                    monsterDistances.Add(Vector2.Distance(player.transform.position, spawnMonsters[index].transform.position));
                 }
                 InsertionSort();
                 spawnMonsters[0].GetComponent<Monster>().Authority = true;

@@ -38,6 +38,7 @@ public class Monster : MonoBehaviour
     public Rigidbody2D rigi2D;
     public virtual void Awake()
     {
+        Instance.Map2D[(int)Mathf.Round(transform.position.x), (int)Mathf.Round(transform.position.y)] = (int)MapObject.moster;
         monsterMovement = GetComponent<MonsterMovement>();
         monsterStateMachine = new MonsterStateMachine(this);
         boxCollider2D = GetComponent<BoxCollider2D>();

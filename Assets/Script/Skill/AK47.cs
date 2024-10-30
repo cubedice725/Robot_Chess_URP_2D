@@ -43,7 +43,7 @@ public class AK47 : MonoBehaviour, IState
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
             // 좌측일경우 총을 반대로 돌림
-            if (Mathf.Sign(transform.parent.localScale.x) < 0)
+            if (Mathf.Sign(GameManager.Instance.player.transform.localScale.x) < 0)
             {
                 angle  += 180;
             }
@@ -62,7 +62,7 @@ public class AK47 : MonoBehaviour, IState
             else
             {
                 // 좌측일경우 총알을 원래 방향으로 돌림
-                if (Mathf.Sign(transform.parent.localScale.x) < 0)
+                if (Mathf.Sign(GameManager.Instance.player.transform.localScale.x) < 0)
                 {
                     angle += 180;
                 }

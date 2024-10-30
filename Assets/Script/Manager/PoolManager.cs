@@ -8,7 +8,9 @@ public class PoolManager : MonoBehaviour
     {
         movePlane,
         Selection,
-        AK47Bullet
+        AK47Bullet,
+        Point,
+        WallObject
     }
     public List<ObjectPool<MyObject>> pools = new List<ObjectPool<MyObject>>();
     public List<GameObject> myObjectlPrefabs = new List<GameObject>();
@@ -16,8 +18,10 @@ public class PoolManager : MonoBehaviour
     public void Awake()
     {
         NewPoolAdd("Prefab/Player/movePlane", 500);
-        NewPoolAdd("Prefab/Selection", 20);
+        NewPoolAdd("Prefab/Player/Selection", 20);
         NewPoolAdd("Prefab/SkillObject/AK47Bullet", 20);
+        NewPoolAdd("Prefab/Object/Point", 20);
+        NewPoolAdd("Prefab/Object/WallObject", 100);
     }
     public ObjectPool<MyObject> SelectPool(Prefabs prefabs)
     {
