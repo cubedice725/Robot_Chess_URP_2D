@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
 {
     // 몬스터는 활동(MovingState, SkillState)이 끝난 구간에 Authority = false로 끝남을 알려야함
     public enum State
-    { 
+    {
         Idle,
         Move,
         Skill
@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviour
 
     public State playerState = State.Idle;
     public IState skillState;
-    
+
 
     private int monsterFlagCount = 0;
     private int monsterAuthorityCount = 0;
@@ -40,7 +40,7 @@ public class GameManager : MonoBehaviour
     public bool playerTurn = true;
     public bool changePlayerTurn = false;
     public bool changeMonsterTurn = false;
-
+    public int monsterTurnCount = 0;
     public Player player { get; set; }
     public PoolManager poolManager { get; set; }
     public int MapSizeX { get; set; } = 12;
@@ -87,18 +87,18 @@ public class GameManager : MonoBehaviour
         {
             Map2D[i / MapSizeY, i % MapSizeY] = (int)MapObject.noting;
         }
-        
+
         player = FindObjectOfType<Player>();
         poolManager = GetComponent<PoolManager>();
     }
-    
+
     private void Update()
     {
-        // 스폰된 몬스터가 존재한다면
-        if (spawnMonsters.Count > 0 && monsterTurn)
+        // 스폰된 몬스터가 존재하고 몬스터 턴이고 몬스터가 움직이는 권한이 없다면 다음 몬스터가 움직여도 된다고 판단
+        if (spawnMonsters.Count > 0 && monsterTurn && !spawnMonsters[monsterAuthorityCount].GetComponent<Monster>().Authority)
         {
-            // 몬스터가 움직이는 권한이 없다면 다음 몬스터가 움직여도 된다고 판단
-            if (!spawnMonsters[monsterAuthorityCount].GetComponent<Monster>().Authority)
+            
+            if (monsterTurnCount < 2)
             {
                 // 다음으로 권한을 넘김
                 if (monsterAuthorityCount < spawnMonsters.Count - 1)
@@ -142,17 +142,28 @@ public class GameManager : MonoBehaviour
                                     spawnMonsters[monsterFlagCount].GetComponent<Monster>().Flag = false;
                                 }
                             }
-                            GameturnCount++;
-                            GameScore += 10;
                             monsterFlagCount = 0;
                             monsterAuthorityCount = 0;
-                            FromMonsterToPlayer();
+                            monsterTurnCount++;
+                            FindNearbyMonsters();
                         }
                     }
-                    
                 }
             }
-            
+            else
+            {
+                // 몬스터의 행동 카운터를 다시 초기화
+                for (int monsterMovementCount = 0; monsterMovementCount < spawnMonsters.Count; monsterMovementCount++)
+                {
+                    spawnMonsters[monsterMovementCount].GetComponent<Monster>().MoveCount = 0;
+                    spawnMonsters[monsterMovementCount].GetComponent<Monster>().AttackCount = 0;
+                }
+                GameturnCount++;
+                GameScore += 10;
+                monsterTurnCount = 0;
+                FromMonsterToPlayer();
+            }
+
         }
         else if (spawnMonsters.Count == 0)
         {
@@ -162,14 +173,7 @@ public class GameManager : MonoBehaviour
         {
             if (!MyObjectActivate)
             {
-                monsterDistances = new List<float>();
-                for (int index = 0; index < spawnMonsters.Count; index++)
-                {
-                    monsterDistances.Add(Vector2.Distance(player.transform.position, spawnMonsters[index].transform.position));
-                }
-                InsertionSort();
-                spawnMonsters[0].GetComponent<Monster>().Authority = true;
-
+                FindNearbyMonsters();
                 changePlayerTurn = false;
                 monsterTurn = true;
                 playerTurn = false;
@@ -192,6 +196,16 @@ public class GameManager : MonoBehaviour
         //        Debug.Log("클릭한 오브젝트 이름: " + hit.collider.gameObject.name);
         //    }
         //}
+    }
+    public void FindNearbyMonsters()
+    {
+        monsterDistances = new List<float>();
+        for (int index = 0; index < spawnMonsters.Count; index++)
+        {
+            monsterDistances.Add(Vector2.Distance(player.transform.position, spawnMonsters[index].transform.position));
+        }
+        InsertionSort();
+        spawnMonsters[0].GetComponent<Monster>().Authority = true;
     }
     public void InsertionSort()
     {

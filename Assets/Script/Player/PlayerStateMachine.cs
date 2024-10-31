@@ -1,3 +1,4 @@
+using static GameManager;
 public class PlayerStateMachine
 {
     public IState CurrentState {  get; private set; }
@@ -23,7 +24,13 @@ public class PlayerStateMachine
         
         if (CurrentState.Exit())
         {
-            GameManager.Instance.FromPlayerToMonster();
+            if(Instance.player.AttackCount == 1 && Instance.player.MoveCount == 1)
+            {
+                Instance.player.AttackCount = 0;
+                Instance.player.MoveCount = 0;
+
+                Instance.FromPlayerToMonster();
+            }
         }
         CurrentState = nextState;
         nextState.Entry();

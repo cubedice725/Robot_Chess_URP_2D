@@ -18,10 +18,7 @@ public class PlayerMovement : AStar
     private float xAxis = 0;
     private int count = 1;
 
-    // 이동거리
-    public int MoveDistance { get; set; } = 4;
-    // 이동 속도
-    public float PlayerMoveSpeed { get; set; } = 1f;
+    
     protected void Awake()
     {
         playerPlaneStandard = GameObject.Find("PlayerPlaneStandard");
@@ -57,7 +54,7 @@ public class PlayerMovement : AStar
         {
             RunAnimation(true, targetPosition.x - transform.position.x);
             // 캐릭터를 이동
-            transform.position = Vector2.MoveTowards(transform.position, targetPosition, PlayerMoveSpeed * Time.deltaTime);
+            transform.position = Vector2.MoveTowards(transform.position, targetPosition, Instance.player.PlayerMoveSpeed * Time.deltaTime);
             return true;
         }
         else
@@ -118,10 +115,10 @@ public class PlayerMovement : AStar
     public void SetMovePlane()
     {
         // 실제 맵이랑 플레이어가 움직이는 임의 탐색 공간의 간격
-        Vector3Int interval = new Vector3Int(playerPosition.x - MoveDistance, playerPosition.y - MoveDistance, 0);
+        Vector3Int interval = new Vector3Int(playerPosition.x - Instance.player.MoveDistance, playerPosition.y - Instance.player.MoveDistance, 0);
         
         // 지름 계산
-        int diameter = MoveDistance * 2 + 1;
+        int diameter = Instance.player.MoveDistance * 2 + 1;
 
         // 플레이어가 움직이는 공간을 먼저 추측하기 위해 이동거리를 기준으로 함
         for (int i = 0; i < diameter * diameter; i++)
@@ -134,16 +131,16 @@ public class PlayerMovement : AStar
             int mapAreaX = interval.x + playerAreaX;
             int mapAreaY = interval.y + playerAreaY;
 
-            int distanceX = playerAreaX - MoveDistance;
-            int distanceY = playerAreaY - MoveDistance;
+            int distanceX = playerAreaX - Instance.player.MoveDistance;
+            int distanceY = playerAreaY - Instance.player.MoveDistance;
             // 맵안 이고 플레이어가 아닌곳
-            if ((mapAreaX > 0 && mapAreaY > 0 && mapAreaX < Instance.MapSizeX && mapAreaY < Instance.MapSizeY) && (playerAreaX != MoveDistance || playerAreaY != MoveDistance))
+            if ((mapAreaX > 0 && mapAreaY > 0 && mapAreaX < Instance.MapSizeX && mapAreaY < Instance.MapSizeY) && (playerAreaX != Instance.player.MoveDistance || playerAreaY != Instance.player.MoveDistance))
             {
                 // 해당 공간에 벽이나 몬스터가 아닌곳
                 if (Instance.Map2D[mapAreaX, mapAreaY] != (int)MapObject.wall && Instance.Map2D[mapAreaX, mapAreaY] != (int)MapObject.moster)
                 {
                     // 플레이어가 움직일수 있는 거리 안 즉 원안에 있는지
-                    if (Mathf.FloorToInt(Mathf.Sqrt((distanceX * distanceX) + (distanceY * distanceY))) <= MoveDistance)
+                    if (Mathf.FloorToInt(Mathf.Sqrt((distanceX * distanceX) + (distanceY * distanceY))) <= Instance.player.MoveDistance)
                     {
                         // 경로 탐색
                         PathFinding(
@@ -153,7 +150,7 @@ public class PlayerMovement : AStar
                             new Vector3Int(Instance.MapSizeX, Instance.MapSizeY, 0)
                         );
                         // 경로 탐색이 잘 되었는지, 이동 거리가 적절한지
-                        if (FinalNodeList.Count > 1 && FinalNodeList.Count <= MoveDistance + 1)
+                        if (FinalNodeList.Count > 1 && FinalNodeList.Count <= Instance.player.MoveDistance + 1)
                         {
                             movePlaneList.Add(Instance.poolManager.SelectPool(PoolManager.Prefabs.movePlane).Get());
                             movePlaneList[movePlaneList.Count - 1].transform.parent = playerPlaneStandard.transform;

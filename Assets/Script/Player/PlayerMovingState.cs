@@ -36,6 +36,7 @@ public class PlayerMovingState : IState
         if (moveUse)
         {
             moveUse = false;
+            Instance.player.MoveCount++;
             return true;
         }
         return false;

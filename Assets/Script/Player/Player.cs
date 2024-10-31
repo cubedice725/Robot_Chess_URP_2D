@@ -7,6 +7,12 @@ public class Player : MonoBehaviour
     private PlayerStateMachine playerStateMachine;
     private PlayerMovement playerMovement;
 
+    public int MoveCount { get; set; } = 0;
+    public int AttackCount { get; set; } = 0;
+    // 이동거리
+    public int MoveDistance { get; set; } = 1;
+    // 이동 속도
+    public float PlayerMoveSpeed { get; set; } = 1f;
     private void Awake()
     {
         playerMovement = GetComponent<PlayerMovement>();
@@ -22,11 +28,17 @@ public class Player : MonoBehaviour
         }
         else if (Instance.playerState == State.Move)
         {
-            playerStateMachine.TransitionTo(playerStateMachine.playerMovingState);
+            if(MoveCount != 1)
+            {
+                playerStateMachine.TransitionTo(playerStateMachine.playerMovingState);
+            }
         }
         else if (Instance.playerState == State.Skill)
         {
-            playerStateMachine.TransitionTo(playerStateMachine.playerSkillCastingState);
+            if (AttackCount != 1)
+            {
+                playerStateMachine.TransitionTo(playerStateMachine.playerSkillCastingState);
+            }
         }
         playerStateMachine.PlayerStateMachineUpdate();
     }

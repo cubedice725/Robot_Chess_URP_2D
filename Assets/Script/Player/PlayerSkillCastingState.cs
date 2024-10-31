@@ -14,6 +14,7 @@ public class PlayerSkillCastingState : IState
     {
         if (Instance.skillState.Exit())
         {
+            Instance.player.AttackCount++;
             return true;
         }
         return false;

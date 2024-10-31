@@ -12,12 +12,13 @@ public class Monster : MonoBehaviour
     // 몬스터가 이동시 겹치는 것을 방지하기 위해 만듦
     // 어떠한 행동을 하기 위해서는 Authority에 true가 몬스터에게 있어야함
     // 즉 권한을 가지면 몬스터가 움직여도 된다는 의미(스킬도 Authority를 가져야함)
-    public bool Authority { get; set; } = false;
+    public bool Authority  = false;
     public virtual int AttackDistance { get; set; } = 1;
     public virtual int MovingDistance { get; set; } = 1;
     public virtual float MoveSpeed { get; set; } = 1f;
     public virtual float HP { get; set; } = 1;
-
+    public int MoveCount  = 0;
+    public int AttackCount = 0;
     public bool Die { get; private set; } = false;
     public int ScorePoint { get; private set; } = 50;
 
@@ -89,8 +90,7 @@ public class Monster : MonoBehaviour
         // 사망 이후 Authority이 들어오면 이를 넘기기위함
         if (Die && Authority)
         {
-            Authority = false;
-            Flag = true;
+            TurnPass();
         }
 
         // 몬스터의 상태변환을 만들기 위함
@@ -100,4 +100,9 @@ public class Monster : MonoBehaviour
         monsterStateMachine.MonsterStateMachineUpdate();
     }
     public virtual void UpdateMonster() { }
+    public void TurnPass()
+    {
+        Authority = false;
+        Flag = true;
+    }
 }

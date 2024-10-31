@@ -6,6 +6,7 @@ public class Robot : Monster
 {
     public override int MovingDistance { get => movingDistance; set => movingDistance = value; }
     public override float MoveSpeed { get => moveSpeed; set => moveSpeed = value; }
+
     private float moveSpeed = 0.7f;
     private int movingDistance = 1;
 
@@ -23,25 +24,36 @@ public class Robot : Monster
     public override void UpdateMonster()
     {
         // 몬스터 턴이되면 한번만 작동, Authority를 통해 권한이 있을경우 움직임
-        if (GameManager.Instance.monsterTurn && start && GetComponent<Monster>().Authority)
+        if (GameManager.Instance.monsterTurn && start && Authority)
         {
             // 사거리 안에 있으면 스킬 아니면 움직임
             if (monsterMovement.AttackNavigation())
             {
+                if (AttackCount == 1)
+                {
+                    TurnPass();
+                    return;
+                }
+
                 state = State.Skill;
+                AttackCount++;
             }
             else
             {
+                if (MoveCount == 1)
+                {
+                    TurnPass();
+                    return; 
+                }
                 state = State.Move;
+                MoveCount++;
             }
             start = false;
         }
-
-        // 몬스터 턴이 끝나면 한번만 작동
-        if (!GameManager.Instance.monsterTurn && !start)
+        if (Flag)
         {
-            state = State.Idle;
             start = true;
+            state = State.Idle;
         }
     }
 }
