@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviour
 
     public State playerState = State.Idle;
     public IState skillState;
+    
 
     private int monsterFlagCount = 0;
     private int monsterAuthorityCount = 0;
@@ -45,8 +46,8 @@ public class GameManager : MonoBehaviour
     public int MapSizeX { get; set; } = 12;
     public int MapSizeY { get; set; } = 12;
     public int[,] Map2D { get; set; }
-
-
+    public int GameScore { get; set; } = 0;
+    public int GameturnCount { get; set; } = 0;
     // 필드에 오브젝트 존재여부 확인
     public bool MyObjectActivate { get; set; } = false;
     public static GameManager Instance
@@ -86,7 +87,7 @@ public class GameManager : MonoBehaviour
         {
             Map2D[i / MapSizeY, i % MapSizeY] = (int)MapObject.noting;
         }
-
+        
         player = FindObjectOfType<Player>();
         poolManager = GetComponent<PoolManager>();
     }
@@ -141,7 +142,8 @@ public class GameManager : MonoBehaviour
                                     spawnMonsters[monsterFlagCount].GetComponent<Monster>().Flag = false;
                                 }
                             }
-                            
+                            GameturnCount++;
+                            GameScore += 10;
                             monsterFlagCount = 0;
                             monsterAuthorityCount = 0;
                             FromMonsterToPlayer();
@@ -185,7 +187,7 @@ public class GameManager : MonoBehaviour
         //if (Input.GetMouseButtonDown(0)) // 마우스 왼쪽 버튼 클릭
         //{
         //    RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
-        //    if(hit.collider != null)
+        //    if (hit.collider != null)
         //    {
         //        Debug.Log("클릭한 오브젝트 이름: " + hit.collider.gameObject.name);
         //    }

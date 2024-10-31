@@ -19,6 +19,7 @@ public class Monster : MonoBehaviour
     public virtual float HP { get; set; } = 1;
 
     public bool Die { get; private set; } = false;
+    public int ScorePoint { get; private set; } = 50;
 
     public enum State
     {
@@ -76,10 +77,13 @@ public class Monster : MonoBehaviour
             boxCollider2D.enabled = false;
             rigi2D.simulated = false;
 
+            Instance.GameScore += ScorePoint;
             // 사망 애니메이션은 반복적으로 true를 받으면 멈춤 그렇기에 사망은 한번만해야함
             Die = true;
             // 사망 애니메이션과 나중에 갈 목적지에 있는 몬스터를 맵에서 지움
             monsterMovement.Die();
+            GetComponent<SpriteRenderer>().sortingOrder = 1;
+
         }
 
         // 사망 이후 Authority이 들어오면 이를 넘기기위함

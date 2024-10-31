@@ -68,17 +68,23 @@ public class MonsterSpawner : MonoBehaviour
     {
         if(Instance.spawnMonsters.Count == 0)
         {
-            SpawnMonster();
-            SpawnMonster();
-            SpawnMonster();
-            SpawnMonster();
-            SpawnMonster();
-            SpawnMonster();
+            SpawnMonster(36);
         }
     }
-    private void SpawnMonster()
+    private void SpawnMonster(int monsterSpawnCount)
     {
-        GameObject MonsterObject = Instantiate(monster, points[Random.Range(0, points.Count)].transform.position, Quaternion.Euler(Vector3.zero));
-        Instance.spawnMonsters.Add(MonsterObject);
+        for (int i = 0; i < monsterSpawnCount;)
+        {
+            int num = Random.Range(0, points.Count);
+            if (Instance.Map2D[(int)Mathf.Round(points[num].transform.position.x), (int)Mathf.Round(points[num].transform.position.y)] != (int)MapObject.player)
+            {
+                if (Instance.Map2D[(int)Mathf.Round(points[num].transform.position.x), (int)Mathf.Round(points[num].transform.position.y)] != (int)MapObject.moster)
+                {
+                    GameObject MonsterObject = Instantiate(monster, points[num].transform.position, Quaternion.Euler(Vector3.zero));
+                    Instance.spawnMonsters.Add(MonsterObject);
+                    i++;
+                }
+            }
+        }
     }
 }

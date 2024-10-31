@@ -1,14 +1,18 @@
+using Unity.VisualScripting;
 using UnityEngine;
+using static GameManager;
 
 public class AK47 : MonoBehaviour, IState
 {
     PlayerMovement playerMovement;
-    RaycastHit2D hit;
+    
+    Vector3 target;
     float rotationSpeed = 7f;
 
     bool start = false;
     bool skillUse = false;
     float accuracy = 0.001f;
+
     private void Awake()
     {
         playerMovement = FindObjectOfType<PlayerMovement>();
@@ -21,10 +25,11 @@ public class AK47 : MonoBehaviour, IState
     {
         if (Input.GetMouseButtonDown(0))
         {
-            hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
+            RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
             if (hit.collider != null && hit.collider.transform.name.StartsWith("Selection"))
             {
-                GameManager.Instance.MyObjectActivate = true;
+                target = hit.collider.gameObject.transform.position;
+                Instance.MyObjectActivate = true;
                 playerMovement.RemoveSelection();
                 playerMovement.LookMonsterAnimation(hit.collider.transform.position.x);
                 skillUse = true;
@@ -38,12 +43,12 @@ public class AK47 : MonoBehaviour, IState
         if (start)
         {
             // 타겟 방향 계산
-            Vector3 direction = hit.transform.position - transform.position;
+            Vector3 direction = target - transform.position;
             direction.Normalize(); // 방향 벡터 정규화
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
             // 좌측일경우 총을 반대로 돌림
-            if (Mathf.Sign(GameManager.Instance.player.transform.localScale.x) < 0)
+            if (Mathf.Sign(Instance.player.transform.localScale.x) < 0)
             {
                 angle  += 180;
             }
@@ -52,7 +57,6 @@ public class AK47 : MonoBehaviour, IState
 
             // 현재 회전 각도와 목표 각도 차이 계산
             float angleDifference = Quaternion.Angle(transform.rotation, targetRotation);
-
             // 각도 차이가 임계값보다 클 경우에만 회전
             if (angleDifference > accuracy)
             {
@@ -62,12 +66,12 @@ public class AK47 : MonoBehaviour, IState
             else
             {
                 // 좌측일경우 총알을 원래 방향으로 돌림
-                if (Mathf.Sign(GameManager.Instance.player.transform.localScale.x) < 0)
+                if (Mathf.Sign(Instance.player.transform.localScale.x) < 0)
                 {
                     angle += 180;
                 }
 
-                MyObject bullet = GameManager.Instance.poolManager.SelectPool(PoolManager.Prefabs.AK47Bullet).Get();
+                MyObject bullet = Instance.poolManager.SelectPool(PoolManager.Prefabs.AK47Bullet).Get();
                 bullet.transform.position = transform.GetChild(0).transform.position;
                 bullet.transform.rotation = Quaternion.Euler(new Vector3(0,0,angle));
                 start = false;
