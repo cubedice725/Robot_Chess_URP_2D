@@ -40,6 +40,14 @@ public class Player : MonoBehaviour
                 playerStateMachine.TransitionTo(playerStateMachine.playerSkillCastingState);
             }
         }
+        
+
         playerStateMachine.PlayerStateMachineUpdate();
+        if (Instance.hit != null && Instance.hit.name == "Player")
+        {
+            if (!Instance.playerTurn) return;
+            Instance.hit.name = "";
+            Instance.playerState = State.Move;
+        }
     }
 }

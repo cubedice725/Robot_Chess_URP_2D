@@ -4,7 +4,7 @@ using static GameManager;
 
 // 에러 발생시 고려해야할 사항
 // Authority을 행동에 할당했는지
-public class Monster : MonoBehaviour
+public abstract class Monster : MonoBehaviour
 {
     // 몬스터의 행동이 끝날 경우 True로 바꿔야함
     public bool Flag { get; set; } = false;

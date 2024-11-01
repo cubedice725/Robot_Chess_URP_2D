@@ -1,48 +1,31 @@
 using UnityEngine;
 using static GameManager;
 
-public class AK47 : LongSkill, IState
+public class Knife : CloseSkill, IState
 {
     PlayerMovement playerMovement;
-    
     Vector3Int target;
     bool start = false;
     bool skillUse = false;
     float accuracy = 0.001f;
-
-    private void Awake()
-    {
-        playerMovement = FindObjectOfType<PlayerMovement>();
-    }
     public void Entry()
     {
-        for (int i = 0; i < Instance.spawnMonsters.Count; i++)
-        {
-            Instance.SetSelection(
-                new Vector2(Instance.spawnMonsters[i].transform.position.x,
-                Instance.spawnMonsters[i].transform.position.y)); 
-        }
-        
+        playerMovement = FindObjectOfType<PlayerMovement>();
+        AttackRange(1);
     }
     public void IStateUpdate()
     {
         if (UpdateSelectionCheck())
         {
-            Instance.MyObjectActivate = true;
-            Instance.hit.name = "";
             Instance.RemoveSelection();
+            Instance.hit.name = "";
             playerMovement.LookMonsterAnimation(Instance.hit.positionInt.x);
             skillUse = true;
             start = true;
         }
-
-        if(start)
+        if (start)
         {
-            if(!UpdateLookAtTarget(Instance.hit.positionInt, accuracy, 7f))
-            {
-                Shoot(PoolManager.Prefabs.AK47Bullet);
-                start = false;
-            }
+            UpdateLookAtTarget(Instance.hit.positionInt, accuracy, 7f);
         }
         else if (skillUse)
         {
@@ -63,3 +46,4 @@ public class AK47 : LongSkill, IState
         return false;
     }
 }
+

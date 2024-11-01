@@ -7,6 +7,18 @@ using UnityEditor.EditorTools;
 using UnityEngine;
 using UnityEngine.UIElements;
 
+[Serializable]
+public class Hit
+{
+    public string name;
+    public Vector3Int positionInt;
+    public Hit(string _name, Vector3Int _positionInt) 
+    { 
+        name = _name;
+        positionInt = _positionInt;
+    }
+    
+}
 public class GameManager : MonoBehaviour
 {
     // 몬스터는 활동(MovingState, SkillState)이 끝난 구간에 Authority = false로 끝남을 알려야함
@@ -32,7 +44,8 @@ public class GameManager : MonoBehaviour
     public State playerState = State.Idle;
     public IState skillState;
 
-
+    private List<MyObject> movePlaneList = new List<MyObject>();
+    private List<MyObject> selectionList = new List<MyObject>();
     private int monsterFlagCount = 0;
     private int monsterAuthorityCount = 0;
 
@@ -43,6 +56,7 @@ public class GameManager : MonoBehaviour
     public int monsterTurnCount = 0;
     public Player player { get; set; }
     public PoolManager poolManager { get; set; }
+    public Hit hit;
     public int MapSizeX { get; set; } = 12;
     public int MapSizeY { get; set; } = 12;
     public int[,] Map2D { get; set; }
@@ -50,6 +64,7 @@ public class GameManager : MonoBehaviour
     public int GameturnCount { get; set; } = 0;
     // 필드에 오브젝트 존재여부 확인
     public bool MyObjectActivate { get; set; } = false;
+    public Vector3Int PlayerPositionInt { get; set; }
     public static GameManager Instance
     {
         get
@@ -68,6 +83,7 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
+        hit = new Hit("",Vector3Int.zero);
         if (_instance == null)
         {
             _instance = this;
@@ -94,6 +110,9 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
+        // 반올림을 하지 않으면 움직이고 난 후 x좌표가 1.999일때 타입케스트는 1이 된다.
+        PlayerPositionInt = new Vector3Int((int)Mathf.Round(player.transform.position.x), (int)Mathf.Round(player.transform.position.y), (int)Mathf.Round(transform.position.z));
+        
         // 스폰된 몬스터가 존재하고 몬스터 턴이고 몬스터가 움직이는 권한이 없다면 다음 몬스터가 움직여도 된다고 판단
         if (spawnMonsters.Count > 0 && monsterTurn && !spawnMonsters[monsterAuthorityCount].GetComponent<Monster>().Authority)
         {
@@ -188,14 +207,20 @@ public class GameManager : MonoBehaviour
                 playerTurn = true;
             }
         }
-        //if (Input.GetMouseButtonDown(0)) // 마우스 왼쪽 버튼 클릭
-        //{
-        //    RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
-        //    if (hit.collider != null)
-        //    {
-        //        Debug.Log("클릭한 오브젝트 이름: " + hit.collider.gameObject.name);
-        //    }
-        //}
+        if (Input.GetMouseButtonDown(0)) // 마우스 왼쪽 버튼 클릭
+        {
+            RaycastHit2D _hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
+            
+            if (_hit.collider != null)
+            {
+                hit.name = _hit.collider.name;
+                hit.positionInt = new Vector3Int(
+                    (int)Mathf.Round(_hit.collider.transform.position.x), 
+                    (int)Mathf.Round(_hit.collider.transform.position.y), 
+                    (int)Mathf.Round(_hit.collider.transform.position.z)
+                    );
+            }
+        }
     }
     public void FindNearbyMonsters()
     {
@@ -240,6 +265,41 @@ public class GameManager : MonoBehaviour
     public void FromMonsterToPlayer()
     {
         changeMonsterTurn = true;
+    }
+
+    // 플레이어 판 관련 함수
+    //----------------------------------------------------------
+    public void SetMovePlane(Vector2 position)
+    {
+        movePlaneList.Add(Instance.poolManager.SelectPool(PoolManager.Prefabs.movePlane).Get());
+        movePlaneList[movePlaneList.Count - 1].transform.position = new Vector3(position.x, position.y, 0);
+    }
+    public void RemoveMovePlane()
+    {
+        // RemoveAt으로 인해 0번째에 값들이 계속 존재함
+        while (movePlaneList.Count > 0)
+        {
+            movePlaneList[0].Destroy();
+            movePlaneList.RemoveAt(0);
+        }
+    }
+
+    // 스킬 판 관련 함수
+    //----------------------------------------------------------
+    public void SetSelection(Vector2 position)
+    {
+        MyObject selectedObject = Instance.poolManager.SelectPool(PoolManager.Prefabs.Selection).Get();
+        selectedObject.transform.position = position;
+        selectionList.Add(selectedObject);
+    }
+    public void RemoveSelection()
+    {
+        // RemoveAt으로 인해 0번째에 값들이 계속 존재함
+        while (selectionList.Count > 0)
+        {
+            selectionList[0].Destroy();
+            selectionList.RemoveAt(0);
+        }
     }
 }
 

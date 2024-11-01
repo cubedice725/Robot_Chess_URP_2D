@@ -129,10 +129,10 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.005000001, y: -0.055}
+  m_Offset: {x: 0.005000001, y: -0.023000028}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.4615385, y: 0.7619048}
+    pivot: {x: 0.4615385, y: 0.60952383}
     oldSize: {x: 0.13, y: 0.21}
     newSize: {x: 0.13, y: 0.21}
     adaptiveTilingThreshold: 0.5
@@ -140,7 +140,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.13, y: 0.21}
+  m_Size: {x: 0.13, y: 0.20999998}
   m_EdgeRadius: 0
 --- !u!50 &2316704304851387166
 Rigidbody2D:
@@ -157,7 +157,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 0
+  m_GravityScale: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -208,6 +208,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fda8dd492342e754088c0d17a49ba807, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Authority: 0
+  MoveCount: 0
+  AttackCount: 0
   state: 0
   monsterMovement: {fileID: 0}
   boxCollider2D: {fileID: 0}

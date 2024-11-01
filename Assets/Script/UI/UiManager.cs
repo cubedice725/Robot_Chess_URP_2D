@@ -7,7 +7,7 @@ public class UiManager : MonoBehaviour
     public void OnClickMainButtion()
     {
         if (!Instance.playerTurn) return;
-
+        Instance.playerState = State.Idle;
         if (Instance.player.transform.Find("MainSkill").transform.childCount > 0)
         {
             Instance.player.transform.Find("SideSkill").gameObject.SetActive(false);
@@ -15,7 +15,10 @@ public class UiManager : MonoBehaviour
 
             Instance.skillState = Instance.player.transform.Find("MainSkill").transform.GetChild(0).GetComponent<IState>();
             TransitionTo(Instance.skillState);
-            Instance.playerState = State.Skill;
+            if (Instance.playerState == State.Idle)
+            {
+                Instance.playerState = State.Skill;
+            }
         }
     }
 
@@ -23,6 +26,8 @@ public class UiManager : MonoBehaviour
     public void OnClickSideButtion()
     {
         if (!Instance.playerTurn) return;
+        Instance.playerState = State.Idle;
+        print(Instance.playerState);
 
         if (Instance.player.transform.Find("SideSkill").transform.childCount > 0)
         {
@@ -31,7 +36,10 @@ public class UiManager : MonoBehaviour
 
             Instance.skillState = Instance.player.transform.Find("SideSkill").transform.GetChild(0).GetComponent<IState>();
             TransitionTo(Instance.skillState);
-            Instance.playerState = State.Skill;
+            if(Instance.playerState == State.Idle)
+            {
+                Instance.playerState = State.Skill;
+            }
         }
     }
     void TransitionTo(IState nextState)

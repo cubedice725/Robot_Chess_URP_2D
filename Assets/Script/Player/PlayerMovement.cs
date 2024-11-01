@@ -4,14 +4,8 @@ using static GameManager;
 
 public class PlayerMovement : AStar
 {
-    private List<MyObject> movePlaneList = new List<MyObject>();
-    private List<MyObject> selectionList = new List<MyObject>();
-
-    private GameObject playerPlaneStandard;
     private Animator animator;
 
-    private RaycastHit2D hit;
-    private Vector3Int playerPosition;
     private Vector2 targetPosition;
 
     private bool updateMoveStart = true;
@@ -21,26 +15,22 @@ public class PlayerMovement : AStar
     
     protected void Awake()
     {
-        playerPlaneStandard = GameObject.Find("PlayerPlaneStandard");
         animator = GetComponent<Animator>();
     }
     public void Update()
     {
-        // 반올림을 하지 않으면 움직이고 난 후 x좌표가 1.999일때 타입케스트는 1이 된다.
-        playerPosition = new Vector3Int((int)Mathf.Round(transform.position.x), (int)Mathf.Round(transform.position.y), (int)Mathf.Round(transform.position.z));
+        
+        
     }
     // 플레이어 움직임 관련 함수
     //----------------------------------------------------------
     public bool UpdateMove()
     {
-
-        // 반올림을 하지 않으면 움직이고 난 후 x좌표가 1.999일때 타입케스트는 1이 된다.
-
         if (updateMoveStart)
         {
             PathFinding(
-                playerPosition,
-                new Vector3Int((int)hit.transform.position.x, (int)hit.transform.position.y, 0),
+                Instance.PlayerPositionInt,
+                new Vector3Int(Instance.hit.positionInt.x, Instance.hit.positionInt.y, 0),
                 Vector3Int.zero,
                 new Vector3Int(Instance.MapSizeX, Instance.MapSizeY, 0)
             );
@@ -70,52 +60,30 @@ public class PlayerMovement : AStar
             else
             {
                 RunAnimation(false);
-                playerPlaneStandard.transform.position = new Vector3(playerPosition.x, playerPosition.y, 0);
-                Instance.Map2D[playerPosition.x, playerPosition.y] = (int)MapObject.player;
+                Instance.Map2D[Instance.PlayerPositionInt.x, Instance.PlayerPositionInt.y] = (int)MapObject.player;
                 count = 1;
                 updateMoveStart = true;
                 return false;
             }
         }
     }
-    public bool UpdatePlayerCheck()
-    {
-        if (!Instance.playerTurn) return false;
-
-        if (Input.GetMouseButtonDown(0))
-        {
-            hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
-
-            if (hit.collider != null && hit.collider.gameObject.name == "Player")
-            {
-                return true;
-            }
-        }
-        return false;
-    }
     public bool UpdateMovePlaneCheck()
     {
         if (!Instance.playerTurn) return false;
 
-        if (Input.GetMouseButtonDown(0))
+        if (Instance.hit != null && Instance.hit.name.StartsWith("MovePlane"))
         {
-            hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
-
-            if (hit.collider != null && hit.collider.transform.name.StartsWith("MovePlane"))
-            {
-                RemoveMovePlane();
-                return true;
-            }
+            Instance.RemoveMovePlane();
+            return true;
         }
         return false;
     }
     
-    // 플레이어 판 관련 함수
-    //----------------------------------------------------------
-    public void SetMovePlane()
+    
+    public void MoveReady()
     {
         // 실제 맵이랑 플레이어가 움직이는 임의 탐색 공간의 간격
-        Vector3Int interval = new Vector3Int(playerPosition.x - Instance.player.MoveDistance, playerPosition.y - Instance.player.MoveDistance, 0);
+        Vector3Int interval = new Vector3Int(Instance.PlayerPositionInt.x - Instance.player.MoveDistance, Instance.PlayerPositionInt.y - Instance.player.MoveDistance, 0);
         
         // 지름 계산
         int diameter = Instance.player.MoveDistance * 2 + 1;
@@ -144,7 +112,7 @@ public class PlayerMovement : AStar
                     {
                         // 경로 탐색
                         PathFinding(
-                            playerPosition,
+                            Instance.PlayerPositionInt,
                             new Vector3Int(mapAreaX, mapAreaY, 0),
                             Vector3Int.zero,
                             new Vector3Int(Instance.MapSizeX, Instance.MapSizeY, 0)
@@ -152,42 +120,11 @@ public class PlayerMovement : AStar
                         // 경로 탐색이 잘 되었는지, 이동 거리가 적절한지
                         if (FinalNodeList.Count > 1 && FinalNodeList.Count <= Instance.player.MoveDistance + 1)
                         {
-                            movePlaneList.Add(Instance.poolManager.SelectPool(PoolManager.Prefabs.movePlane).Get());
-                            movePlaneList[movePlaneList.Count - 1].transform.parent = playerPlaneStandard.transform;
-                            movePlaneList[movePlaneList.Count - 1].transform.position = new Vector3(mapAreaX, mapAreaY, 0);
+                            Instance.SetMovePlane(new Vector2(mapAreaX, mapAreaY));
                         }
                     }
                 }
             }
-        }
-    }
-    public void RemoveMovePlane()
-    {
-        // RemoveAt으로 인해 0번째에 값들이 계속 존재함
-        while (movePlaneList.Count > 0)
-        {
-            movePlaneList[0].Destroy();
-            movePlaneList.RemoveAt(0);
-        }
-    }
-
-    // 스킬 판 관련 함수
-    //----------------------------------------------------------
-    public void SetSelection()
-    {
-        for (int i = 0; i < Instance.spawnMonsters.Count; i++)
-        {
-            selectionList.Add(Instance.poolManager.SelectPool(PoolManager.Prefabs.Selection).Get());
-            selectionList[i].transform.position = Instance.spawnMonsters[i].transform.position;
-        }
-    }
-    public void RemoveSelection()
-    {
-        // RemoveAt으로 인해 0번째에 값들이 계속 존재함
-        while (selectionList.Count > 0)
-        {
-            selectionList[0].Destroy();
-            selectionList.RemoveAt(0);
         }
     }
 
@@ -233,19 +170,5 @@ public class PlayerMovement : AStar
             // 오른쪽 방향
             transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
         }
-    }
-    // 상태변환 관련 함수
-    //----------------------------------------------------------
-    public void IdleState()
-    {
-        Instance.playerState = State.Idle;
-    }
-    public void MoveState()
-    {
-        Instance.playerState = State.Move;
-    }
-    public void MainSkillState()
-    {
-        Instance.playerState = State.Skill;
     }
 }

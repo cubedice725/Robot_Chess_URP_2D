@@ -12,7 +12,7 @@ public class PlayerMovingState : IState
     }
     public void Entry()
     {
-        _playerMovement.SetMovePlane();
+        _playerMovement.MoveReady();
     }
     public void IStateUpdate()
     {
@@ -25,14 +25,14 @@ public class PlayerMovingState : IState
         {
             if (!_playerMovement.UpdateMove())
             {
-                _playerMovement.IdleState();
+                Instance.playerState = State.Idle;
             }
         }
 
     }
     public bool Exit()
     {
-        _playerMovement.RemoveMovePlane();
+        Instance.RemoveMovePlane();
         if (moveUse)
         {
             moveUse = false;

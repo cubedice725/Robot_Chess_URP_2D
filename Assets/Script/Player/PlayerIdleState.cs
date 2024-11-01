@@ -15,10 +15,7 @@ public class PlayerIdleState : IState
     }
     public void IStateUpdate()
     {
-        if (_playerMovement.UpdatePlayerCheck())
-        {
-            _playerMovement.MoveState();
-        }
+
     }
     public bool Exit()
     {

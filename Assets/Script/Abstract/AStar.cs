@@ -16,7 +16,7 @@ public class Node
     public int F { get { return G + H; } }
 }
 
-public class AStar : MonoBehaviour
+public abstract class AStar : MonoBehaviour
 {
     [SerializeField]
     protected List<Node> FinalNodeList;
