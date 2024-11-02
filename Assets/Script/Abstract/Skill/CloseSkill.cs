@@ -30,6 +30,7 @@ public class CloseSkill : Skill
             catch { }
         }
     }
+
     public void UpAttack()
     {
 

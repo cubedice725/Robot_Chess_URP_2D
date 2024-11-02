@@ -5,14 +5,9 @@ using static GameManager;
 
 public abstract class Skill : MonoBehaviour
 {
-    public float angle = 0;
     public bool UpdateLookAtTarget(Vector3 target, float accuracy, float rotationSpeed)
     {
-        // 타겟 방향 계산
-        Vector3 direction = target - transform.position;
-        direction.Normalize(); // 방향 벡터 정규화
-        angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        Quaternion targetRotation = Quaternion.Euler(new Vector3(0, 0, LeftAbj(angle)));
+        Quaternion targetRotation = Quaternion.Euler(new Vector3(0, 0, LeftAbj(DirectionMeasurement(target))));
 
         // 현재 회전 각도와 목표 각도 차이 계산
         float angleDifference = Quaternion.Angle(transform.rotation, targetRotation);
@@ -50,6 +45,15 @@ public abstract class Skill : MonoBehaviour
         }
         return true;
     }
+
+    // 타겟 방향 계산
+    public float DirectionMeasurement(Vector3 target)
+    {
+        Vector3 direction = target - transform.position;
+        direction.Normalize(); // 방향 벡터 정규화
+        return Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+    }
+
     public bool UpdateSelectionCheck()
     {
         if (Instance.hit != null && Instance.hit.name.StartsWith("Selection"))

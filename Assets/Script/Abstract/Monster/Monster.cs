@@ -7,7 +7,7 @@ using static GameManager;
 public abstract class Monster : MonoBehaviour
 {
     // 몬스터의 행동이 끝날 경우 True로 바꿔야함
-    public bool Flag { get; set; } = false;
+    public bool Flag = false;
 
     // 몬스터가 이동시 겹치는 것을 방지하기 위해 만듦
     // 어떠한 행동을 하기 위해서는 Authority에 true가 몬스터에게 있어야함
@@ -17,36 +17,32 @@ public abstract class Monster : MonoBehaviour
     public virtual int MovingDistance { get; set; } = 1;
     public virtual float MoveSpeed { get; set; } = 1f;
     public virtual float HP { get; set; } = 1;
-    public int MoveCount  = 0;
-    public int AttackCount = 0;
+    public int MoveCount { get; set; } = 0;
+    public int AttackCount { get; set; } = 0;
     public bool Die { get; private set; } = false;
     public int ScorePoint { get; private set; } = 50;
+    public State state { get;  set; } = State.Idle;
 
-    public enum State
+    protected IState monsterSkillCastingState;
+    protected IState monsterMovingState;
+    protected IState monsterIdleState;
+
+    protected MonsterStateMachine monsterStateMachine;
+    protected MonsterMovement monsterMovement;
+    protected BoxCollider2D boxCollider2D;
+    protected Rigidbody2D rigi2D;
+
+
+    protected virtual void Awake()
     {
-        Idle,
-        Move,
-        Skill
-    }
-    public IState monsterSkillCastingState;
-    public IState monsterMovingState;
-    public IState monsterIdleState;
 
-    public State state = State.Idle;
-
-    public MonsterStateMachine monsterStateMachine;
-    public MonsterMovement monsterMovement;
-    public BoxCollider2D boxCollider2D;
-    public Rigidbody2D rigi2D;
-    public virtual void Awake()
-    {
         Instance.Map2D[(int)Mathf.Round(transform.position.x), (int)Mathf.Round(transform.position.y)] = (int)MapObject.moster;
         monsterMovement = GetComponent<MonsterMovement>();
         monsterStateMachine = new MonsterStateMachine(this);
         boxCollider2D = GetComponent<BoxCollider2D>();
         rigi2D = GetComponent<Rigidbody2D>();
     }
-    public void Update()
+    protected void Update()
     {
         // 게임 시스템은 Authority을 통해 Flag로 간다.
         // 즉 Authority가 True이면 무조건 False가 된후에 Flag가 True가 된다.
@@ -84,7 +80,6 @@ public abstract class Monster : MonoBehaviour
             // 사망 애니메이션과 나중에 갈 목적지에 있는 몬스터를 맵에서 지움
             monsterMovement.Die();
             GetComponent<SpriteRenderer>().sortingOrder = 1;
-
         }
 
         // 사망 이후 Authority이 들어오면 이를 넘기기위함
@@ -99,8 +94,8 @@ public abstract class Monster : MonoBehaviour
         // ex(MonsterStateMachine -> MonsterMovingState)
         monsterStateMachine.MonsterStateMachineUpdate();
     }
-    public virtual void UpdateMonster() { }
-    public void TurnPass()
+    protected virtual void UpdateMonster() { }
+    protected void TurnPass()
     {
         Authority = false;
         Flag = true;

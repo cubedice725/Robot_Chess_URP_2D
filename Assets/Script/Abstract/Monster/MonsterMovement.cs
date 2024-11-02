@@ -166,7 +166,7 @@ public class MonsterMovement : AStar
     }
     public void Die()
     {
-        if (monster.state == Monster.State.Move)
+        if (monster.state == State.Move)
         {
             Instance.Map2D[FinalNodeList[monster.MovingDistance].x, FinalNodeList[monster.MovingDistance].y] = (int)MapObject.noting;
         }
@@ -175,15 +175,15 @@ public class MonsterMovement : AStar
     }
     public void IdleState()
     {
-        monster.state = Monster.State.Idle;
+        monster.state = State.Idle;
     }
     public void MoveState()
     {
-        monster.state = Monster.State.Move;
+        monster.state = State.Move;
     }
     public void SkillState()
     {
-        monster.state = Monster.State.Skill;
+        monster.state = State.Skill;
     }
     public void Authority(bool value)
     {

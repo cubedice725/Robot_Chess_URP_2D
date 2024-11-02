@@ -10,6 +10,6 @@ public abstract class LongSkill : Skill
     {
         MyObject ThrowableObject = Instance.poolManager.SelectPool(prefabs).Get();
         ThrowableObject.transform.position = transform.GetChild(0).transform.position;
-        ThrowableObject.transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
+        ThrowableObject.transform.rotation = Quaternion.Euler(new Vector3(0, 0, LeftAbj(transform.eulerAngles.z)));
     }
 }

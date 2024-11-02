@@ -63,7 +63,7 @@ public class GameManager : MonoBehaviour
     public int GameScore { get; set; } = 0;
     public int GameturnCount { get; set; } = 0;
     // 필드에 오브젝트 존재여부 확인
-    public bool MyObjectActivate { get; set; } = false;
+    public bool MyObjectActivate  = false;
     public Vector3Int PlayerPositionInt { get; set; }
     public static GameManager Instance
     {
@@ -80,10 +80,8 @@ public class GameManager : MonoBehaviour
             return _instance;
         }
     }
-
     private void Awake()
     {
-        hit = new Hit("",Vector3Int.zero);
         if (_instance == null)
         {
             _instance = this;
@@ -104,124 +102,168 @@ public class GameManager : MonoBehaviour
             Map2D[i / MapSizeY, i % MapSizeY] = (int)MapObject.noting;
         }
 
+        hit = new Hit("", Vector3Int.zero);
         player = FindObjectOfType<Player>();
         poolManager = GetComponent<PoolManager>();
     }
 
     private void Update()
     {
-        // 반올림을 하지 않으면 움직이고 난 후 x좌표가 1.999일때 타입케스트는 1이 된다.
-        PlayerPositionInt = new Vector3Int((int)Mathf.Round(player.transform.position.x), (int)Mathf.Round(player.transform.position.y), (int)Mathf.Round(transform.position.z));
-        
-        // 스폰된 몬스터가 존재하고 몬스터 턴이고 몬스터가 움직이는 권한이 없다면 다음 몬스터가 움직여도 된다고 판단
+        UpdatePlayerPosition();
+
+        // 몬스터의 움직임의 규칙을 담당하는 알고리즘
         if (spawnMonsters.Count > 0 && monsterTurn && !spawnMonsters[monsterAuthorityCount].GetComponent<Monster>().Authority)
         {
-            
-            if (monsterTurnCount < 2)
-            {
-                // 다음으로 권한을 넘김
-                if (monsterAuthorityCount < spawnMonsters.Count - 1)
-                {
-                    monsterAuthorityCount++;
-                    spawnMonsters[monsterAuthorityCount].GetComponent<Monster>().Authority = true;
-                }
-                // 움직이는 권한을 스폰된 몬스터에 다 확인이 끝나면
-                else
-                {
-                    //print("권한 전부 넘어감," + monsterAuthorityCount);
-                    // 움직임이 완전히 종료된 몬스터를 확인
-                    if (spawnMonsters[monsterFlagCount].GetComponent<Monster>().Flag)
-                    {
-                        // 다음으로 확인
-                        if (monsterFlagCount < spawnMonsters.Count - 1)
-                        {
-                            monsterFlagCount++;
-                        }
-                        else
-                        {
-                            //print("플래그 ALL TRUE," + monsterFlagCount);
-                            // 사망한 몬스터를 확인하고 처리, 역반복문은 Remove로 인해 count의 오차발생을 방지
-                            for (int count = spawnMonsters.Count - 1; count >= 0; count--)
-                            {
-                                if (spawnMonsters[count].GetComponent<Monster>().Die)
-                                {
-                                    // Monster.cs에 Update()주석을 참고하면 좋다.
-                                    spawnMonsters[count].GetComponent<Monster>().Authority = true;
-                                    deadMonsters.Add(spawnMonsters[count]);
-                                    spawnMonsters.RemoveAt(count);
-                                    //print("사망처리 완료," + count);
-                                }
-                            }
-                            // 사망한 몬스터를 처리한후 spawnMonsters에는 몬스터가 없을수 있음
-                            if (spawnMonsters.Count > 0)
-                            {
-                                // 사망한 몬스터 Flag 내리기
-                                for (monsterFlagCount = 0; monsterFlagCount < spawnMonsters.Count; monsterFlagCount++)
-                                {
-                                    spawnMonsters[monsterFlagCount].GetComponent<Monster>().Flag = false;
-                                }
-                            }
-                            monsterFlagCount = 0;
-                            monsterAuthorityCount = 0;
-                            monsterTurnCount++;
-                            FindNearbyMonsters();
-                        }
-                    }
-                }
-            }
-            else
-            {
-                // 몬스터의 행동 카운터를 다시 초기화
-                for (int monsterMovementCount = 0; monsterMovementCount < spawnMonsters.Count; monsterMovementCount++)
-                {
-                    spawnMonsters[monsterMovementCount].GetComponent<Monster>().MoveCount = 0;
-                    spawnMonsters[monsterMovementCount].GetComponent<Monster>().AttackCount = 0;
-                }
-                GameturnCount++;
-                GameScore += 10;
-                monsterTurnCount = 0;
-                FromMonsterToPlayer();
-            }
-
+            HandleMonsterTurn();
         }
         else if (spawnMonsters.Count == 0)
         {
             FromMonsterToPlayer();
         }
-        if (changePlayerTurn)
+
+        HandleTurnChange();
+
+        if (Input.GetMouseButtonDown(0))
         {
-            if (!MyObjectActivate)
+            HandleMouseClick();
+        }
+    }
+
+    private void UpdatePlayerPosition()
+    {
+        PlayerPositionInt = new Vector3Int(
+            (int)Mathf.Round(player.transform.position.x),
+            (int)Mathf.Round(player.transform.position.y),
+            (int)Mathf.Round(transform.position.z)
+        );
+    }
+
+    // 몬스터의 턴을 관리하는 함수
+    private void HandleMonsterTurn()
+    {
+        // 몬스터가 N번 행동 할수 있도록 함
+        if (monsterTurnCount < 2)
+        {
+            TransferAuthorityToNextMonster();
+        }
+        // 몬스터의 움직임이 끝난후 플레이어한테 넘기기전 단계
+        else
+        {
+            ResetMonsterMovements();
+            GameturnCount++;
+            GameScore += 10;
+            monsterTurnCount = 0;
+            FromMonsterToPlayer();
+        }
+    }
+    private void ResetMonsterMovements()
+    {
+        foreach (var monster in spawnMonsters)
+        {
+            monster.GetComponent<Monster>().MoveCount = 0;
+            monster.GetComponent<Monster>().AttackCount = 0;
+        }
+    }
+
+    // 몬스터의 권한을 확인하는 함수
+    private void TransferAuthorityToNextMonster()
+    {
+        // 몬스터의 권한을 확인
+        if (monsterAuthorityCount < spawnMonsters.Count - 1)
+        {
+            monsterAuthorityCount++;
+            spawnMonsters[monsterAuthorityCount].GetComponent<Monster>().Authority = true;
+        }
+        // 몬스터의 권한이 끝나면 행동과 사망을 확인함
+        else
+        {
+            CheckMonsterFlagsAndHandleDeaths();
+        }
+    }
+
+    // 행동이 끝나기 전까지 사망을 알수 없기에 행동을 확인 후 몬스터 사망처리
+    private void CheckMonsterFlagsAndHandleDeaths()
+    {
+        if (spawnMonsters[monsterFlagCount].GetComponent<Monster>().Flag)
+        {
+            if (monsterFlagCount < spawnMonsters.Count - 1)
             {
+                monsterFlagCount++;
+            }
+            else
+            {
+                HandleDeadMonsters();
                 FindNearbyMonsters();
-                changePlayerTurn = false;
-                monsterTurn = true;
-                playerTurn = false;
-            }
-        }
-        if (changeMonsterTurn)
-        {
-            if (!MyObjectActivate)
-            {
-                changeMonsterTurn = false;
-                monsterTurn = false;
-                playerTurn = true;
-            }
-        }
-        if (Input.GetMouseButtonDown(0)) // 마우스 왼쪽 버튼 클릭
-        {
-            RaycastHit2D _hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
-            
-            if (_hit.collider != null)
-            {
-                hit.name = _hit.collider.name;
-                hit.positionInt = new Vector3Int(
-                    (int)Mathf.Round(_hit.collider.transform.position.x), 
-                    (int)Mathf.Round(_hit.collider.transform.position.y), 
-                    (int)Mathf.Round(_hit.collider.transform.position.z)
-                    );
+                ResetMonsterFlags();
             }
         }
     }
+
+    // 몬스터 사망처리 함수
+    private void HandleDeadMonsters()
+    {
+        // 사망한 몬스터를 확인하고 처리, 역반복문은 Remove로 인해 count의 오차발생을 방지
+        for (int count = spawnMonsters.Count - 1; count >= 0; count--)
+        {
+            if (spawnMonsters[count].GetComponent<Monster>().Die)
+            {
+                spawnMonsters[count].GetComponent<Monster>().Authority = true;
+                deadMonsters.Add(spawnMonsters[count]);
+                spawnMonsters.RemoveAt(count);
+            }
+        }
+    }
+
+    private void ResetMonsterFlags()
+    {
+        if (spawnMonsters.Count > 0)
+        {
+            for (monsterFlagCount = 0; monsterFlagCount < spawnMonsters.Count; monsterFlagCount++)
+            {
+                spawnMonsters[monsterFlagCount].GetComponent<Monster>().Flag = false;
+            }
+        }
+
+        monsterFlagCount = 0;
+        monsterAuthorityCount = 0;
+        monsterTurnCount++;
+    }
+
+    private void HandleTurnChange()
+    {
+        if (changePlayerTurn && !MyObjectActivate)
+        {
+            FindNearbyMonsters();
+            HandleDeadMonsters();
+            changePlayerTurn = false;
+            monsterTurn = true;
+            playerTurn = false;
+        }
+
+        if (changeMonsterTurn && !MyObjectActivate)
+        {
+            changeMonsterTurn = false;
+            monsterTurn = false;
+            playerTurn = true;
+        }
+    }
+
+    private void HandleMouseClick()
+    {
+        RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
+
+        if (hit.collider != null)
+        {
+            this.hit.name = hit.collider.name;
+            this.hit.positionInt = new Vector3Int(
+                (int)Mathf.Round(hit.collider.transform.position.x),
+                (int)Mathf.Round(hit.collider.transform.position.y),
+                (int)Mathf.Round(hit.collider.transform.position.z)
+            );
+        }
+    }
+
+    // 플레이어와 가까운 몬스터 확인
     public void FindNearbyMonsters()
     {
         monsterDistances = new List<float>();
@@ -267,8 +309,6 @@ public class GameManager : MonoBehaviour
         changeMonsterTurn = true;
     }
 
-    // 플레이어 판 관련 함수
-    //----------------------------------------------------------
     public void SetMovePlane(Vector2 position)
     {
         movePlaneList.Add(Instance.poolManager.SelectPool(PoolManager.Prefabs.movePlane).Get());
@@ -284,8 +324,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // 스킬 판 관련 함수
-    //----------------------------------------------------------
     public void SetSelection(Vector2 position)
     {
         MyObject selectedObject = Instance.poolManager.SelectPool(PoolManager.Prefabs.Selection).Get();

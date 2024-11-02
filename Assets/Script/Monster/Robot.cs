@@ -10,9 +10,9 @@ public class Robot : Monster
     private float moveSpeed = 0.7f;
     private int movingDistance = 1;
 
-    bool start = true;
+    public bool start = true;
 
-    public override void Awake()
+    protected override void Awake()
     {
         base.Awake();
         monsterIdleState = new RobotIdleState(monsterMovement);
@@ -20,8 +20,8 @@ public class Robot : Monster
         monsterSkillCastingState = GetComponent<RobotSkillCastingState>();
         monsterStateMachine.Initialize(monsterIdleState);
     }
-    
-    public override void UpdateMonster()
+
+    protected override void UpdateMonster()
     {
         // 몬스터 턴이되면 한번만 작동, Authority를 통해 권한이 있을경우 움직임
         if (GameManager.Instance.monsterTurn && start && Authority)
@@ -35,7 +35,7 @@ public class Robot : Monster
                     return;
                 }
 
-                state = State.Skill;
+                state = GameManager.State.Skill;
                 AttackCount++;
             }
             else
@@ -45,7 +45,7 @@ public class Robot : Monster
                     TurnPass();
                     return; 
                 }
-                state = State.Move;
+                state = GameManager.State.Move;
                 MoveCount++;
             }
             start = false;
@@ -53,7 +53,7 @@ public class Robot : Monster
         if (Flag)
         {
             start = true;
-            state = State.Idle;
+            state = GameManager.State.Idle;
         }
     }
 }

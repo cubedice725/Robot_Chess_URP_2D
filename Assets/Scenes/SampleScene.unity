@@ -9436,6 +9436,7 @@ MonoBehaviour:
   hit:
     name: 
     positionInt: {x: 0, y: 0, z: 0}
+  MyObjectActivate: 0
 --- !u!4 &876545602
 Transform:
   m_ObjectHideFlags: 0
