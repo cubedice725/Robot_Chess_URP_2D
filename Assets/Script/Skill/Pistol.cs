@@ -1,45 +1,48 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using static GameManager;
-
-public class Knife : CloseSkill, IState
+public class Pistol : LongSkill, IState
 {
     PlayerMovement playerMovement;
-    MyObject myObject;
-    Vector3 target;
+
+    Vector3Int target;
     bool start = false;
     bool skillUse = false;
     float accuracy = 0.001f;
-    public void Entry()
+
+    private void Awake()
     {
         playerMovement = FindObjectOfType<PlayerMovement>();
-        AttackRange(1);
+    }
+    public void Entry()
+    {
+        AttackRange(2);
     }
     public void IStateUpdate()
     {
         if (UpdateSelectionCheck())
         {
-            Instance.playerSkillUse = true;
-            Instance.RemoveSelection();
-            myObject = Instance.poolManager.SelectPool(PoolManager.Prefabs.CrashBoxObject).Get();
-            myObject.transform.position = Instance.hit.positionInt;
+            Instance.MyObjectActivate = true;
             Instance.hit.name = "";
+            Instance.RemoveSelection();
             playerMovement.LookMonsterAnimation(Instance.hit.positionInt.x);
             skillUse = true;
             start = true;
         }
+
         if (start)
         {
-            if(!UpdateLookAtTarget(Instance.hit.positionInt, accuracy, 7f))
+            if (!UpdateLookAtTarget(Instance.hit.positionInt, accuracy, 7f))
             {
-                myObject.GetComponent<CrashBoxObject>().collObject.gameObject.GetComponent<Monster>().HP -= 1;
+                Shoot(PoolManager.Prefabs.AK47Bullet);
                 start = false;
             }
         }
         else if (skillUse)
         {
-            if (SkillArray(new Vector3(0,0,LeftAbj(90)), 7f))
+            if (SkillArray(Vector3.zero, 7f))
             {
-                myObject.Destroy();
                 Instance.playerState = State.Idle;
             }
         }
@@ -49,12 +52,9 @@ public class Knife : CloseSkill, IState
         Instance.RemoveSelection();
         if (skillUse)
         {
-            Instance.playerSkillUse = false;
             skillUse = false;
             return true;
         }
         return false;
     }
 }
-
- 

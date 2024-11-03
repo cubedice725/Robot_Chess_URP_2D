@@ -8,6 +8,7 @@ public class UiManager : MonoBehaviour
     {
         if (!Instance.playerTurn) return;
         Instance.playerState = State.Idle;
+
         if (Instance.player.transform.Find("MainSkill").transform.childCount > 0)
         {
             Instance.player.transform.Find("SideSkill").gameObject.SetActive(false);
@@ -27,7 +28,6 @@ public class UiManager : MonoBehaviour
     {
         if (!Instance.playerTurn) return;
         Instance.playerState = State.Idle;
-        print(Instance.playerState);
 
         if (Instance.player.transform.Find("SideSkill").transform.childCount > 0)
         {

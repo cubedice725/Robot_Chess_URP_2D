@@ -17,11 +17,6 @@ public class PlayerMovement : AStar
     {
         animator = GetComponent<Animator>();
     }
-    public void Update()
-    {
-        
-        
-    }
     // 플레이어 움직임 관련 함수
     //----------------------------------------------------------
     public bool UpdateMove()

@@ -49,6 +49,7 @@ public class GameManager : MonoBehaviour
     private int monsterFlagCount = 0;
     private int monsterAuthorityCount = 0;
 
+    public bool playerSkillUse = false;
     public bool monsterTurn = false;
     public bool playerTurn = true;
     public bool changePlayerTurn = false;
@@ -250,15 +251,16 @@ public class GameManager : MonoBehaviour
 
     private void HandleMouseClick()
     {
-        RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
-
-        if (hit.collider != null)
+        RaycastHit2D[] hits = Physics2D.RaycastAll(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
+        if (hits.Length > 0)
         {
-            this.hit.name = hit.collider.name;
+            print(hits[0].transform.name);
+
+            this.hit.name = hits[0].collider.name;
             this.hit.positionInt = new Vector3Int(
-                (int)Mathf.Round(hit.collider.transform.position.x),
-                (int)Mathf.Round(hit.collider.transform.position.y),
-                (int)Mathf.Round(hit.collider.transform.position.z)
+                (int)Mathf.Round(hits[0].collider.transform.position.x),
+                (int)Mathf.Round(hits[0].collider.transform.position.y),
+                (int)Mathf.Round(hits[0].collider.transform.position.z)
             );
         }
     }
@@ -327,7 +329,7 @@ public class GameManager : MonoBehaviour
     public void SetSelection(Vector2 position)
     {
         MyObject selectedObject = Instance.poolManager.SelectPool(PoolManager.Prefabs.Selection).Get();
-        selectedObject.transform.position = position;
+        selectedObject.transform.position = new Vector3Int((int)Mathf.Round(position.x), (int)Mathf.Round(position.y), -5);
         selectionList.Add(selectedObject);
     }
     public void RemoveSelection()

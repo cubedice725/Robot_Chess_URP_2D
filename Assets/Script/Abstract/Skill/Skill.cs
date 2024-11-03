@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static GameManager;
+using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 
 public abstract class Skill : MonoBehaviour
 {
     public bool UpdateLookAtTarget(Vector3 target, float accuracy, float rotationSpeed)
     {
-        Quaternion targetRotation = Quaternion.Euler(new Vector3(0, 0, LeftAbj(DirectionMeasurement(target))));
+        Quaternion targetRotation = Quaternion.Euler(new Vector3(0, 0, LeftAbj(TargetToAngle(target))));
 
         // 현재 회전 각도와 목표 각도 차이 계산
         float angleDifference = Quaternion.Angle(transform.rotation, targetRotation);
@@ -29,7 +30,7 @@ public abstract class Skill : MonoBehaviour
         // 좌측일경우 물체를 반대로 돌림
         if (Mathf.Sign(Instance.player.transform.localScale.x) < 0)
         {
-            angle += 180;
+            angle -= 180;
         }
         return angle;
     }
@@ -46,12 +47,14 @@ public abstract class Skill : MonoBehaviour
         return true;
     }
 
-    // 타겟 방향 계산
-    public float DirectionMeasurement(Vector3 target)
+    // 타겟에 각도 계산
+    public float TargetToAngle(Vector3 target)
     {
+        float angle;
         Vector3 direction = target - transform.position;
         direction.Normalize(); // 방향 벡터 정규화
-        return Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        return angle;
     }
 
     public bool UpdateSelectionCheck()
@@ -61,5 +64,27 @@ public abstract class Skill : MonoBehaviour
             return true;
         }
         return false;
+    }
+    public void AttackRange(int size)
+    {
+        for (int i = 1; i <= size; i++)
+        {
+            if ((Instance.PlayerPositionInt.y - i > 0)  && Instance.Map2D[Instance.PlayerPositionInt.x, Instance.PlayerPositionInt.y - i] == (int)MapObject.moster)
+            {
+                Instance.SetSelection(new Vector2(Instance.PlayerPositionInt.x, Instance.PlayerPositionInt.y - i));
+            }
+            if ((Instance.PlayerPositionInt.y + i < Instance.MapSizeY) && Instance.Map2D[Instance.PlayerPositionInt.x, Instance.PlayerPositionInt.y + i] == (int)MapObject.moster)
+            {
+                Instance.SetSelection(new Vector2(Instance.PlayerPositionInt.x, Instance.PlayerPositionInt.y + i));
+            }
+            if ((Instance.PlayerPositionInt.x - i > 0) && Instance.Map2D[Instance.PlayerPositionInt.x - i, Instance.PlayerPositionInt.y] == (int)MapObject.moster)
+            {
+                Instance.SetSelection(new Vector2(Instance.PlayerPositionInt.x - i, Instance.PlayerPositionInt.y));
+            }
+            if ((Instance.PlayerPositionInt.x + i < Instance.MapSizeX) && Instance.Map2D[Instance.PlayerPositionInt.x + i, Instance.PlayerPositionInt.y] == (int)MapObject.moster)
+            {
+                Instance.SetSelection(new Vector2(Instance.PlayerPositionInt.x + i, Instance.PlayerPositionInt.y));
+            }
+        }
     }
 }
