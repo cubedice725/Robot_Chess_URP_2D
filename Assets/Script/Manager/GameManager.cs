@@ -107,7 +107,11 @@ public class GameManager : MonoBehaviour
         player = FindObjectOfType<Player>();
         poolManager = GetComponent<PoolManager>();
     }
+    private void Start()
+    {
+        
 
+    }
     private void Update()
     {
         UpdatePlayerPosition();
@@ -314,7 +318,7 @@ public class GameManager : MonoBehaviour
     public void SetMovePlane(Vector2 position)
     {
         movePlaneList.Add(Instance.poolManager.SelectPool(PoolManager.Prefabs.movePlane).Get());
-        movePlaneList[movePlaneList.Count - 1].transform.position = new Vector3(position.x, position.y, 0);
+        movePlaneList[movePlaneList.Count - 1].transform.position = new Vector3(position.x, position.y, -5);
     }
     public void RemoveMovePlane()
     {

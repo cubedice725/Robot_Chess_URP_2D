@@ -1,18 +1,33 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using UnityEditor.EditorTools;
 using UnityEngine;
+using static GameManager;
 
 public class ItamSpawner : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private void Update()
     {
-        
+        if (Instance.playerTurn)
+        {
+            SpawnItem(1);
+        }
     }
-
-    // Update is called once per frame
-    void Update()
+    private void SpawnItem(int count)
     {
-        
+        for (int i = 0; i < count;)
+        {
+            Vector2Int ItemPosition = new Vector2Int(Random.Range(1, Instance.MapSizeX - 1), Random.Range(1, Instance.MapSizeY - 1));
+
+            if (Instance.Map2D[ItemPosition.x, ItemPosition.y] != (int)MapObject.player)
+            {
+                if (Instance.Map2D[ItemPosition.x, ItemPosition.y] != (int)MapObject.moster)
+                {
+                    Instance.poolManager.SelectPool(PoolManager.Prefabs.RangedAttackObject).Get().transform.position = new Vector3(ItemPosition.x, ItemPosition.y, 0);
+                    i++;
+                }
+            }
+        }
     }
 }

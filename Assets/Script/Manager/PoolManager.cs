@@ -11,7 +11,8 @@ public class PoolManager : MonoBehaviour
         AK47Bullet,
         Point,
         WallObject,
-        CrashBoxObject
+        CrashBoxObject,
+        RangedAttackObject
     }
     public List<ObjectPool<MyObject>> pools = new List<ObjectPool<MyObject>>();
     public List<GameObject> myObjectlPrefabs = new List<GameObject>();
@@ -24,6 +25,7 @@ public class PoolManager : MonoBehaviour
         NewPoolAdd("Prefab/Object/Point", 20);
         NewPoolAdd("Prefab/Object/WallObject", 100);
         NewPoolAdd("Prefab/Object/CrashBoxObject", 100);
+        NewPoolAdd("Prefab/Object/RangedAttackObject", 10);
     }
     public ObjectPool<MyObject> SelectPool(Prefabs prefabs)
     {
