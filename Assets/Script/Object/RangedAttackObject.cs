@@ -26,6 +26,9 @@ public class RangedAttackObject : MonoBehaviour
 
             if (transform.localScale.x >= 3)
             {
+                transform.localScale = new Vector3(0, 0, 0);
+                start = false;
+
                 GetComponent<MyObject>().Destroy();
             }
         }

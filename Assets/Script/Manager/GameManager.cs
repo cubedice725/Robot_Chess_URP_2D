@@ -5,6 +5,7 @@ using System.Reflection;
 using Unity.Burst.CompilerServices;
 using UnityEditor.EditorTools;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
 
 [Serializable]
@@ -44,8 +45,6 @@ public class GameManager : MonoBehaviour
     public State playerState = State.Idle;
     public IState skillState;
 
-    private List<MyObject> movePlaneList = new List<MyObject>();
-    private List<MyObject> selectionList = new List<MyObject>();
     private int monsterFlagCount = 0;
     private int monsterAuthorityCount = 0;
 
@@ -107,14 +106,13 @@ public class GameManager : MonoBehaviour
         player = FindObjectOfType<Player>();
         poolManager = GetComponent<PoolManager>();
     }
-    private void Start()
-    {
-        
-
-    }
     private void Update()
     {
-        UpdatePlayerPosition();
+        PlayerPositionInt = new Vector3Int(
+            (int)Mathf.Round(player.transform.position.x),
+            (int)Mathf.Round(player.transform.position.y),
+            (int)Mathf.Round(transform.position.z)
+        );
 
         // 몬스터의 움직임의 규칙을 담당하는 알고리즘
         if (spawnMonsters.Count > 0 && monsterTurn && !spawnMonsters[monsterAuthorityCount].GetComponent<Monster>().Authority)
@@ -130,17 +128,20 @@ public class GameManager : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            HandleMouseClick();
-        }
-    }
+            RaycastHit2D[] hits = Physics2D.RaycastAll(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
+            if (hits.Length > 0)
+            {
+                if (EventSystem.current.IsPointerOverGameObject()) return;
+                print(hits[0].transform.name);
 
-    private void UpdatePlayerPosition()
-    {
-        PlayerPositionInt = new Vector3Int(
-            (int)Mathf.Round(player.transform.position.x),
-            (int)Mathf.Round(player.transform.position.y),
-            (int)Mathf.Round(transform.position.z)
-        );
+                hit.name = hits[0].collider.name;
+                hit.positionInt = new Vector3Int(
+                    (int)Mathf.Round(hits[0].collider.transform.position.x),
+                    (int)Mathf.Round(hits[0].collider.transform.position.y),
+                    (int)Mathf.Round(hits[0].collider.transform.position.z)
+                );
+            }
+        }
     }
 
     // 몬스터의 턴을 관리하는 함수
@@ -161,6 +162,7 @@ public class GameManager : MonoBehaviour
             FromMonsterToPlayer();
         }
     }
+    // 몬스터 움직임 초기화
     private void ResetMonsterMovements()
     {
         foreach (var monster in spawnMonsters)
@@ -219,6 +221,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // 몬스터 플래그를 내림
     private void ResetMonsterFlags()
     {
         if (spawnMonsters.Count > 0)
@@ -240,6 +243,10 @@ public class GameManager : MonoBehaviour
         {
             FindNearbyMonsters();
             HandleDeadMonsters();
+            ResetMonsterFlags();
+            ResetMonsterMovements();
+            player.AttackCount = 0;
+            player.MoveCount = 0;
             changePlayerTurn = false;
             monsterTurn = true;
             playerTurn = false;
@@ -250,22 +257,6 @@ public class GameManager : MonoBehaviour
             changeMonsterTurn = false;
             monsterTurn = false;
             playerTurn = true;
-        }
-    }
-
-    private void HandleMouseClick()
-    {
-        RaycastHit2D[] hits = Physics2D.RaycastAll(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
-        if (hits.Length > 0)
-        {
-            print(hits[0].transform.name);
-
-            this.hit.name = hits[0].collider.name;
-            this.hit.positionInt = new Vector3Int(
-                (int)Mathf.Round(hits[0].collider.transform.position.x),
-                (int)Mathf.Round(hits[0].collider.transform.position.y),
-                (int)Mathf.Round(hits[0].collider.transform.position.z)
-            );
         }
     }
 
@@ -309,41 +300,11 @@ public class GameManager : MonoBehaviour
     public void FromPlayerToMonster()
     {
         changePlayerTurn = true;
+        
     }
     public void FromMonsterToPlayer()
     {
         changeMonsterTurn = true;
-    }
-
-    public void SetMovePlane(Vector2 position)
-    {
-        movePlaneList.Add(Instance.poolManager.SelectPool(PoolManager.Prefabs.movePlane).Get());
-        movePlaneList[movePlaneList.Count - 1].transform.position = new Vector3(position.x, position.y, -5);
-    }
-    public void RemoveMovePlane()
-    {
-        // RemoveAt으로 인해 0번째에 값들이 계속 존재함
-        while (movePlaneList.Count > 0)
-        {
-            movePlaneList[0].Destroy();
-            movePlaneList.RemoveAt(0);
-        }
-    }
-
-    public void SetSelection(Vector2 position)
-    {
-        MyObject selectedObject = Instance.poolManager.SelectPool(PoolManager.Prefabs.Selection).Get();
-        selectedObject.transform.position = new Vector3Int((int)Mathf.Round(position.x), (int)Mathf.Round(position.y), -5);
-        selectionList.Add(selectedObject);
-    }
-    public void RemoveSelection()
-    {
-        // RemoveAt으로 인해 0번째에 값들이 계속 존재함
-        while (selectionList.Count > 0)
-        {
-            selectionList[0].Destroy();
-            selectionList.RemoveAt(0);
-        }
     }
 }
 

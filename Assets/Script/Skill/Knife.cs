@@ -19,7 +19,7 @@ public class Knife : CloseSkill, IState
         if (UpdateSelectionCheck())
         {
             Instance.playerSkillUse = true;
-            Instance.RemoveSelection();
+            Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.Selection);
             myObject = Instance.poolManager.SelectPool(PoolManager.Prefabs.CrashBoxObject).Get();
             myObject.transform.position = Instance.hit.positionInt;
             Instance.hit.name = "";
@@ -46,7 +46,7 @@ public class Knife : CloseSkill, IState
     }
     public bool Exit()
     {
-        Instance.RemoveSelection();
+        Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.Selection);
         if (skillUse)
         {
             Instance.playerSkillUse = false;

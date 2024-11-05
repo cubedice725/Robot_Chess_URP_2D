@@ -68,7 +68,7 @@ public class PlayerMovement : AStar
 
         if (Instance.hit != null && Instance.hit.name.StartsWith("MovePlane"))
         {
-            Instance.RemoveMovePlane();
+            Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.movePlane);
             return true;
         }
         return false;
@@ -115,7 +115,8 @@ public class PlayerMovement : AStar
                         // 경로 탐색이 잘 되었는지, 이동 거리가 적절한지
                         if (FinalNodeList.Count > 1 && FinalNodeList.Count <= Instance.player.MoveDistance + 1)
                         {
-                            Instance.SetMovePlane(new Vector2(mapAreaX, mapAreaY));
+                            Instance.poolManager.SelectPool(PoolManager.Prefabs.movePlane).Get().transform.position
+                                = new Vector2(mapAreaX, mapAreaY);
                         }
                     }
                 }

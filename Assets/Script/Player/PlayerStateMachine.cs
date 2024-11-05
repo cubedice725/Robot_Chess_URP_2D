@@ -26,15 +26,11 @@ public class PlayerStateMachine
         {
             if(Instance.player.AttackCount == 1 && Instance.player.MoveCount == 1)
             {
-                Instance.player.AttackCount = 0;
-                Instance.player.MoveCount = 0;
-
                 Instance.FromPlayerToMonster();
             }
         }
         CurrentState = nextState;
         nextState.Entry();
-
     }
     public void PlayerStateMachineUpdate()
     {

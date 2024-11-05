@@ -18,11 +18,9 @@ public class AK47 : LongSkill, IState
     {
         for (int i = 0; i < Instance.spawnMonsters.Count; i++)
         {
-            Instance.SetSelection(
-                new Vector2(Instance.spawnMonsters[i].transform.position.x,
-                Instance.spawnMonsters[i].transform.position.y)); 
+            Instance.poolManager.SelectPool(PoolManager.Prefabs.Selection).Get().transform.position =
+                new Vector2(Instance.spawnMonsters[i].transform.position.x, Instance.spawnMonsters[i].transform.position.y); 
         }
-        
     }
     public void IStateUpdate()
     {
@@ -30,7 +28,7 @@ public class AK47 : LongSkill, IState
         {
             Instance.MyObjectActivate = true;
             Instance.hit.name = "";
-            Instance.RemoveSelection();
+            Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.Selection);
             playerMovement.LookMonsterAnimation(Instance.hit.positionInt.x);
             skillUse = true;
             start = true;
@@ -54,7 +52,7 @@ public class AK47 : LongSkill, IState
     }
     public bool Exit()
     {
-        Instance.RemoveSelection();
+        Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.Selection);
         if (skillUse)
         {
             skillUse = false;

@@ -71,19 +71,23 @@ public abstract class Skill : MonoBehaviour
         {
             if ((Instance.PlayerPositionInt.y - i > 0)  && Instance.Map2D[Instance.PlayerPositionInt.x, Instance.PlayerPositionInt.y - i] == (int)MapObject.moster)
             {
-                Instance.SetSelection(new Vector2(Instance.PlayerPositionInt.x, Instance.PlayerPositionInt.y - i));
+                Instance.poolManager.SelectPool(PoolManager.Prefabs.Selection).Get().transform.position
+                    = new Vector2(Instance.PlayerPositionInt.x, Instance.PlayerPositionInt.y - i);
             }
             if ((Instance.PlayerPositionInt.y + i < Instance.MapSizeY) && Instance.Map2D[Instance.PlayerPositionInt.x, Instance.PlayerPositionInt.y + i] == (int)MapObject.moster)
             {
-                Instance.SetSelection(new Vector2(Instance.PlayerPositionInt.x, Instance.PlayerPositionInt.y + i));
+                Instance.poolManager.SelectPool(PoolManager.Prefabs.Selection).Get().transform.position 
+                    = new Vector2(Instance.PlayerPositionInt.x, Instance.PlayerPositionInt.y + i);
             }
             if ((Instance.PlayerPositionInt.x - i > 0) && Instance.Map2D[Instance.PlayerPositionInt.x - i, Instance.PlayerPositionInt.y] == (int)MapObject.moster)
             {
-                Instance.SetSelection(new Vector2(Instance.PlayerPositionInt.x - i, Instance.PlayerPositionInt.y));
+                Instance.poolManager.SelectPool(PoolManager.Prefabs.Selection).Get().transform.position
+                    = new Vector2(Instance.PlayerPositionInt.x - i, Instance.PlayerPositionInt.y);
             }
             if ((Instance.PlayerPositionInt.x + i < Instance.MapSizeX) && Instance.Map2D[Instance.PlayerPositionInt.x + i, Instance.PlayerPositionInt.y] == (int)MapObject.moster)
             {
-                Instance.SetSelection(new Vector2(Instance.PlayerPositionInt.x + i, Instance.PlayerPositionInt.y));
+                Instance.poolManager.SelectPool(PoolManager.Prefabs.Selection).Get().transform.position
+                    = new Vector2(Instance.PlayerPositionInt.x + i, Instance.PlayerPositionInt.y);
             }
         }
     }

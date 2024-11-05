@@ -8,6 +8,7 @@ using UnityEngine.Pool;
 public class MyObject : MonoBehaviour
 {
     private IObjectPool<MyObject> _ManagedPool;
+    public PoolManager.Prefabs Prefabs { get; set; }
     public  void SetManagedPool(IObjectPool<MyObject> pool)
     {
         _ManagedPool = pool;

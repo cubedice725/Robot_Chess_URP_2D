@@ -25,7 +25,7 @@ public class Pistol : LongSkill, IState
         {
             Instance.MyObjectActivate = true;
             Instance.hit.name = "";
-            Instance.RemoveSelection();
+            Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.Selection);
             playerMovement.LookMonsterAnimation(Instance.hit.positionInt.x);
             skillUse = true;
             start = true;
@@ -49,7 +49,7 @@ public class Pistol : LongSkill, IState
     }
     public bool Exit()
     {
-        Instance.RemoveSelection();
+        Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.Selection);
         if (skillUse)
         {
             skillUse = false;
