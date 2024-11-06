@@ -69,6 +69,8 @@ public class PlayerMovement : AStar
         if (Instance.hit != null && Instance.hit.name.StartsWith("MovePlane"))
         {
             Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.movePlane);
+            Instance.ButtonLock = true;
+
             return true;
         }
         return false;

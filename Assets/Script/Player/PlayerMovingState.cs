@@ -37,8 +37,10 @@ public class PlayerMovingState : IState
         {
             moveUse = false;
             Instance.player.MoveCount++;
+            Instance.ButtonLock = false;
             return true;
         }
+        Instance.ButtonLock = false;
         return false;
     }
 }

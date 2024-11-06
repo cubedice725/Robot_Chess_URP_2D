@@ -57,6 +57,8 @@ public class GameManager : MonoBehaviour
     public Player player { get; set; }
     public PoolManager poolManager { get; set; }
     public Hit hit;
+    public bool ButtonLock { get; set; } = false;
+
     public int MapSizeX { get; set; } = 12;
     public int MapSizeY { get; set; } = 12;
     public int[,] Map2D { get; set; }
@@ -241,6 +243,7 @@ public class GameManager : MonoBehaviour
     {
         if (changePlayerTurn && !MyObjectActivate)
         {
+            ButtonLock = true;
             FindNearbyMonsters();
             HandleDeadMonsters();
             ResetMonsterFlags();
@@ -254,6 +257,7 @@ public class GameManager : MonoBehaviour
 
         if (changeMonsterTurn && !MyObjectActivate)
         {
+            ButtonLock = false;
             changeMonsterTurn = false;
             monsterTurn = false;
             playerTurn = true;
@@ -299,8 +303,8 @@ public class GameManager : MonoBehaviour
     }
     public void FromPlayerToMonster()
     {
+
         changePlayerTurn = true;
-        
     }
     public void FromMonsterToPlayer()
     {

@@ -61,6 +61,7 @@ public abstract class Skill : MonoBehaviour
     {
         if (Instance.hit != null && Instance.hit.name.StartsWith("Selection"))
         {
+            Instance.ButtonLock = true;
             return true;
         }
         return false;

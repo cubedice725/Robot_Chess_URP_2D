@@ -15,8 +15,11 @@ public class PlayerSkillCastingState : IState
         if (Instance.skillState.Exit())
         {
             Instance.player.AttackCount++;
+            Instance.ButtonLock = false;
+
             return true;
         }
+        Instance.ButtonLock = false;
         return false;
     }
 }
