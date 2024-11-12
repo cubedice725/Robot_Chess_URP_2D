@@ -5,17 +5,11 @@ using static GameManager;
 
 public class Sniper : LongSkill, IState
 {
-    PlayerMovement playerMovement;
-
     Vector3Int target;
     bool start = false;
     bool skillUse = false;
     float accuracy = 0.001f;
-
-    private void Awake()
-    {
-        playerMovement = FindObjectOfType<PlayerMovement>();
-    }
+    public override int UsageLimit { get; set; } = 3;
     public void Entry()
     {
         AttackRange(3);
@@ -38,6 +32,7 @@ public class Sniper : LongSkill, IState
             {
                 Shoot(PoolManager.Prefabs.AK47Bullet);
                 start = false;
+                Usage++;
             }
         }
         else if (skillUse)
@@ -45,6 +40,7 @@ public class Sniper : LongSkill, IState
             if (SkillArray(Vector3.zero, 7f))
             {
                 Instance.playerState = State.Idle;
+                CheckUsage();
             }
         }
     }

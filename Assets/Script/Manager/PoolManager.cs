@@ -4,15 +4,20 @@ using UnityEngine.Pool;
 
 public class PoolManager : MonoBehaviour
 {
+    // Prefabs과 NewPoolAdd의 순서를 맞춰야함
+    // 이유는 myObjectLists.Add(new List<MyObject>());
     public enum Prefabs
     {
-        movePlane,
+        MovePlane,
         Selection,
-        AK47Bullet,
+        CrashBoxObject,
+        RangedAttackObject,
         Point,
         WallObject,
-        CrashBoxObject,
-        RangedAttackObject
+        Knife,
+        Pistol,
+        Sniper,
+        AK47Bullet
     }
     // 생성된 물체를 컨트롤하기 위한 리스트, 풀로 되돌아온 즉 비활성화된 오브젝트는 관리 안함
     public List<List<MyObject>> myObjectLists = new List<List<MyObject>>();
@@ -25,11 +30,16 @@ public class PoolManager : MonoBehaviour
     {
         NewPoolAdd("Prefab/Object/movePlane", 500);
         NewPoolAdd("Prefab/Object/Selection", 20);
-        NewPoolAdd("Prefab/SkillObject/AK47Bullet", 20);
-        NewPoolAdd("Prefab/Object/Point", 20);
-        NewPoolAdd("Prefab/Object/WallObject", 100);
         NewPoolAdd("Prefab/Object/CrashBoxObject", 100);
         NewPoolAdd("Prefab/Object/RangedAttackObject", 10);
+        NewPoolAdd("Prefab/Object/Point", 20);
+        NewPoolAdd("Prefab/Object/WallObject", 100);
+
+        NewPoolAdd("Prefab/Skill/Knife", 2);
+        NewPoolAdd("Prefab/Skill/Pistol", 2);
+        NewPoolAdd("Prefab/Skill/Sniper", 2);
+
+        NewPoolAdd("Prefab/SkillObject/AK47Bullet", 20);
     }
     public ObjectPool<MyObject> SelectPool(Prefabs _prefabs)
     {

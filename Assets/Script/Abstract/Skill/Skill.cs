@@ -2,10 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static GameManager;
-using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 
 public abstract class Skill : MonoBehaviour
 {
+    public PlayerMovement playerMovement;
+    public MyObject myObject;
+    public virtual int UsageLimit { get; set; }
+    public int Usage { get; set; } = 0;
+    public void Awake()
+    {
+        playerMovement = FindObjectOfType<PlayerMovement>();
+        myObject = GetComponent<MyObject>();
+    }
     public bool UpdateLookAtTarget(Vector3 target, float accuracy, float rotationSpeed)
     {
         Quaternion targetRotation = Quaternion.Euler(new Vector3(0, 0, LeftAbj(TargetToAngle(target))));
@@ -90,6 +98,14 @@ public abstract class Skill : MonoBehaviour
                 Instance.poolManager.SelectPool(PoolManager.Prefabs.Selection).Get().transform.position
                     = new Vector2(Instance.PlayerPositionInt.x + i, Instance.PlayerPositionInt.y);
             }
+        }
+    }
+    public void CheckUsage()
+    {
+        if(Usage >= UsageLimit)
+        {
+            transform.parent = null;
+            myObject.Destroy();
         }
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
 using static GameManager;
@@ -7,6 +8,8 @@ using static GameManager;
 public class SideButton : MonoBehaviour
 {
     Sprite img;
+    public Sprite veto;
+
     bool changeSkill = false;
     Button button;
     private void Awake()
@@ -32,7 +35,7 @@ public class SideButton : MonoBehaviour
         {
             Instance.playerState = State.Idle;
         }
-        
+
         if (Instance.player.transform.Find("SideSkill").transform.childCount > 0)
         {
             if (img == Instance.player.transform.Find("SideSkill").transform.GetChild(0).GetComponent<SpriteRenderer>().sprite) return;
@@ -40,8 +43,11 @@ public class SideButton : MonoBehaviour
             GetComponent<Image>().sprite = Instance.player.transform.Find("SideSkill").transform.GetChild(0).GetComponent<SpriteRenderer>().sprite;
             img = Instance.player.transform.Find("SideSkill").transform.GetChild(0).GetComponent<SpriteRenderer>().sprite;
         }
+        else
+        {
+            GetComponent<Image>().sprite = veto;
+        }
     }
-    // 플레이어는 스킬을 사용하기 위해 무언가를 착용했는 SideSkill을 확인함
     public void OnClickSideButtion()
     {
         if (!Instance.playerTurn) return;
@@ -49,7 +55,6 @@ public class SideButton : MonoBehaviour
         if (Instance.player.transform.Find("SideSkill").transform.childCount > 0)
         {
             changeSkill = true;
-
             Instance.player.transform.Find("MainSkill").gameObject.SetActive(false);
             Instance.player.transform.Find("SideSkill").gameObject.SetActive(true);
 

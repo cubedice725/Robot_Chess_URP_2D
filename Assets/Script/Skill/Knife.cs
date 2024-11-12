@@ -3,15 +3,16 @@ using static GameManager;
 
 public class Knife : CloseSkill, IState
 {
-    PlayerMovement playerMovement;
-    MyObject myObject;
+    MyObject crashBoxObject;
+
     Vector3 target;
     bool start = false;
     bool skillUse = false;
     float accuracy = 0.001f;
+    public override int UsageLimit { get; set; } = 1;
+
     public void Entry()
     {
-        playerMovement = FindObjectOfType<PlayerMovement>();
         AttackRange(1);
     }
     public void IStateUpdate()
@@ -20,8 +21,8 @@ public class Knife : CloseSkill, IState
         {
             Instance.playerSkillUse = true;
             Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.Selection);
-            myObject = Instance.poolManager.SelectPool(PoolManager.Prefabs.CrashBoxObject).Get();
-            myObject.transform.position = Instance.hit.positionInt;
+            crashBoxObject = Instance.poolManager.SelectPool(PoolManager.Prefabs.CrashBoxObject).Get();
+            crashBoxObject.transform.position = Instance.hit.positionInt;
             Instance.hit.name = "";
             playerMovement.LookMonsterAnimation(Instance.hit.positionInt.x);
             skillUse = true;
@@ -31,16 +32,18 @@ public class Knife : CloseSkill, IState
         {
             if(!UpdateLookAtTarget(Instance.hit.positionInt, accuracy, 7f))
             {
-                myObject.GetComponent<CrashBoxObject>().collObject.gameObject.GetComponent<Monster>().HP -= 1;
+                crashBoxObject.GetComponent<CrashBoxObject>().collObject.gameObject.GetComponent<Monster>().HP -= 1;
                 start = false;
+                Usage++;
             }
         }
         else if (skillUse)
         {
             if (SkillArray(new Vector3(0,0,LeftAbj(90)), 7f))
             {
-                myObject.Destroy();
+                crashBoxObject.Destroy();
                 Instance.playerState = State.Idle;
+                CheckUsage();
             }
         }
     }

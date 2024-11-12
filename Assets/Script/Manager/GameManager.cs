@@ -63,7 +63,7 @@ public class GameManager : MonoBehaviour
     public int MapSizeY { get; set; } = 12;
     public int[,] Map2D { get; set; }
     public int GameScore { get; set; } = 0;
-    public int GameturnCount { get; set; } = 0;
+    public int GameTurnCount { get; set; } = 0;
     // 필드에 오브젝트 존재여부 확인
     public bool MyObjectActivate  = false;
     public Vector3Int PlayerPositionInt { get; set; }
@@ -130,6 +130,7 @@ public class GameManager : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
+            
             RaycastHit2D[] hits = Physics2D.RaycastAll(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
             if (hits.Length > 0)
             {
@@ -158,7 +159,7 @@ public class GameManager : MonoBehaviour
         else
         {
             ResetMonsterMovements();
-            GameturnCount++;
+            GameTurnCount++;
             GameScore += 10;
             monsterTurnCount = 0;
             FromMonsterToPlayer();
@@ -248,8 +249,7 @@ public class GameManager : MonoBehaviour
             HandleDeadMonsters();
             ResetMonsterFlags();
             ResetMonsterMovements();
-            player.AttackCount = 0;
-            player.MoveCount = 0;
+            
             changePlayerTurn = false;
             monsterTurn = true;
             playerTurn = false;
@@ -257,6 +257,8 @@ public class GameManager : MonoBehaviour
 
         if (changeMonsterTurn && !MyObjectActivate)
         {
+            player.AttackCount = 0;
+            player.MoveCount = 0;
             ButtonLock = false;
             changeMonsterTurn = false;
             monsterTurn = false;
@@ -303,7 +305,9 @@ public class GameManager : MonoBehaviour
     }
     public void FromPlayerToMonster()
     {
-
+        poolManager.AllDistroyMyObject(PoolManager.Prefabs.MovePlane);
+        poolManager.AllDistroyMyObject(PoolManager.Prefabs.Selection);
+        hit.name = "";
         changePlayerTurn = true;
     }
     public void FromMonsterToPlayer()

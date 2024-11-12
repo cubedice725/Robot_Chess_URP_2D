@@ -4,17 +4,12 @@ using UnityEngine;
 using static GameManager;
 public class Pistol : LongSkill, IState
 {
-    PlayerMovement playerMovement;
-
     Vector3Int target;
     bool start = false;
     bool skillUse = false;
     float accuracy = 0.001f;
+    public override int UsageLimit { get; set; } = 6;
 
-    private void Awake()
-    {
-        playerMovement = FindObjectOfType<PlayerMovement>();
-    }
     public void Entry()
     {
         AttackRange(2);
@@ -37,6 +32,7 @@ public class Pistol : LongSkill, IState
             {
                 Shoot(PoolManager.Prefabs.AK47Bullet);
                 start = false;
+                Usage++;
             }
         }
         else if (skillUse)
@@ -44,6 +40,7 @@ public class Pistol : LongSkill, IState
             if (SkillArray(Vector3.zero, 7f))
             {
                 Instance.playerState = State.Idle;
+                CheckUsage();
             }
         }
     }

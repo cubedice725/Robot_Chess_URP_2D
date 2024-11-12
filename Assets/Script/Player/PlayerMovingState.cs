@@ -32,7 +32,7 @@ public class PlayerMovingState : IState
     }
     public bool Exit()
     {
-        Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.movePlane);
+        Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.MovePlane);
         if (moveUse)
         {
             moveUse = false;

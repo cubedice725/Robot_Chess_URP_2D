@@ -9,7 +9,7 @@ public class ItamSpawner : MonoBehaviour
 {
     private void Update()
     {
-        if (Instance.playerTurn && Instance.poolManager.myObjectLists[(int)PoolManager.Prefabs.RangedAttackObject].Count < 1)
+        if (Instance.playerTurn && Instance.poolManager.myObjectLists[(int)PoolManager.Prefabs.RangedAttackObject].Count < 1 && Instance.GameTurnCount >= 7)
         {
             SpawnItem(1);
         }

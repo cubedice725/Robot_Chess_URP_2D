@@ -3,17 +3,12 @@ using static GameManager;
 
 public class AK47 : LongSkill, IState
 {
-    PlayerMovement playerMovement;
     
     Vector3Int target;
     bool start = false;
     bool skillUse = false;
     float accuracy = 0.001f;
 
-    private void Awake()
-    {
-        playerMovement = FindObjectOfType<PlayerMovement>();
-    }
     public void Entry()
     {
         for (int i = 0; i < Instance.spawnMonsters.Count; i++)
