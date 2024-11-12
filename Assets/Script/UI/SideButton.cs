@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
 using static GameManager;
@@ -8,6 +5,8 @@ using static GameManager;
 public class SideButton : MonoBehaviour
 {
     Sprite img;
+    Sprite NextImg;
+
     public Sprite veto;
 
     bool changeSkill = false;
@@ -38,13 +37,19 @@ public class SideButton : MonoBehaviour
 
         if (Instance.player.transform.Find("SideSkill").transform.childCount > 0)
         {
-            if (img == Instance.player.transform.Find("SideSkill").transform.GetChild(0).GetComponent<SpriteRenderer>().sprite) return;
+            NextImg = Instance.player.transform.Find("SideSkill").transform.GetChild(0).GetComponent<SpriteRenderer>().sprite;
+
+            if (img == NextImg) return;
 
             GetComponent<Image>().sprite = Instance.player.transform.Find("SideSkill").transform.GetChild(0).GetComponent<SpriteRenderer>().sprite;
             img = Instance.player.transform.Find("SideSkill").transform.GetChild(0).GetComponent<SpriteRenderer>().sprite;
         }
         else
         {
+            NextImg = veto;
+
+            if (img == NextImg) return;
+
             GetComponent<Image>().sprite = veto;
         }
     }

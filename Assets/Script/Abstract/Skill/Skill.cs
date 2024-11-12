@@ -105,6 +105,11 @@ public abstract class Skill : MonoBehaviour
         if(Usage >= UsageLimit)
         {
             transform.parent = null;
+            if(myObject.transform.localScale.x < 0)
+            {
+                myObject.transform.localScale = new Vector3(-myObject.transform.localScale.x, myObject.transform.localScale.y, 0);
+            }
+            myObject.transform.rotation = Quaternion.Euler(Vector3Int.zero);
             myObject.Destroy();
         }
     }

@@ -7,8 +7,9 @@ using static GameManager;
 public class MainButton : MonoBehaviour
 {
     Sprite img;
-    public Sprite veto;
+    Sprite NextImg;
 
+    public Sprite veto;
     bool changeSkill = false;
     Button button;
     private void Awake()
@@ -37,13 +38,16 @@ public class MainButton : MonoBehaviour
         
         if (Instance.player.transform.Find("MainSkill").transform.childCount > 0)
         {
-            if (img == Instance.player.transform.Find("MainSkill").transform.GetChild(0).GetComponent<SpriteRenderer>().sprite) return;
+            NextImg = Instance.player.transform.Find("MainSkill").transform.GetChild(0).GetComponent<SpriteRenderer>().sprite;
+            if (img == NextImg) return;
 
             GetComponent<Image>().sprite = Instance.player.transform.Find("MainSkill").transform.GetChild(0).GetComponent<SpriteRenderer>().sprite;
             img = Instance.player.transform.Find("MainSkill").transform.GetChild(0).GetComponent<SpriteRenderer>().sprite;
         }
         else
         {
+            NextImg = veto;
+            if (img == NextImg) return;
             GetComponent<Image>().sprite = veto;
         }
     }

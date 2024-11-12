@@ -1,12 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Reflection;
-using Unity.Burst.CompilerServices;
-using UnityEditor.EditorTools;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UIElements;
 
 [Serializable]
 public class Hit
