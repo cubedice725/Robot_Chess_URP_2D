@@ -47,10 +47,9 @@ public class SideButton : MonoBehaviour
         else
         {
             NextImg = veto;
-
             if (img == NextImg) return;
-
             GetComponent<Image>().sprite = veto;
+            img = veto;
         }
     }
     public void OnClickSideButtion()

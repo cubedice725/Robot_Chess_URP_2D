@@ -68,7 +68,7 @@ public class MonsterSpawner : MonoBehaviour
     {
         if(Instance.spawnMonsters.Count == 0 && Instance.playerTurn)
         {
-            SpawnMonster(1);
+            SpawnMonster(10);
         }
     }
     private void SpawnMonster(int monsterSpawnCount)

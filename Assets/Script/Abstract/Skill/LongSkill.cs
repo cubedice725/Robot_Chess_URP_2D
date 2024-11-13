@@ -9,7 +9,10 @@ public abstract class LongSkill : Skill
     public void Shoot(PoolManager.Prefabs prefabs)
     {
         MyObject ThrowableObject = Instance.poolManager.SelectPool(prefabs).Get();
+        ThrowableObject.gameObject.SetActive(false);
         ThrowableObject.transform.position = transform.GetChild(0).transform.position;
         ThrowableObject.transform.rotation = Quaternion.Euler(new Vector3(0, 0, LeftAbj(transform.eulerAngles.z)));
+        ThrowableObject.gameObject.SetActive(true);
+
     }
 }

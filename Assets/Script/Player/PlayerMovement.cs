@@ -68,6 +68,8 @@ public class PlayerMovement : AStar
 
         if (Instance.hit != null && Instance.hit.name.StartsWith("MovePlane"))
         {
+            Instance.hit.name = "";
+
             Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.MovePlane);
             Instance.ButtonLock = true;
 
@@ -118,7 +120,7 @@ public class PlayerMovement : AStar
                         if (FinalNodeList.Count > 1 && FinalNodeList.Count <= Instance.player.MoveDistance + 1)
                         {
                             Instance.poolManager.SelectPool(PoolManager.Prefabs.MovePlane).Get().transform.position
-                                = new Vector3Int(mapAreaX, mapAreaY, 1);
+                                = new Vector3Int(mapAreaX, mapAreaY, -1);
                         }
                     }
                 }

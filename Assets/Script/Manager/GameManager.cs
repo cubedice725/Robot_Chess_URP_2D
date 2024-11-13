@@ -182,27 +182,23 @@ public class GameManager : MonoBehaviour
         // 몬스터의 권한이 끝나면 행동과 사망을 확인함
         else
         {
-            CheckMonsterFlagsAndHandleDeaths();
+            // 행동이 끝나기 전까지 사망을 알수 없기에 행동을 확인 후 몬스터 사망처리
+            if (spawnMonsters[monsterFlagCount].GetComponent<Monster>().Flag)
+            {
+                if (monsterFlagCount < spawnMonsters.Count - 1)
+                {
+                    monsterFlagCount++;
+                }
+                else
+                {
+                    HandleDeadMonsters();
+                    FindNearbyMonsters();
+                    ResetMonsterFlags();
+                }
+            }
         }
     }
 
-    // 행동이 끝나기 전까지 사망을 알수 없기에 행동을 확인 후 몬스터 사망처리
-    private void CheckMonsterFlagsAndHandleDeaths()
-    {
-        if (spawnMonsters[monsterFlagCount].GetComponent<Monster>().Flag)
-        {
-            if (monsterFlagCount < spawnMonsters.Count - 1)
-            {
-                monsterFlagCount++;
-            }
-            else
-            {
-                HandleDeadMonsters();
-                FindNearbyMonsters();
-                ResetMonsterFlags();
-            }
-        }
-    }
 
     // 몬스터 사망처리 함수
     private void HandleDeadMonsters()
@@ -240,11 +236,11 @@ public class GameManager : MonoBehaviour
         if (changePlayerTurn && !MyObjectActivate)
         {
             ButtonLock = true;
-            FindNearbyMonsters();
             HandleDeadMonsters();
             ResetMonsterFlags();
             ResetMonsterMovements();
-            
+            FindNearbyMonsters();
+
             changePlayerTurn = false;
             monsterTurn = true;
             playerTurn = false;

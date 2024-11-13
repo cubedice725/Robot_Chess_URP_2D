@@ -49,6 +49,7 @@ public class MainButton : MonoBehaviour
             NextImg = veto;
             if (img == NextImg) return;
             GetComponent<Image>().sprite = veto;
+            img = veto;
         }
     }
     public void OnClickMainButtion()

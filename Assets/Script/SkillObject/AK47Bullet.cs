@@ -3,12 +3,12 @@ using UnityEngine;
 public class AK47Bullet : MonoBehaviour
 {
     MyObject MyObject;
-    float speed = 30;
+    float speed = 20;
     private void Awake()
     {
         MyObject = GetComponent<MyObject>();
     }
-    void Update()
+    void FixedUpdate()
     {
         transform.Translate(speed * Time.deltaTime,0,0);
     }
