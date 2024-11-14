@@ -9,7 +9,7 @@ public class Knife : CloseSkill, IState
     bool start = false;
     bool skillUse = false;
     float accuracy = 0.001f;
-    public override int UsageLimit { get; set; } = 1;
+    public override int UsageLimit { get => 1; set { } }
 
     public void Entry()
     {

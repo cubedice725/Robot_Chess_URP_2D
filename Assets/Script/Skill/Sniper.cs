@@ -9,7 +9,7 @@ public class Sniper : LongSkill, IState
     bool start = false;
     bool skillUse = false;
     float accuracy = 0.001f;
-    public override int UsageLimit { get; set; } = 3;
+    public override int UsageLimit { get => 3; set { } }
     public void Entry()
     {
         AttackRange(3);

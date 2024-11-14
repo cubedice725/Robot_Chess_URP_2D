@@ -10,7 +10,7 @@ public class AK47Bullet : MonoBehaviour
     }
     void FixedUpdate()
     {
-        transform.Translate(speed * Time.deltaTime,0,0);
+        transform.Translate(speed * Time.fixedDeltaTime, 0,0);
     }
     public void OnCollisionEnter2D(Collision2D collision)
     {

@@ -32,9 +32,6 @@ public class GameManager : MonoBehaviour
         moster
     }
     private static GameManager _instance;
-
-    public List<GameObject> spawnMonsters = new List<GameObject>();
-    public List<GameObject> deadMonsters = new List<GameObject>();
     public List<float> monsterDistances = new List<float>();
 
     public State playerState = State.Idle;
@@ -112,11 +109,49 @@ public class GameManager : MonoBehaviour
         );
 
         // 몬스터의 움직임의 규칙을 담당하는 알고리즘
-        if (spawnMonsters.Count > 0 && monsterTurn && !spawnMonsters[monsterAuthorityCount].GetComponent<Monster>().Authority)
+        if (monsterTurn
+            && poolManager.MyObjectLists[(int)PoolManager.Prefabs.Robot].Count > 0
+            && !poolManager.MyObjectLists[(int)PoolManager.Prefabs.Robot][monsterAuthorityCount].GetComponent<Monster>().Authority)
         {
-            HandleMonsterTurn();
+            // 몬스터가 N번 행동 할수 있도록 함
+            if (monsterTurnCount < 2)
+            {
+                // 몬스터의 권한을 확인
+                if (monsterAuthorityCount < poolManager.MyObjectLists[(int)PoolManager.Prefabs.Robot].Count - 1)
+                {
+                    monsterAuthorityCount++;
+                    poolManager.MyObjectLists[(int)PoolManager.Prefabs.Robot][monsterAuthorityCount].GetComponent<Monster>().Authority = true;
+                }
+                // 몬스터의 권한이 끝나면 행동과 사망을 확인함
+                else
+                {
+                    // 행동이 끝나기 전까지 사망을 알수 없기에 행동을 확인 후 몬스터 사망처리
+                    if (poolManager.MyObjectLists[(int)PoolManager.Prefabs.Robot][monsterFlagCount].GetComponent<Monster>().Flag)
+                    {
+                        if (monsterFlagCount < poolManager.MyObjectLists[(int)PoolManager.Prefabs.Robot].Count - 1)
+                        {
+                            monsterFlagCount++;
+                        }
+                        else
+                        {
+                            HandleDeadMonsters();
+                            FindNearbyMonsters();
+                            ResetMonsterFlags();
+                        }
+                    }
+                }
+            }
+            // 몬스터의 움직임이 끝난후 플레이어한테 넘기기전 단계
+            else
+            {
+                ResetMonsterMovements();
+                GameTurnCount++;
+                GameScore += 10;
+                monsterTurnCount = 0;
+                FromMonsterToPlayer();
+            }
         }
-        else if (spawnMonsters.Count == 0)
+        else if (poolManager.MyObjectLists[(int)PoolManager.Prefabs.Robot].Count == 0)
         {
             FromMonsterToPlayer();
         }
@@ -142,60 +177,13 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // 몬스터의 턴을 관리하는 함수
-    private void HandleMonsterTurn()
-    {
-        // 몬스터가 N번 행동 할수 있도록 함
-        if (monsterTurnCount < 2)
-        {
-            TransferAuthorityToNextMonster();
-        }
-        // 몬스터의 움직임이 끝난후 플레이어한테 넘기기전 단계
-        else
-        {
-            ResetMonsterMovements();
-            GameTurnCount++;
-            GameScore += 10;
-            monsterTurnCount = 0;
-            FromMonsterToPlayer();
-        }
-    }
     // 몬스터 움직임 초기화
     private void ResetMonsterMovements()
     {
-        foreach (var monster in spawnMonsters)
+        foreach (var monster in poolManager.MyObjectLists[(int)PoolManager.Prefabs.Robot])
         {
             monster.GetComponent<Monster>().MoveCount = 0;
             monster.GetComponent<Monster>().AttackCount = 0;
-        }
-    }
-
-    // 몬스터의 권한을 확인하는 함수
-    private void TransferAuthorityToNextMonster()
-    {
-        // 몬스터의 권한을 확인
-        if (monsterAuthorityCount < spawnMonsters.Count - 1)
-        {
-            monsterAuthorityCount++;
-            spawnMonsters[monsterAuthorityCount].GetComponent<Monster>().Authority = true;
-        }
-        // 몬스터의 권한이 끝나면 행동과 사망을 확인함
-        else
-        {
-            // 행동이 끝나기 전까지 사망을 알수 없기에 행동을 확인 후 몬스터 사망처리
-            if (spawnMonsters[monsterFlagCount].GetComponent<Monster>().Flag)
-            {
-                if (monsterFlagCount < spawnMonsters.Count - 1)
-                {
-                    monsterFlagCount++;
-                }
-                else
-                {
-                    HandleDeadMonsters();
-                    FindNearbyMonsters();
-                    ResetMonsterFlags();
-                }
-            }
         }
     }
 
@@ -203,14 +191,11 @@ public class GameManager : MonoBehaviour
     // 몬스터 사망처리 함수
     private void HandleDeadMonsters()
     {
-        // 사망한 몬스터를 확인하고 처리, 역반복문은 Remove로 인해 count의 오차발생을 방지
-        for (int count = spawnMonsters.Count - 1; count >= 0; count--)
+        for (int count = poolManager.MyObjectLists[(int)PoolManager.Prefabs.Robot].Count; count < 0; count++)
         {
-            if (spawnMonsters[count].GetComponent<Monster>().Die)
+            if (poolManager.MyObjectLists[(int)PoolManager.Prefabs.Robot][count].GetComponent<Monster>().Die)
             {
-                spawnMonsters[count].GetComponent<Monster>().Authority = true;
-                deadMonsters.Add(spawnMonsters[count]);
-                spawnMonsters.RemoveAt(count);
+                poolManager.MyObjectLists[(int)PoolManager.Prefabs.Robot][count].GetComponent<Monster>().Authority = true;
             }
         }
     }
@@ -218,17 +203,29 @@ public class GameManager : MonoBehaviour
     // 몬스터 플래그를 내림
     private void ResetMonsterFlags()
     {
-        if (spawnMonsters.Count > 0)
+        if (poolManager.MyObjectLists[(int)PoolManager.Prefabs.Robot].Count > 0)
         {
-            for (monsterFlagCount = 0; monsterFlagCount < spawnMonsters.Count; monsterFlagCount++)
+            for (monsterFlagCount = 0; monsterFlagCount < poolManager.MyObjectLists[(int)PoolManager.Prefabs.Robot].Count; monsterFlagCount++)
             {
-                spawnMonsters[monsterFlagCount].GetComponent<Monster>().Flag = false;
+                poolManager.MyObjectLists[(int)PoolManager.Prefabs.Robot][monsterFlagCount].GetComponent<Monster>().Flag = false;
             }
         }
 
         monsterFlagCount = 0;
         monsterAuthorityCount = 0;
         monsterTurnCount++;
+    }
+
+    //몬스터의 거리확인
+    public void FindNearbyMonsters()
+    {
+        monsterDistances = new List<float>();
+        for (int index = 0; index < poolManager.MyObjectLists[(int)PoolManager.Prefabs.Robot].Count; index++)
+        {
+            monsterDistances.Add(Vector2.Distance(player.transform.position, poolManager.MyObjectLists[(int)PoolManager.Prefabs.Robot][index].transform.position));
+        }
+        InsertionSort();
+        poolManager.MyObjectLists[(int)PoolManager.Prefabs.Robot][0].GetComponent<Monster>().Authority = true;
     }
 
     private void HandleTurnChange()
@@ -258,31 +255,22 @@ public class GameManager : MonoBehaviour
     }
 
     // 플레이어와 가까운 몬스터 확인
-    public void FindNearbyMonsters()
-    {
-        monsterDistances = new List<float>();
-        for (int index = 0; index < spawnMonsters.Count; index++)
-        {
-            monsterDistances.Add(Vector2.Distance(player.transform.position, spawnMonsters[index].transform.position));
-        }
-        InsertionSort();
-        spawnMonsters[0].GetComponent<Monster>().Authority = true;
-    }
+    
     public void InsertionSort()
     {
         int j = 0;
         float key = 0;
-        GameObject gameObject = null;
-        for (int i = 1; i < spawnMonsters.Count; i++)
+        MyObject gameObject = null;
+        for (int i = 1; i < poolManager.MyObjectLists[(int)PoolManager.Prefabs.Robot].Count; i++)
         {
             key = monsterDistances[i];
-            gameObject = spawnMonsters[i];
+            gameObject = poolManager.MyObjectLists[(int)PoolManager.Prefabs.Robot][i];
             for (j = i - 1; j >= 0; j--)
             {
                 if (monsterDistances[j] > key)
                 {
                     monsterDistances[j + 1] = monsterDistances[j];
-                    spawnMonsters[j + 1] = spawnMonsters[j];
+                    poolManager.MyObjectLists[(int)PoolManager.Prefabs.Robot][j + 1] = poolManager.MyObjectLists[(int)PoolManager.Prefabs.Robot][j];
                 }
                 else
                 {
@@ -291,7 +279,7 @@ public class GameManager : MonoBehaviour
             }
 
             monsterDistances[j + 1] = key;
-            spawnMonsters[j + 1] = gameObject;
+            poolManager.MyObjectLists[(int)PoolManager.Prefabs.Robot][j + 1] = gameObject;
         }
     }
     public void FromPlayerToMonster()

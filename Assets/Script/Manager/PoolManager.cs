@@ -14,13 +14,14 @@ public class PoolManager : MonoBehaviour
         RangedAttackObject,
         Point,
         WallObject,
+        Robot,
         Knife,
         Pistol,
         Sniper,
         AK47Bullet
     }
     // 생성된 물체를 컨트롤하기 위한 리스트, 풀로 되돌아온 즉 비활성화된 오브젝트는 관리 안함
-    public List<List<MyObject>> myObjectLists = new List<List<MyObject>>();
+    public List<List<MyObject>> MyObjectLists { get; private set; } = new List<List<MyObject>>();
     public List<ObjectPool<MyObject>> pools = new List<ObjectPool<MyObject>>();
     public List<GameObject> myObjectlPrefabs = new List<GameObject>();
     
@@ -34,6 +35,8 @@ public class PoolManager : MonoBehaviour
         NewPoolAdd("Prefab/Object/RangedAttackObject", 10);
         NewPoolAdd("Prefab/Object/Point", 20);
         NewPoolAdd("Prefab/Object/WallObject", 100);
+        
+        NewPoolAdd("Prefab/Monster/Robot", 50);
 
         NewPoolAdd("Prefab/Skill/Knife", 2);
         NewPoolAdd("Prefab/Skill/Pistol", 2);
@@ -49,9 +52,9 @@ public class PoolManager : MonoBehaviour
     public void AllDistroyMyObject(Prefabs _prefabs)
     {
         // RemoveAt으로 인해 0번째에 값들이 계속 존재함
-        while (myObjectLists[(int)_prefabs].Count > 0)
+        while (MyObjectLists[(int)_prefabs].Count > 0)
         {
-            myObjectLists[(int)_prefabs][0].Destroy();
+            MyObjectLists[(int)_prefabs][0].Destroy();
         }
     }
     private void NewPoolAdd(string prefabsName, int _maxSize)
@@ -65,7 +68,7 @@ public class PoolManager : MonoBehaviour
             OnDestroyMyObject,
             maxSize: _maxSize
             ));
-        myObjectLists.Add(new List<MyObject>());
+        MyObjectLists.Add(new List<MyObject>());
     }
     private MyObject CreateMyObject()
     {
@@ -76,18 +79,18 @@ public class PoolManager : MonoBehaviour
     }
     private void OnGetMyObject(MyObject myObject)
     {
-        myObjectLists[(int)prefabs].Add(myObject);
+        MyObjectLists[(int)prefabs].Add(myObject);
         myObject.gameObject.SetActive(true);
     }
     private void OnReleaseMyObject(MyObject myObject)
     {
         // 돌아온 오브젝트가 무엇인지 판단
-        for (int i = 0; i < myObjectLists[(int)myObject.Prefabs].Count; i++)
+        for (int i = 0; i < MyObjectLists[(int)myObject.Prefabs].Count; i++)
         {
             // 돌아온 오브젝트가 무엇인지 확인되면 myObjectLists에서 제외시킴
-            if (myObject = myObjectLists[(int)myObject.Prefabs][i])
+            if (myObject = MyObjectLists[(int)myObject.Prefabs][i])
             {
-                myObjectLists[(int)myObject.Prefabs].RemoveAt(i);
+                MyObjectLists[(int)myObject.Prefabs].RemoveAt(i);
                 myObject.gameObject.SetActive(false);
                 return;
             }

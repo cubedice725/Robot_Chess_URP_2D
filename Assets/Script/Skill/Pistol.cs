@@ -8,7 +8,7 @@ public class Pistol : LongSkill, IState
     bool start = false;
     bool skillUse = false;
     float accuracy = 0.001f;
-    public override int UsageLimit { get; set; } = 6;
+    public override int UsageLimit { get => 6; set { } }
 
     public void Entry()
     {

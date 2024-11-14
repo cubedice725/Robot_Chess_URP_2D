@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using Unity.VisualScripting;
 using UnityEngine;
 using static GameManager;
+using static PoolManager;
 
 public class MonsterSpawner : MonoBehaviour
 {
@@ -11,7 +13,9 @@ public class MonsterSpawner : MonoBehaviour
     private Vector2Int size;
     private List<MyObject> points = new List<MyObject>();
     private GameObject monster;
-    
+
+    private int unspondedMonsters = 0;
+    private bool start = false;
     private void Awake()
     {
         monster = Resources.Load("Prefab/Monster/Robot", typeof(GameObject)) as GameObject;
@@ -28,7 +32,7 @@ public class MonsterSpawner : MonoBehaviour
         //100
         for (index = 0; index < size.y; index++)
         {
-            points.Add(Instance.poolManager.SelectPool(PoolManager.Prefabs.Point).Get());
+            points.Add(Instance.poolManager.SelectPool(Prefabs.Point).Get());
             points[count].transform.position = startPosition + new Vector3Int(0, index, 0);
             points[count].transform.parent = transform;
             count++;
@@ -38,7 +42,7 @@ public class MonsterSpawner : MonoBehaviour
         //101
         for (index = 0; index < size.y; index++)
         {
-            points.Add(Instance.poolManager.SelectPool(PoolManager.Prefabs.Point).Get());
+            points.Add(Instance.poolManager.SelectPool(Prefabs.Point).Get());
             points[count].transform.position = startPosition + new Vector3Int(size.x - 1, index, 0);
             points[count].transform.parent = transform;
             count++;
@@ -48,7 +52,7 @@ public class MonsterSpawner : MonoBehaviour
         //111
         for (index = 1; index < size.x - 1; index++)
         {
-            points.Add(Instance.poolManager.SelectPool(PoolManager.Prefabs.Point).Get());
+            points.Add(Instance.poolManager.SelectPool(Prefabs.Point).Get());
             points[count].transform.position = startPosition + new Vector3Int(index, 0, 0);
             points[count].transform.parent = transform;
             count++;
@@ -58,32 +62,78 @@ public class MonsterSpawner : MonoBehaviour
         //111
         for (index = 1; index < size.x - 1; index++)
         {
-            points.Add(Instance.poolManager.SelectPool(PoolManager.Prefabs.Point).Get());
+            points.Add(Instance.poolManager.SelectPool(Prefabs.Point).Get());
             points[count].transform.position = startPosition + new Vector3Int(index, size.y - 1, 0);
             points[count].transform.parent = transform;
             count++;
         }
+        SpawnMonster(5);
     }
     private void Update()
     {
-        if(Instance.spawnMonsters.Count == 0 && Instance.playerTurn)
+        if (Instance.monsterTurn)
         {
-            SpawnMonster(10);
+            start = true;
+        }
+        if(Instance.GameTurnCount % 1 == 0 && Instance.playerTurn && Instance.GameTurnCount != 0 && start)
+        {
+            SpawnMonster(3);
+            SpawnMonster(0);
+            start = false; 
         }
     }
-    private void SpawnMonster(int monsterSpawnCount)
+    private void SpawnMonster(int numMonstersSummon)
     {
-        for (int i = 0; i < monsterSpawnCount;)
+        int unavailableNumberCount = 0;
+        bool[] verifiedNumber = new bool[points.Count];
+        for (int index = 0; index < points.Count; index++)
         {
-            int num = Random.Range(0, points.Count);
-            if (Instance.Map2D[(int)Mathf.Round(points[num].transform.position.x), (int)Mathf.Round(points[num].transform.position.y)] != (int)MapObject.player)
+            if (Instance.Map2D[(int)Mathf.Round(points[index].transform.position.x), (int)Mathf.Round(points[index].transform.position.y)] != (int)MapObject.player
+                && Instance.Map2D[(int)Mathf.Round(points[index].transform.position.x), (int)Mathf.Round(points[index].transform.position.y)] != (int)MapObject.moster)
             {
-                if (Instance.Map2D[(int)Mathf.Round(points[num].transform.position.x), (int)Mathf.Round(points[num].transform.position.y)] != (int)MapObject.moster)
-                {
-                    GameObject MonsterObject = Instantiate(monster, points[num].transform.position, Quaternion.Euler(Vector3.zero));
-                    Instance.spawnMonsters.Add(MonsterObject);
-                    i++;
-                }
+                verifiedNumber[index] = true;
+            }
+            else
+            {
+                unavailableNumberCount++;
+            }
+        }
+        if(numMonstersSummon == 0)
+        {
+            if(unavailableNumberCount == points.Count)
+            {
+                // print("점검");
+                unspondedMonsters += unavailableNumberCount - points.Count;
+                // print("재소환" + unspondedMonsters);
+                numMonstersSummon = points.Count - unavailableNumberCount;
+            }
+        }
+        if (points.Count - unavailableNumberCount <= 0)
+        {
+            // print("소환 못하여 다 들어감");
+            unspondedMonsters += numMonstersSummon;
+            // print("소환못한 몬스터" + unspondedMonsters);
+
+            return;
+        }
+        for (int i = 0; i < numMonstersSummon;)
+        {
+            if (unavailableNumberCount == points.Count)
+            {
+                // print("소환한 몬스터" + i);
+                // print("들어가는 몬스터" + (numMonstersSummon - i));
+                unspondedMonsters += numMonstersSummon - i;
+                // print("소환못한 몬스터" + unspondedMonsters);
+                return;
+            }
+            int RandomNum = Random.Range(0, points.Count);
+            if (verifiedNumber[RandomNum])
+            {
+                MyObject MonsterObject = Instance.poolManager.SelectPool(Prefabs.Robot).Get();
+                MonsterObject.transform.position = points[RandomNum].transform.position;
+                verifiedNumber[RandomNum] = false;
+                unavailableNumberCount++;
+                i++;
             }
         }
     }
