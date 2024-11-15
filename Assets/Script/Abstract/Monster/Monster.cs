@@ -21,19 +21,17 @@ public abstract class Monster : MonoBehaviour
     public int AttackCount { get; set; } = 0;
     public bool Die { get; private set; } = false;
     public int ScorePoint { get; private set; } = 50;
-    public float time;
-    public State state { get;  set; } = State.Idle;
-
-    protected IState monsterSkillCastingState;
-    protected IState monsterMovingState;
-    protected IState monsterIdleState;
 
     protected MonsterStateMachine monsterStateMachine;
     protected MonsterMovement monsterMovement;
     protected BoxCollider2D boxCollider2D;
     protected Rigidbody2D rigi2D;
+    protected MyObject myObject;
 
-
+    public State state { get;  set; } = State.Idle;
+    protected IState monsterSkillCastingState;
+    protected IState monsterMovingState;
+    protected IState monsterIdleState;
     protected virtual void Awake()
     {
         Instance.Map2D[(int)Mathf.Round(transform.position.x), (int)Mathf.Round(transform.position.y)] = (int)MapObject.moster;
@@ -41,31 +39,10 @@ public abstract class Monster : MonoBehaviour
         monsterStateMachine = new MonsterStateMachine(this);
         boxCollider2D = GetComponent<BoxCollider2D>();
         rigi2D = GetComponent<Rigidbody2D>();
-    }
-    private void FixedUpdate()
-    {
-        if (Die && Authority && Flag)
-        {
-            time += Time.fixedDeltaTime;
-            if (time > 5) 
-            {
-                print("동작");
-                GetComponent<MyObject>().Destroy();
-            }
-        }
+        myObject = GetComponent<MyObject>();
     }
     protected void Update()
     {
-        // 게임 시스템은 Authority을 통해 Flag로 간다.
-        // 즉 Authority가 True이면 무조건 False가 된후에 Flag가 True가 된다.
-        // Authority, Flag가 둘다 True가 되는경우는 없다.
-        // Die && Authority && Flag의 경우를 만드는 곳은 GameManager이다.
-        if (Die && Authority && Flag)
-        {
-            print("이건 되는데");
-            return;
-        }
-
         // 어떠한 경우에 상태 변환이 될지 모르기에 상태 변환을 가장 먼저 해야함
         if (state == State.Idle)
         {

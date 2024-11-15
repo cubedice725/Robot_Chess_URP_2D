@@ -11,10 +11,10 @@ public class AK47 : LongSkill, IState
 
     public void Entry()
     {
-        for (int i = 0; i < Instance.poolManager.MyObjectLists[(int)PoolManager.Prefabs.Robot].Count; i++)
+        for (int i = 0; i < Instance.SummonedMonster.Count; i++)
         {
             Instance.poolManager.SelectPool(PoolManager.Prefabs.Selection).Get().transform.position =
-                new Vector2(Instance.poolManager.MyObjectLists[(int)PoolManager.Prefabs.Robot][i].transform.position.x, Instance.poolManager.MyObjectLists[(int)PoolManager.Prefabs.Robot][i].transform.position.y); 
+                new Vector2(Instance.SummonedMonster[i].transform.position.x, Instance.SummonedMonster[i].transform.position.y); 
         }
     }
     public void IStateUpdate()
@@ -22,7 +22,6 @@ public class AK47 : LongSkill, IState
         if (UpdateSelectionCheck())
         {
             Instance.MyObjectActivate = true;
-            Instance.hit.name = "";
             Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.Selection);
             playerMovement.LookMonsterAnimation(Instance.hit.positionInt.x);
             skillUse = true;

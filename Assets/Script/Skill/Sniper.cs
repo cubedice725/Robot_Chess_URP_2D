@@ -19,7 +19,6 @@ public class Sniper : LongSkill, IState
         if (UpdateSelectionCheck())
         {
             Instance.MyObjectActivate = true;
-            Instance.hit.name = "";
             Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.Selection);
             playerMovement.LookMonsterAnimation(Instance.hit.positionInt.x);
             skillUse = true;

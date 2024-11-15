@@ -46,7 +46,7 @@ public class Player : MonoBehaviour
         if (Instance.hit != null && Instance.hit.name == "Player")
         {
             if (!Instance.playerTurn) return;
-            Instance.hit.name = "";
+            
             Instance.playerState = State.Move;
         }
     }

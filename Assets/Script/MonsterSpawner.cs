@@ -130,6 +130,7 @@ public class MonsterSpawner : MonoBehaviour
             if (verifiedNumber[RandomNum])
             {
                 MyObject MonsterObject = Instance.poolManager.SelectPool(Prefabs.Robot).Get();
+                Instance.SummonedMonster.Add(MonsterObject.gameObject);
                 MonsterObject.transform.position = points[RandomNum].transform.position;
                 verifiedNumber[RandomNum] = false;
                 unavailableNumberCount++;

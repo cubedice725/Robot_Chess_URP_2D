@@ -23,7 +23,6 @@ public class Knife : CloseSkill, IState
             Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.Selection);
             crashBoxObject = Instance.poolManager.SelectPool(PoolManager.Prefabs.CrashBoxObject).Get();
             crashBoxObject.transform.position = Instance.hit.positionInt;
-            Instance.hit.name = "";
             playerMovement.LookMonsterAnimation(Instance.hit.positionInt.x);
             skillUse = true;
             start = true;
@@ -32,6 +31,7 @@ public class Knife : CloseSkill, IState
         {
             if(!UpdateLookAtTarget(Instance.hit.positionInt, accuracy, 7f))
             {
+                print(crashBoxObject.GetComponent<CrashBoxObject>().collObject.gameObject.GetComponent<Monster>());
                 crashBoxObject.GetComponent<CrashBoxObject>().collObject.gameObject.GetComponent<Monster>().HP -= 1;
                 start = false;
                 Usage++;

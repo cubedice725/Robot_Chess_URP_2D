@@ -24,7 +24,7 @@ public class PoolManager : MonoBehaviour
     public List<List<MyObject>> MyObjectLists { get; private set; } = new List<List<MyObject>>();
     public List<ObjectPool<MyObject>> pools = new List<ObjectPool<MyObject>>();
     public List<GameObject> myObjectlPrefabs = new List<GameObject>();
-    
+
     private Prefabs prefabs;
 
     public void Awake()
@@ -87,11 +87,12 @@ public class PoolManager : MonoBehaviour
         // 돌아온 오브젝트가 무엇인지 판단
         for (int i = 0; i < MyObjectLists[(int)myObject.Prefabs].Count; i++)
         {
+            myObject.gameObject.SetActive(false);
             // 돌아온 오브젝트가 무엇인지 확인되면 myObjectLists에서 제외시킴
-            if (myObject = MyObjectLists[(int)myObject.Prefabs][i])
+            if (myObject.Equals(MyObjectLists[(int)myObject.Prefabs][i]))
             {
                 MyObjectLists[(int)myObject.Prefabs].RemoveAt(i);
-                myObject.gameObject.SetActive(false);
+                
                 return;
             }
         }
