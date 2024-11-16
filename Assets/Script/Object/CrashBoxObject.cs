@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class CrashBoxObject : MonoBehaviour
 {
-    public Collision2D collObject;
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        collObject = collision;
+        if(collision != null)
+        {
+            collision.transform.GetComponent<Monster>().HP -= 1;
+            GetComponent<MyObject>().Destroy();
+        }
     }
 }

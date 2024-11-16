@@ -21,6 +21,7 @@ public abstract class Monster : MonoBehaviour
     public int AttackCount { get; set; } = 0;
     public bool Die { get; private set; } = false;
     public int ScorePoint { get; private set; } = 50;
+    public float time = 0;
 
     protected MonsterStateMachine monsterStateMachine;
     protected MonsterMovement monsterMovement;
@@ -32,6 +33,20 @@ public abstract class Monster : MonoBehaviour
     protected IState monsterSkillCastingState;
     protected IState monsterMovingState;
     protected IState monsterIdleState;
+
+    public virtual void Initialize()
+    {
+        GetComponent<SpriteRenderer>().sortingOrder = 4;
+        boxCollider2D.enabled = true;
+        rigi2D.simulated = true;
+        Flag = false;
+        Authority = false;
+        HP = 1;
+        MoveCount = 0;
+        AttackCount = 0;
+        Die = false;
+        time = 0;
+    }
     protected virtual void Awake()
     {
         Instance.Map2D[(int)Mathf.Round(transform.position.x), (int)Mathf.Round(transform.position.y)] = (int)MapObject.moster;
@@ -40,6 +55,18 @@ public abstract class Monster : MonoBehaviour
         boxCollider2D = GetComponent<BoxCollider2D>();
         rigi2D = GetComponent<Rigidbody2D>();
         myObject = GetComponent<MyObject>();
+    }
+    private void FixedUpdate()
+    {
+        if (Die && time >= 0)
+        {
+            time += Time.fixedDeltaTime;
+        }
+        if (time > 5 && Die)
+        {
+            GetComponent<MyObject>().Destroy();
+            time = -1;
+        }
     }
     protected void Update()
     {
@@ -64,9 +91,9 @@ public abstract class Monster : MonoBehaviour
             {
                 Instance.Map2D[(int)Mathf.Round(transform.position.x), (int)Mathf.Round(transform.position.y)] = (int)MapObject.noting;
             }
+
             boxCollider2D.enabled = false;
             rigi2D.simulated = false;
-
             Instance.GameScore += ScorePoint;
             // 사망 애니메이션은 반복적으로 true를 받으면 멈춤 그렇기에 사망은 한번만해야함
             Die = true;

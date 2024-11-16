@@ -8,6 +8,7 @@ public abstract class Skill : MonoBehaviour
     public PlayerMovement playerMovement;
     public MyObject myObject;
     public virtual int UsageLimit { get; set; }
+    // 무기 사용횟수
     public int Usage { get; set; } = 0;
     public void Awake()
     {
@@ -69,6 +70,7 @@ public abstract class Skill : MonoBehaviour
     {
         if (Instance.hit != null && Instance.hit.name.StartsWith("Selection"))
         {
+            Instance.hit.name = "";
             Instance.ButtonLock = true;
             return true;
         }

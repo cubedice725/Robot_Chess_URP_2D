@@ -12,13 +12,11 @@ public class MonsterSpawner : MonoBehaviour
 
     private Vector2Int size;
     private List<MyObject> points = new List<MyObject>();
-    private GameObject monster;
 
     private int unspondedMonsters = 0;
     private bool start = false;
     private void Awake()
     {
-        monster = Resources.Load("Prefab/Monster/Robot", typeof(GameObject)) as GameObject;
         size.x = Instance.MapSizeX - 2;
         size.y = Instance.MapSizeY - 2;
     }
@@ -67,10 +65,11 @@ public class MonsterSpawner : MonoBehaviour
             points[count].transform.parent = transform;
             count++;
         }
-        SpawnMonster(5);
+        SpawnMonster(36);
     }
     private void Update()
     {
+        print(Instance.Map2D[(int)Mathf.Round(points[20].transform.position.x), (int)Mathf.Round(points[20].transform.position.y)] == (int)MapObject.moster);
         if (Instance.monsterTurn)
         {
             start = true;
@@ -98,21 +97,21 @@ public class MonsterSpawner : MonoBehaviour
                 unavailableNumberCount++;
             }
         }
-        if(numMonstersSummon == 0)
+        if (numMonstersSummon == 0)
         {
             if(unavailableNumberCount == points.Count)
             {
-                // print("점검");
+                print("점검");
                 unspondedMonsters += unavailableNumberCount - points.Count;
-                // print("재소환" + unspondedMonsters);
+                print("재소환" + unspondedMonsters);
                 numMonstersSummon = points.Count - unavailableNumberCount;
             }
         }
         if (points.Count - unavailableNumberCount <= 0)
         {
-            // print("소환 못하여 다 들어감");
+            print("소환 못하여 다 들어감");
             unspondedMonsters += numMonstersSummon;
-            // print("소환못한 몬스터" + unspondedMonsters);
+            print("소환못한 몬스터" + unspondedMonsters);
 
             return;
         }
@@ -120,18 +119,19 @@ public class MonsterSpawner : MonoBehaviour
         {
             if (unavailableNumberCount == points.Count)
             {
-                // print("소환한 몬스터" + i);
-                // print("들어가는 몬스터" + (numMonstersSummon - i));
+                print("소환한 몬스터" + i);
+                print("들어가는 몬스터" + (numMonstersSummon - i));
                 unspondedMonsters += numMonstersSummon - i;
-                // print("소환못한 몬스터" + unspondedMonsters);
+                print("소환못한 몬스터" + unspondedMonsters);
                 return;
             }
             int RandomNum = Random.Range(0, points.Count);
             if (verifiedNumber[RandomNum])
             {
-                MyObject MonsterObject = Instance.poolManager.SelectPool(Prefabs.Robot).Get();
-                Instance.SummonedMonster.Add(MonsterObject.gameObject);
-                MonsterObject.transform.position = points[RandomNum].transform.position;
+                MyObject monsterObject = Instance.poolManager.SelectPool(Prefabs.Robot).Get();
+                monsterObject.transform.GetComponent<Monster>().Initialize();
+                Instance.SummonedMonster.Add(monsterObject.gameObject);
+                monsterObject.transform.position = points[RandomNum].transform.position;
                 verifiedNumber[RandomNum] = false;
                 unavailableNumberCount++;
                 i++;

@@ -87,12 +87,11 @@ public class PoolManager : MonoBehaviour
         // 돌아온 오브젝트가 무엇인지 판단
         for (int i = 0; i < MyObjectLists[(int)myObject.Prefabs].Count; i++)
         {
-            myObject.gameObject.SetActive(false);
             // 돌아온 오브젝트가 무엇인지 확인되면 myObjectLists에서 제외시킴
             if (myObject.Equals(MyObjectLists[(int)myObject.Prefabs][i]))
             {
+                myObject.gameObject.SetActive(false);
                 MyObjectLists[(int)myObject.Prefabs].RemoveAt(i);
-                
                 return;
             }
         }

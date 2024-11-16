@@ -48,6 +48,8 @@ public class Player : MonoBehaviour
             if (!Instance.playerTurn) return;
             
             Instance.playerState = State.Move;
+            Instance.hit.name = "";
+
         }
     }
 }
