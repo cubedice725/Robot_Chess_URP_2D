@@ -21,7 +21,7 @@ public class BuyButton : MonoBehaviour
         {
             case Item.Knife:
                 {
-                    ReadyToMount(Prefabs.Knife, new Vector3(0.082f, -0.02f, 0), 0, 90);
+                    //ReadyToMount(Prefabs.Knife, new Vector3(0.082f, -0.02f, 0), 0, 90);
                     break;
                 }
             case Item.Pistol:

@@ -15,7 +15,6 @@ public class PoolManager : MonoBehaviour
         Point,
         WallObject,
         Robot,
-        Knife,
         Pistol,
         Sniper,
         AK47Bullet
@@ -38,7 +37,6 @@ public class PoolManager : MonoBehaviour
         
         NewPoolAdd("Prefab/Monster/Robot", 50);
 
-        NewPoolAdd("Prefab/Skill/Knife", 2);
         NewPoolAdd("Prefab/Skill/Pistol", 2);
         NewPoolAdd("Prefab/Skill/Sniper", 2);
 

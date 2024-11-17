@@ -59,8 +59,9 @@ public class MainButton : MonoBehaviour
         if (Instance.player.transform.Find("MainSkill").transform.childCount > 0)
         {
             changeSkill = true;
-            Instance.player.transform.Find("SideSkill").gameObject.SetActive(false);
             Instance.player.transform.Find("MainSkill").gameObject.SetActive(true);
+            Instance.player.transform.Find("SideSkill").gameObject.SetActive(false);
+            Instance.player.transform.Find("KnifeSkill").gameObject.SetActive(false);
 
             Instance.skillState = Instance.player.transform.Find("MainSkill").transform.GetChild(0).GetComponent<IState>();
         }   

@@ -69,7 +69,6 @@ public class MonsterSpawner : MonoBehaviour
     }
     private void Update()
     {
-        print(Instance.Map2D[(int)Mathf.Round(points[20].transform.position.x), (int)Mathf.Round(points[20].transform.position.y)] == (int)MapObject.moster);
         if (Instance.monsterTurn)
         {
             start = true;

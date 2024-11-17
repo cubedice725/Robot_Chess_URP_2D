@@ -29,7 +29,6 @@ public class Knife : CloseSkill, IState
             if (!UpdateLookAtTarget(Instance.hit.positionInt, 0.001f, 7f))
             {
                 start = false;
-                Usage++;
             }
         }
         else if (skillUse)

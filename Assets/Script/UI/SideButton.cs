@@ -61,6 +61,7 @@ public class SideButton : MonoBehaviour
             changeSkill = true;
             Instance.player.transform.Find("MainSkill").gameObject.SetActive(false);
             Instance.player.transform.Find("SideSkill").gameObject.SetActive(true);
+            Instance.player.transform.Find("KnifeSkill").gameObject.SetActive(false);
 
             Instance.skillState = Instance.player.transform.Find("SideSkill").transform.GetChild(0).GetComponent<IState>();
         }
