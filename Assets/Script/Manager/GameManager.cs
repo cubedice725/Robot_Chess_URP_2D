@@ -94,7 +94,6 @@ public class GameManager : MonoBehaviour
         {
             Map2D[i / MapSizeY, i % MapSizeY] = (int)MapObject.noting;
         }
-
         hit = new Hit("", Vector3Int.zero);
         player = FindObjectOfType<Player>();
         poolManager = GetComponent<PoolManager>();
@@ -107,7 +106,7 @@ public class GameManager : MonoBehaviour
             (int)Mathf.Round(player.transform.position.y),
             (int)Mathf.Round(transform.position.z)
         );
-
+        
         // 몬스터의 움직임의 규칙을 담당하는 알고리즘
         if (monsterTurn && SummonedMonster.Count > 0)
         {
@@ -206,6 +205,7 @@ public class GameManager : MonoBehaviour
     // 몬스터가 전부 플레그를 올렸는지 확인
     private bool CheckMonsterFlag()
     {
+        
         if (SummonedMonster.Count > 0)
         {
             for (int index = 0; index < SummonedMonster.Count; index++)

@@ -65,7 +65,7 @@ public class MonsterSpawner : MonoBehaviour
             points[count].transform.parent = transform;
             count++;
         }
-        SpawnMonster(36);
+        SpawnMonster(5);
     }
     private void Update()
     {
@@ -75,7 +75,7 @@ public class MonsterSpawner : MonoBehaviour
         }
         if(Instance.GameTurnCount % 1 == 0 && Instance.playerTurn && Instance.GameTurnCount != 0 && start)
         {
-            SpawnMonster(3);
+            SpawnMonster(5);
             SpawnMonster(0);
             start = false; 
         }
@@ -95,22 +95,24 @@ public class MonsterSpawner : MonoBehaviour
             {
                 unavailableNumberCount++;
             }
+            //print(verifiedNumber[20]);
+
         }
         if (numMonstersSummon == 0)
         {
             if(unavailableNumberCount == points.Count)
             {
-                print("점검");
+                // print("점검");
                 unspondedMonsters += unavailableNumberCount - points.Count;
-                print("재소환" + unspondedMonsters);
+               // print("재소환" + unspondedMonsters);
                 numMonstersSummon = points.Count - unavailableNumberCount;
             }
         }
         if (points.Count - unavailableNumberCount <= 0)
         {
-            print("소환 못하여 다 들어감");
+            // print("소환 못하여 다 들어감");
             unspondedMonsters += numMonstersSummon;
-            print("소환못한 몬스터" + unspondedMonsters);
+            // print("소환못한 몬스터" + unspondedMonsters);
 
             return;
         }
@@ -118,10 +120,10 @@ public class MonsterSpawner : MonoBehaviour
         {
             if (unavailableNumberCount == points.Count)
             {
-                print("소환한 몬스터" + i);
-                print("들어가는 몬스터" + (numMonstersSummon - i));
+                // print("소환한 몬스터" + i);
+                // print("들어가는 몬스터" + (numMonstersSummon - i));
                 unspondedMonsters += numMonstersSummon - i;
-                print("소환못한 몬스터" + unspondedMonsters);
+                // print("소환못한 몬스터" + unspondedMonsters);
                 return;
             }
             int RandomNum = Random.Range(0, points.Count);

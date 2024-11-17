@@ -4,11 +4,8 @@ using UnityEngine;
 [RequireComponent(typeof(RobotSkillCastingState))]
 public class Robot : Monster
 {
-    public override int MovingDistance { get => movingDistance; set => movingDistance = value; }
-    public override float MoveSpeed { get => moveSpeed; set => moveSpeed = value; }
-
-    private float moveSpeed = 0.7f;
-    private int movingDistance = 1;
+    public override int MovingDistance { get => 1; set { } }
+    public override float MoveSpeed { get => 0.7f; set { } }
 
     public bool start = true;
 

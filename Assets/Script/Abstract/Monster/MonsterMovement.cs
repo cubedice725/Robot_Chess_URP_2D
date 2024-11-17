@@ -12,11 +12,15 @@ public class MonsterMovement : AStar
     private float xAxis = 0;
     protected bool updateMoveStart = true;
     protected int count = 1;
-
+    protected bool start = true;
     public void Awake()
     {
         monster = GetComponent<Monster>();
         animator = GetComponent<Animator>();
+    }
+    public void Start()
+    {
+        Instance.Map2D[(int)Mathf.Round(transform.position.x), (int)Mathf.Round(transform.position.y)] = (int)MapObject.moster;
     }
     public void Update()
     {
@@ -32,7 +36,7 @@ public class MonsterMovement : AStar
             return false;
         }
 
-        if (count == 1)
+        if (start)
         {
             // 몬스터 벽취급이기에 자신의 자리를 비운후 자신이 갈 곳을 미리 지정하여 겹치지 않게함
             Instance.Map2D[monsterPosition.x, monsterPosition.y] = (int)MapObject.noting;
@@ -51,7 +55,7 @@ public class MonsterMovement : AStar
                 targetPosition = new Vector2(FinalNodeList[count].x, FinalNodeList[count].y);
                 updateMoveStart = false;
             }
-
+            start = false;
             // 다음 위치까지 움직임
             transform.position = Vector2.MoveTowards(transform.position, targetPosition, monster.MoveSpeed * Time.deltaTime);
             float distance = Vector2.Distance(transform.position, targetPosition);
@@ -88,6 +92,7 @@ public class MonsterMovement : AStar
             RunAnimation(false);
             count = 1;
             updateMoveStart = true;
+            start = true;
             LookPlayerAnimation();
             return false;
         }
@@ -97,7 +102,7 @@ public class MonsterMovement : AStar
     {
         // 몬스터의 경우 자기 위치가 비어있어야 탐색 가능
         Instance.Map2D[monsterPosition.x, monsterPosition.y] = (int)MapObject.noting;
-        
+
         // 탐색
         PathFinding(
             monsterPosition,

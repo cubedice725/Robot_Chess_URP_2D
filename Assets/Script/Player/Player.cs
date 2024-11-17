@@ -10,7 +10,7 @@ public class Player : MonoBehaviour
     public int MoveCount { get; set; } = 0;
     public int AttackCount { get; set; } = 0;
     // 이동거리
-    public int MoveDistance { get; set; } = 1;
+    public int MoveDistance { get; set; } = 100;
     // 이동 속도
     public float PlayerMoveSpeed { get; set; } = 1f;
     private void Awake()
@@ -18,6 +18,10 @@ public class Player : MonoBehaviour
         playerMovement = GetComponent<PlayerMovement>();
         playerStateMachine = new PlayerStateMachine(playerMovement);
         playerStateMachine.Initialize(playerStateMachine.playerIdleState);
+    }
+    private void Start()
+    {
+        Instance.Map2D[(int)Mathf.Round(transform.position.x), (int)Mathf.Round(transform.position.y)] = (int)MapObject.player;
     }
     private void Update()
     {

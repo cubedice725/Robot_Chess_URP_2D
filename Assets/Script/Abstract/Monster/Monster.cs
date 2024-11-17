@@ -49,13 +49,13 @@ public abstract class Monster : MonoBehaviour
     }
     protected virtual void Awake()
     {
-        Instance.Map2D[(int)Mathf.Round(transform.position.x), (int)Mathf.Round(transform.position.y)] = (int)MapObject.moster;
         monsterMovement = GetComponent<MonsterMovement>();
         monsterStateMachine = new MonsterStateMachine(this);
         boxCollider2D = GetComponent<BoxCollider2D>();
         rigi2D = GetComponent<Rigidbody2D>();
         myObject = GetComponent<MyObject>();
     }
+    
     private void FixedUpdate()
     {
         if (Die && time >= 0)
