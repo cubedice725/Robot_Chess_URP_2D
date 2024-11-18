@@ -30,7 +30,7 @@ public abstract class AStar : MonoBehaviour
     protected int sizeX, sizeY;
     protected Vector3Int bottomLeft, topRight, startPos, targetPos;
 
-    protected void PathFinding(Vector3Int start, Vector3Int target, Vector3Int mapMini, Vector3Int mapMax)
+    protected void PathFinding(Vector3Int start, Vector3Int target, Vector3Int mapMini, Vector3Int mapMax, List<GameManager.MapObject> wallType)
     {
         startPos = start;
         
@@ -45,14 +45,18 @@ public abstract class AStar : MonoBehaviour
         sizeY = topRight.y - bottomLeft.y;
         NodeArray = new Node[sizeX, sizeY];
 
-        for (int i = 0; i < sizeX * sizeY; i++)
+        for (int indexI = 0; indexI < sizeX * sizeY; indexI++)
         {
             bool isWall = false;
-            if ((int)GameManager.MapObject.wall == GameManager.Instance.Map2D[i / sizeY, i % sizeY] || (int)GameManager.MapObject.moster == GameManager.Instance.Map2D[i / sizeY, i % sizeY])
+            for (int indexJ = 0; indexJ < wallType.Count; indexJ++)
             {
-                isWall = true;
+                if ((int)wallType[indexJ] == GameManager.Instance.Map2D[indexI / sizeY, indexI % sizeY])
+                {
+                    isWall = true;
+                    break;
+                }
             }
-            NodeArray[i / sizeY, i % sizeY] = new Node(isWall, (i / sizeY) + bottomLeft.x, (i % sizeY) + bottomLeft.y);
+            NodeArray[indexI / sizeY, indexI % sizeY] = new Node(isWall, (indexI / sizeY) + bottomLeft.x, (indexI % sizeY) + bottomLeft.y);
         }
 
         // 시작과 끝 노드, 열린리스트와 닫힌리스트, 마지막리스트 초기화
@@ -108,7 +112,7 @@ public abstract class AStar : MonoBehaviour
         }
     }
 
-    void OpenListAdd(int checkX, int checkY)
+    private void OpenListAdd(int checkX, int checkY)
     {
         // 상하좌우 범위를 벗어나지 않고, 벽이 아니면서, 닫힌리스트에 없다면
         if (checkX > bottomLeft.x && checkX < topRight.x && checkY > bottomLeft.y && checkY < topRight.y && !NodeArray[checkX - bottomLeft.x, checkY - bottomLeft.y].isWall && !ClosedList.Contains(NodeArray[checkX - bottomLeft.x, checkY - bottomLeft.y]))

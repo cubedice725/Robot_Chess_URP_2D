@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using static GameManager;
 
@@ -13,6 +14,8 @@ public class MonsterMovement : AStar
     protected bool updateMoveStart = true;
     protected int count = 1;
     protected bool start = true;
+    private List<MapObject> isWall = new List<MapObject>() { MapObject.wall };
+
     public void Awake()
     {
         monster = GetComponent<Monster>();
@@ -100,18 +103,7 @@ public class MonsterMovement : AStar
     // 공격 사거리 확인을 위한 함수
     public bool AttackNavigation()
     {
-        // 몬스터의 경우 자기 위치가 비어있어야 탐색 가능
-        Instance.Map2D[monsterPosition.x, monsterPosition.y] = (int)MapObject.noting;
-
-        // 탐색
-        PathFinding(
-            monsterPosition,
-            new Vector3Int((int)Mathf.Round(Instance.player.transform.position.x), (int)Mathf.Round(Instance.player.transform.position.y), (int)Mathf.Round(Instance.player.transform.position.z)),
-            Vector3Int.zero,
-            new Vector3Int(Instance.MapSizeX, Instance.MapSizeY, 0)
-            );
-
-        Instance.Map2D[monsterPosition.x, monsterPosition.y] = (int)MapObject.moster;
+        
 
         if (FinalNodeList.Count == 0)
         {
@@ -126,6 +118,22 @@ public class MonsterMovement : AStar
         return false;
     }
 
+    public void MonsterPathFinding()
+    {
+        // 몬스터의 경우 자기 위치가 비어있어야 탐색 가능
+        Instance.Map2D[monsterPosition.x, monsterPosition.y] = (int)MapObject.noting;
+
+        // 탐색
+        PathFinding(
+            monsterPosition,
+            new Vector3Int((int)Mathf.Round(Instance.player.transform.position.x), (int)Mathf.Round(Instance.player.transform.position.y), (int)Mathf.Round(Instance.player.transform.position.z)),
+            Vector3Int.zero,
+            new Vector3Int(Instance.MapSizeX, Instance.MapSizeY, 0),
+            isWall
+            );
+
+        Instance.Map2D[monsterPosition.x, monsterPosition.y] = (int)MapObject.moster;
+    }
     // 가만히 있을때 플레이어를 바라보는 애니메이션
     public void LookPlayerAnimation()
     {

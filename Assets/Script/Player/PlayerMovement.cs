@@ -11,8 +11,8 @@ public class PlayerMovement : AStar
     private bool updateMoveStart = true;
     private float xAxis = 0;
     private int count = 1;
+    private List<MapObject> isWall = new List<MapObject>() { MapObject.moster, MapObject.wall };
 
-    
     protected void Awake()
     {
         animator = GetComponent<Animator>();
@@ -27,7 +27,8 @@ public class PlayerMovement : AStar
                 Instance.PlayerPositionInt,
                 new Vector3Int(Instance.hit.positionInt.x, Instance.hit.positionInt.y, 0),
                 Vector3Int.zero,
-                new Vector3Int(Instance.MapSizeX, Instance.MapSizeY, 0)
+                new Vector3Int(Instance.MapSizeX, Instance.MapSizeY, 0),
+                isWall
             );
             targetPosition = new Vector2(FinalNodeList[count].x, FinalNodeList[count].y);
             updateMoveStart = false;
@@ -113,7 +114,8 @@ public class PlayerMovement : AStar
                             Instance.PlayerPositionInt,
                             new Vector3Int(mapAreaX, mapAreaY, 0),
                             Vector3Int.zero,
-                            new Vector3Int(Instance.MapSizeX, Instance.MapSizeY, 0)
+                            new Vector3Int(Instance.MapSizeX, Instance.MapSizeY, 0),
+                            isWall
                         );
                         // 경로 탐색이 잘 되었는지, 이동 거리가 적절한지
                         if (FinalNodeList.Count > 1 && FinalNodeList.Count <= Instance.player.MoveDistance + 1)
@@ -129,7 +131,6 @@ public class PlayerMovement : AStar
 
     // 애니메이션 관련 함수
     //----------------------------------------------------------
-    
     public void LookMonsterAnimation(float target)
     {
         float direction = target - transform.position.x;
