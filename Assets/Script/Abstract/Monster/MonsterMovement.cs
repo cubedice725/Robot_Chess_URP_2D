@@ -14,7 +14,7 @@ public class MonsterMovement : AStar
     protected bool updateMoveStart = true;
     protected int count = 1;
     protected bool start = true;
-    private List<MapObject> isWall = new List<MapObject>() { MapObject.wall };
+    private List<MapObject> isWall = new List<MapObject>() { MapObject.wall, MapObject.moster };
 
     public void Awake()
     {
@@ -103,8 +103,6 @@ public class MonsterMovement : AStar
     // 공격 사거리 확인을 위한 함수
     public bool AttackNavigation()
     {
-        
-
         if (FinalNodeList.Count == 0)
         {
             return false;
@@ -131,6 +129,8 @@ public class MonsterMovement : AStar
             new Vector3Int(Instance.MapSizeX, Instance.MapSizeY, 0),
             isWall
             );
+
+
 
         Instance.Map2D[monsterPosition.x, monsterPosition.y] = (int)MapObject.moster;
     }

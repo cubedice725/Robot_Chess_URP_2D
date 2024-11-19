@@ -22,50 +22,31 @@ public class MonsterSpawner : MonoBehaviour
     }
     void Start()
     {
-        int index;
-        int count = 0;
-
-        //100
-        //100
-        //100
-        for (index = 0; index < size.y; index++)
-        {
-            points.Add(Instance.poolManager.SelectPool(Prefabs.Point).Get());
-            points[count].transform.position = startPosition + new Vector3Int(0, index, 0);
-            points[count].transform.parent = transform;
-            count++;
-        }
-        //101
-        //101
-        //101
-        for (index = 0; index < size.y; index++)
-        {
-            points.Add(Instance.poolManager.SelectPool(Prefabs.Point).Get());
-            points[count].transform.position = startPosition + new Vector3Int(size.x - 1, index, 0);
-            points[count].transform.parent = transform;
-            count++;
-        }
-        //101
-        //101
-        //111
-        for (index = 1; index < size.x - 1; index++)
-        {
-            points.Add(Instance.poolManager.SelectPool(Prefabs.Point).Get());
-            points[count].transform.position = startPosition + new Vector3Int(index, 0, 0);
-            points[count].transform.parent = transform;
-            count++;
-        }
-        //111
-        //101
-        //111
-        for (index = 1; index < size.x - 1; index++)
-        {
-            points.Add(Instance.poolManager.SelectPool(Prefabs.Point).Get());
-            points[count].transform.position = startPosition + new Vector3Int(index, size.y - 1, 0);
-            points[count].transform.parent = transform;
-            count++;
-        }
+        CreateBorder();
         SpawnMonster(5);
+    }
+    void AddPoint(int x, int y)
+    {
+        points.Add(Instance.poolManager.SelectPool(Prefabs.Point).Get());
+        points[points.Count - 1].transform.position = startPosition + new Vector3Int(x, y, 0);
+        points[points.Count - 1].transform.parent = transform;
+    }
+
+    void CreateBorder()
+    {
+        // 왼쪽과 오른쪽 테두리
+        for (int y = 0; y < size.y; y++)
+        {
+            AddPoint(0, y);
+            AddPoint(size.x - 1, y);
+        }
+
+        // 위쪽과 아래쪽 테두리 (모서리 중복 방지)
+        for (int x = 1; x < size.x - 1; x++)
+        {
+            AddPoint(x, 0);
+            AddPoint(x, size.y - 1);
+        }
     }
     private void Update()
     {
