@@ -1,13 +1,17 @@
+using System;
 using System.Collections.Generic;
+using System.Drawing;
+using Unity.Properties;
 using UnityEngine;
 using static GameManager;
+using static PoolManager;
 
 public class MonsterMovement : AStar
 {
     protected Animator animator;
     protected Monster monster;
 
-    protected Vector3Int monsterPosition;
+    protected Vector3Int monsterPositionInt;
     protected Vector2 targetPosition;
 
     private float xAxis = 0;
@@ -24,10 +28,11 @@ public class MonsterMovement : AStar
     public void Start()
     {
         Instance.Map2D[(int)Mathf.Round(transform.position.x), (int)Mathf.Round(transform.position.y)] = (int)MapObject.moster;
+        
     }
     public void Update()
     {
-        monsterPosition = new Vector3Int((int)Mathf.Round(transform.position.x), (int)Mathf.Round(transform.position.y), (int)Mathf.Round(transform.position.z));
+        monsterPositionInt = new Vector3Int((int)Mathf.Round(transform.position.x), (int)Mathf.Round(transform.position.y), (int)Mathf.Round(transform.position.z));
     }
     // 실제 몬스터가 움직임
     public virtual bool UpdateMove()
@@ -42,7 +47,7 @@ public class MonsterMovement : AStar
         if (start)
         {
             // 몬스터 벽취급이기에 자신의 자리를 비운후 자신이 갈 곳을 미리 지정하여 겹치지 않게함
-            Instance.Map2D[monsterPosition.x, monsterPosition.y] = (int)MapObject.noting;
+            Instance.Map2D[monsterPositionInt.x, monsterPositionInt.y] = (int)MapObject.noting;
             Instance.Map2D[FinalNodeList[monster.MovingDistance].x, FinalNodeList[monster.MovingDistance].y] = (int)MapObject.moster;
             Authority(false);
         }
@@ -101,43 +106,112 @@ public class MonsterMovement : AStar
         }
     }
     // 공격 사거리 확인을 위한 함수
-    public bool AttackNavigation()
+    public string AttackNavigation()
     {
+        // 사거리 안에 있는지 확인
+        if ((int)Mathf.Round(Vector2.Distance(Instance.player.transform.position, transform.position)) <= monster.AttackDistance + 1)
+        {
+            return "AttackRange";
+        }
         if (FinalNodeList.Count == 0)
         {
-            return false;
-        }
+            for (int index = 1; index < Instance.MapSizeX || index < Instance.MapSizeY; index++)
+            {
+                CreateBorder((2 * index) + 1, (2 * index) + 1, Instance.PlayerPositionInt + ((Vector3Int.left + Vector3Int.down) * index));
+                if (NewPathFinding())
+                {
+                    Instance.poolManager.AllDistroyMyObject(Prefabs.PlayerPoint);
+                    return "FindPath";
+                }
+                Instance.poolManager.AllDistroyMyObject(Prefabs.PlayerPoint);
+            }
 
-        // 사거리 안에 있는지 확인
-        if (FinalNodeList.Count < monster.AttackDistance + 3 && FinalNodeList.Count != 0)
+            return "NotFindPath";
+        }
+        return "FindPath";
+    }
+    bool NewPathFinding()
+    {
+        float closeDistance = 0;
+        int num = 0;
+        if (Instance.poolManager.MyObjectLists[(int)Prefabs.PlayerPoint].Count != 0)
         {
+            for (int index = 0; index < Instance.poolManager.MyObjectLists[(int)Prefabs.PlayerPoint].Count; index++)
+            {
+                float distance = Vector2.Distance(transform.position, Instance.poolManager.MyObjectLists[(int)Prefabs.PlayerPoint][index].transform.position);
+                // 가장 가까운 포인트 확인
+                if (distance < closeDistance)
+                {
+                    closeDistance = distance;
+                    num = index;
+                }
+            }
+            // 가장 가까운 포인트에 넣음
+            PathFinding(
+                monsterPositionInt,
+                new Vector3Int(
+                    (int)Mathf.Round(Instance.poolManager.MyObjectLists[(int)Prefabs.PlayerPoint][num].transform.position.x),
+                    (int)Mathf.Round(Instance.poolManager.MyObjectLists[(int)Prefabs.PlayerPoint][num].transform.position.y),
+                    (int)Mathf.Round(Instance.poolManager.MyObjectLists[(int)Prefabs.PlayerPoint][num].transform.position.z)),
+                Vector3Int.zero,
+                new Vector3Int(Instance.MapSizeX, Instance.MapSizeY, 0),
+                isWall
+            );
+            if (FinalNodeList.Count == 0)
+            {
+                return false;
+            }
             return true;
         }
         return false;
     }
+    void AddPoint(int sizeX, int sizeY, Vector3Int startPosition)
+    {
+        if(startPosition.x + sizeX > 0 && startPosition.y + sizeY > 0 && startPosition.x + sizeX < Instance.MapSizeX - 1 && startPosition.y + sizeY < Instance.MapSizeY - 1)
+        {
+            if (Instance.Map2D[startPosition.x + sizeX, startPosition.y + sizeY] != (int)MapObject.moster)
+            {
+                Instance.poolManager.SelectPool(Prefabs.PlayerPoint).Get().transform.position = startPosition + new Vector3Int(sizeX, sizeY, 0);
+            }
+        }
+    }
+    void CreateBorder(int sizeX, int sizeY, Vector3Int startPosition)
+    {
+        // 왼쪽과 오른쪽 테두리
+        for (int indexY = 0; indexY < sizeY; indexY++)
+        {
+            AddPoint(0, indexY, startPosition);
+            AddPoint(sizeX - 1, indexY, startPosition);
+        }
 
+        // 위쪽과 아래쪽 테두리 (모서리 중복 방지)
+        for (int indexX = 1; indexX < sizeX - 1; indexX++)
+        {
+            AddPoint(indexX, 0, startPosition);
+            AddPoint(indexX, sizeY - 1, startPosition);
+        }
+    }
+    // 몬스터가 길을 찾을때 주로 사용
     public void MonsterPathFinding()
     {
         // 몬스터의 경우 자기 위치가 비어있어야 탐색 가능
-        Instance.Map2D[monsterPosition.x, monsterPosition.y] = (int)MapObject.noting;
+        Instance.Map2D[monsterPositionInt.x, monsterPositionInt.y] = (int)MapObject.noting;
 
         // 탐색
         PathFinding(
-            monsterPosition,
-            new Vector3Int((int)Mathf.Round(Instance.player.transform.position.x), (int)Mathf.Round(Instance.player.transform.position.y), (int)Mathf.Round(Instance.player.transform.position.z)),
+            monsterPositionInt,
+            Instance.PlayerPositionInt,
             Vector3Int.zero,
             new Vector3Int(Instance.MapSizeX, Instance.MapSizeY, 0),
             isWall
             );
 
-
-
-        Instance.Map2D[monsterPosition.x, monsterPosition.y] = (int)MapObject.moster;
+        Instance.Map2D[monsterPositionInt.x, monsterPositionInt.y] = (int)MapObject.moster;
     }
     // 가만히 있을때 플레이어를 바라보는 애니메이션
     public void LookPlayerAnimation()
     {
-        float direction = Instance.player.transform.position.x - monsterPosition.x;
+        float direction = Instance.player.transform.position.x - monsterPositionInt.x;
 
         if (direction == 0) return;
         if (xAxis == Mathf.Sign(direction)) return;

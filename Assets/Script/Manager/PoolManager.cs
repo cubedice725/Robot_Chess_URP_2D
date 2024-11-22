@@ -13,6 +13,7 @@ public class PoolManager : MonoBehaviour
         CrashBoxObject,
         RangedAttackObject,
         Point,
+        PlayerPoint,
         WallObject,
         Robot,
         Pistol,
@@ -33,6 +34,7 @@ public class PoolManager : MonoBehaviour
         NewPoolAdd("Prefab/Object/CrashBoxObject", 100);
         NewPoolAdd("Prefab/Object/RangedAttackObject", 10);
         NewPoolAdd("Prefab/Object/Point", 20);
+        NewPoolAdd("Prefab/Object/PlayerPoint", 20);
         NewPoolAdd("Prefab/Object/WallObject", 100);
         
         NewPoolAdd("Prefab/Monster/Robot", 50);

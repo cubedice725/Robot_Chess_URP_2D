@@ -25,7 +25,7 @@ public class Robot : Monster
         {
             monsterMovement.MonsterPathFinding();
             // 사거리 안에 있으면 스킬 아니면 움직임
-            if (monsterMovement.AttackNavigation())
+            if (monsterMovement.AttackNavigation() == "AttackRange")
             {
                 if (AttackCount == 1)
                 {
@@ -36,7 +36,11 @@ public class Robot : Monster
                 state = GameManager.State.Skill;
                 AttackCount++;
             }
-            else
+            else if (monsterMovement.AttackNavigation() == "NotFindPath")
+            {
+                TurnPass();
+            }
+            else if (monsterMovement.AttackNavigation() == "FindPath")
             {
                 if (MoveCount == 1)
                 {

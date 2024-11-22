@@ -38,10 +38,10 @@ public class ArrayEditor : Editor
 
         EditorGUILayout.LabelField("2차원 배열");
 
-        for (int x = 0; x < arrayComponent.sizeX; x++)
+        for (int y = arrayComponent.sizeY - 1; y >= 0; y--)
         {
             EditorGUILayout.BeginHorizontal();
-            for (int y = 0; y < arrayComponent.sizeY; y++)
+            for (int x = 0; x < arrayComponent.sizeX; x++)
             {
                 arrayComponent.array[x, y] = EditorGUILayout.IntField(arrayComponent.array[x, y]);
             }
