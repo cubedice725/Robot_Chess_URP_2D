@@ -105,59 +105,81 @@ public class MonsterMovement : AStar
         }
         if (FinalNodeList.Count == 0)
         {
+            // 길을 못찾는 경우 플레이어 근처에 가까운 곳의 길을 유도함
+            // 맵의 가로 세로 모두 돌아갈수 있도록함
             for (int index = 1; index < Instance.MapSizeX || index < Instance.MapSizeY; index++)
             {
+                // 플레이어 기준에서 대각선으로 점점 기준점을 낮추고 그 기준점으로 부터 플레이어와 가까운 포인트를 정사각형으로 만듦
                 CreateBorder((2 * index) + 1, (2 * index) + 1, Instance.PlayerPositionInt + ((Vector3Int.left + Vector3Int.down) * index));
-                if (NewPathFinding())
+                
+                // 새로은 길을 찾는걸 시도
+                string type = NewPathFinding();
+                if(type == "Warten")
+                {
+                    Instance.poolManager.AllDistroyMyObject(Prefabs.PlayerPoint);
+                    return "NotFindPath";
+                }
+                if (type == "FindPath")
                 {
                     Instance.poolManager.AllDistroyMyObject(Prefabs.PlayerPoint);
                     return "FindPath";
                 }
                 Instance.poolManager.AllDistroyMyObject(Prefabs.PlayerPoint);
             }
-
+            // 모든곳의 포인트를 찍어도 길을 못찾을 경우 길을 못찾는것으로 판정
             return "NotFindPath";
         }
         return "FindPath";
     }
-    bool NewPathFinding()
+    string NewPathFinding()
     {
         float closeDistance = float.MaxValue;
         int num = 0;
+        // 플레이어와 가까운 포인트가 존재하면
         if (Instance.poolManager.MyObjectLists[(int)Prefabs.PlayerPoint].Count != 0)
         {
             for (int index = 0; index < Instance.poolManager.MyObjectLists[(int)Prefabs.PlayerPoint].Count; index++)
             {
-                float distance = Vector2.Distance(transform.position, Instance.poolManager.MyObjectLists[(int)Prefabs.PlayerPoint][index].transform.position);
-                // 가장 가까운 포인트 확인
-                if (distance < closeDistance)
+                // 가장 가까운 곳이 현 위치이면 그냥 대기
+                if((int)Mathf.Round(Instance.poolManager.MyObjectLists[(int)Prefabs.PlayerPoint][index].transform.position.x) == monsterPositionInt.x &&
+                    (int)Mathf.Round(Instance.poolManager.MyObjectLists[(int)Prefabs.PlayerPoint][index].transform.position.y) == monsterPositionInt.y)
                 {
-                    closeDistance = distance;
-                    num = index;
+                    return "Warten";
+                }
+                // 가까운 곳에서 몬스터가 없는것을 확인
+                if (Instance.Map2D
+                    [(int)Mathf.Round(Instance.poolManager.MyObjectLists[(int)Prefabs.PlayerPoint][index].transform.position.x),
+                    (int)Mathf.Round(Instance.poolManager.MyObjectLists[(int)Prefabs.PlayerPoint][index].transform.position.y)] != (int)MapObject.moster)
+                {
+                    float distance = Vector2.Distance(transform.position, Instance.poolManager.MyObjectLists[(int)Prefabs.PlayerPoint][index].transform.position);
+                    // 가까운 포인트의 숫자를 저장
+                    if (distance < closeDistance)
+                    {
+                        closeDistance = distance;
+                        num = index;
+                    }
                 }
             }
 
+            // 가장 가까운 포인트로 길을 찾음
             MonsterPathFinding(new Vector3Int(
-                    (int)Mathf.Round(Instance.poolManager.MyObjectLists[(int)Prefabs.PlayerPoint][num].transform.position.x),
-                    (int)Mathf.Round(Instance.poolManager.MyObjectLists[(int)Prefabs.PlayerPoint][num].transform.position.y),
-                    (int)Mathf.Round(Instance.poolManager.MyObjectLists[(int)Prefabs.PlayerPoint][num].transform.position.z)));
-
+                (int)Mathf.Round(Instance.poolManager.MyObjectLists[(int)Prefabs.PlayerPoint][num].transform.position.x),
+                (int)Mathf.Round(Instance.poolManager.MyObjectLists[(int)Prefabs.PlayerPoint][num].transform.position.y),
+                (int)Mathf.Round(Instance.poolManager.MyObjectLists[(int)Prefabs.PlayerPoint][num].transform.position.z)));
+            
             if (FinalNodeList.Count == 0)
             {
-                return false;
+                return "NotFindPath";
             }
-            return true;
+            return "FindPath";
         }
-        return false;
+        return "NotFindPath";
     }
     void AddPoint(int sizeX, int sizeY, Vector3Int startPosition)
     {
         if(startPosition.x + sizeX > 0 && startPosition.y + sizeY > 0 && startPosition.x + sizeX < Instance.MapSizeX - 1 && startPosition.y + sizeY < Instance.MapSizeY - 1)
         {
-            if (Instance.Map2D[startPosition.x + sizeX, startPosition.y + sizeY] != (int)MapObject.moster)
-            {
-                Instance.poolManager.SelectPool(Prefabs.PlayerPoint).Get().transform.position = startPosition + new Vector3Int(sizeX, sizeY, 0);
-            }
+            Instance.poolManager.SelectPool(Prefabs.PlayerPoint).Get().transform.position = startPosition + new Vector3Int(sizeX, sizeY, 0);
         }
     }
     void CreateBorder(int sizeX, int sizeY, Vector3Int startPosition)

@@ -23,7 +23,7 @@ public class MonsterSpawner : MonoBehaviour
     void Start()
     {
         CreateBorder();
-        SpawnMonster(5);
+        SpawnMonster(1);
     }
     void AddPoint(int x, int y)
     {
@@ -56,8 +56,8 @@ public class MonsterSpawner : MonoBehaviour
         }
         if(Instance.GameTurnCount % 1 == 0 && Instance.playerTurn && Instance.GameTurnCount != 0 && start)
         {
-            SpawnMonster(5);
-            SpawnMonster(0);
+            //SpawnMonster(5);
+            //SpawnMonster(0);
             start = false; 
         }
     }

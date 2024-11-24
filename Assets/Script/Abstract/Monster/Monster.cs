@@ -13,8 +13,8 @@ public abstract class Monster : MonoBehaviour
     // 어떠한 행동을 하기 위해서는 Authority에 true가 몬스터에게 있어야함
     // 즉 권한을 가지면 몬스터가 움직여도 된다는 의미(스킬도 Authority를 가져야함)
     public bool Authority  = false;
-    public virtual int AttackDistance { get; set; } = 1;
-    public virtual int MovingDistance { get; set; } = 1;
+    public virtual int AttackDistance { get; set; } = 0;
+    public virtual int MovingDistance { get; set; } = 0;
     public virtual float MoveSpeed { get; set; } = 1f;
     public virtual float HP { get; set; } = 1;
     public int MoveCount { get; set; } = 0;
@@ -36,7 +36,7 @@ public abstract class Monster : MonoBehaviour
 
     public virtual void Initialize()
     {
-        GetComponent<SpriteRenderer>().sortingOrder = 4;
+        GetComponent<SpriteRenderer>().sortingOrder = 5;
         boxCollider2D.enabled = true;
         rigi2D.simulated = true;
         Flag = false;
