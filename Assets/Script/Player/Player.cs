@@ -10,7 +10,7 @@ public class Player : MonoBehaviour
     public int MoveCount { get; set; } = 0;
     public int AttackCount { get; set; } = 0;
     // 이동거리
-    public int MoveDistance { get; set; } = 100;
+    public int MoveDistance { get; set; } = 1;
     // 이동 속도
     public float PlayerMoveSpeed { get; set; } = 1f;
     private void Awake()

@@ -50,10 +50,11 @@ public class MonsterMovement : AStar
             Instance.Map2D[monsterPositionInt.x, monsterPositionInt.y] = (int)MapObject.noting;
             Instance.Map2D[FinalNodeList[monster.MovingDistance].x, FinalNodeList[monster.MovingDistance].y] = (int)MapObject.moster;
             Authority(false);
+            start = false;
         }
 
         // MovingDistance을 통해 행동을 제약
-        if (count <= monster.MovingDistance)
+        if (count <= monster.MovingDistance && !start)
         {
             // 플레이어까지 가기위한 노드를 한 지점으로 하여,
             // 목표까지 대각선으로 막힌곳을 뚤어 가는게 아닌
@@ -63,7 +64,6 @@ public class MonsterMovement : AStar
                 targetPosition = new Vector2(FinalNodeList[count].x, FinalNodeList[count].y);
                 updateMoveStart = false;
             }
-            start = false;
             // 다음 위치까지 움직임
             transform.position = Vector2.MoveTowards(transform.position, targetPosition, monster.MoveSpeed * Time.deltaTime);
             float distance = Vector2.Distance(transform.position, targetPosition);
@@ -86,24 +86,14 @@ public class MonsterMovement : AStar
                     targetPosition = new Vector2(FinalNodeList[count].x, FinalNodeList[count].y);
                     return true;
                 }
-                else
-                {
-                    RunAnimation(false);
-                    count = 1;
-                    updateMoveStart = true;
-                    return false;
-                }
             }
         }
-        else
-        {
-            RunAnimation(false);
-            count = 1;
-            updateMoveStart = true;
-            start = true;
-            LookPlayerAnimation();
-            return false;
-        }
+        RunAnimation(false);
+        count = 1;
+        updateMoveStart = true;
+        start = true;
+        LookPlayerAnimation();
+        return false;
     }
     // 공격 사거리 확인을 위한 함수
     public string AttackNavigation()
@@ -132,7 +122,7 @@ public class MonsterMovement : AStar
     }
     bool NewPathFinding()
     {
-        float closeDistance = 0;
+        float closeDistance = float.MaxValue;
         int num = 0;
         if (Instance.poolManager.MyObjectLists[(int)Prefabs.PlayerPoint].Count != 0)
         {
@@ -146,17 +136,12 @@ public class MonsterMovement : AStar
                     num = index;
                 }
             }
-            // 가장 가까운 포인트에 넣음
-            PathFinding(
-                monsterPositionInt,
-                new Vector3Int(
+
+            MonsterPathFinding(new Vector3Int(
                     (int)Mathf.Round(Instance.poolManager.MyObjectLists[(int)Prefabs.PlayerPoint][num].transform.position.x),
                     (int)Mathf.Round(Instance.poolManager.MyObjectLists[(int)Prefabs.PlayerPoint][num].transform.position.y),
-                    (int)Mathf.Round(Instance.poolManager.MyObjectLists[(int)Prefabs.PlayerPoint][num].transform.position.z)),
-                Vector3Int.zero,
-                new Vector3Int(Instance.MapSizeX, Instance.MapSizeY, 0),
-                isWall
-            );
+                    (int)Mathf.Round(Instance.poolManager.MyObjectLists[(int)Prefabs.PlayerPoint][num].transform.position.z)));
+
             if (FinalNodeList.Count == 0)
             {
                 return false;
@@ -192,7 +177,7 @@ public class MonsterMovement : AStar
         }
     }
     // 몬스터가 길을 찾을때 주로 사용
-    public void MonsterPathFinding()
+    public void MonsterPathFinding(Vector3Int target)
     {
         // 몬스터의 경우 자기 위치가 비어있어야 탐색 가능
         Instance.Map2D[monsterPositionInt.x, monsterPositionInt.y] = (int)MapObject.noting;
@@ -200,7 +185,7 @@ public class MonsterMovement : AStar
         // 탐색
         PathFinding(
             monsterPositionInt,
-            Instance.PlayerPositionInt,
+            target,
             Vector3Int.zero,
             new Vector3Int(Instance.MapSizeX, Instance.MapSizeY, 0),
             isWall

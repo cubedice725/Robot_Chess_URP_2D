@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using static GameManager;
 [RequireComponent(typeof(MonsterMovement))]
 [RequireComponent(typeof(RobotSkillCastingState))]
 public class Robot : Monster
@@ -21,11 +21,16 @@ public class Robot : Monster
     protected override void UpdateMonster()
     {
         // 몬스터 턴이되면 한번만 작동, Authority를 통해 권한이 있을경우 움직임
-        if (GameManager.Instance.monsterTurn && start && Authority)
+        if (Instance.monsterTurn && start && Authority)
         {
-            monsterMovement.MonsterPathFinding();
+            if(MoveCount < 1)
+            {
+                monsterMovement.MonsterPathFinding(Instance.PlayerPositionInt);
+            }
+            
+            string returnType = monsterMovement.AttackNavigation();
             // 사거리 안에 있으면 스킬 아니면 움직임
-            if (monsterMovement.AttackNavigation() == "AttackRange")
+            if (returnType == "AttackRange")
             {
                 if (AttackCount == 1)
                 {
@@ -33,21 +38,21 @@ public class Robot : Monster
                     return;
                 }
 
-                state = GameManager.State.Skill;
+                state = State.Skill;
                 AttackCount++;
             }
-            else if (monsterMovement.AttackNavigation() == "NotFindPath")
+            else if (returnType == "NotFindPath")
             {
                 TurnPass();
             }
-            else if (monsterMovement.AttackNavigation() == "FindPath")
+            else if (returnType == "FindPath")
             {
                 if (MoveCount == 1)
                 {
                     TurnPass();
                     return; 
                 }
-                state = GameManager.State.Move;
+                state = State.Move;
                 MoveCount++;
             }
             start = false;
@@ -55,7 +60,7 @@ public class Robot : Monster
         if (Flag)
         {
             start = true;
-            state = GameManager.State.Idle;
+            state = State.Idle;
         }
     }
 }
