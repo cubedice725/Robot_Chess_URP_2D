@@ -1,10 +1,13 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using static GameManager;
 [RequireComponent(typeof(MonsterMovement))]
-[RequireComponent(typeof(RobotSkillCastingState))]
-public class Robot : Monster
+[RequireComponent(typeof(RobotKnifeSkillCastingState))]
+public class RobotKnife : Monster
 {
     public override int MovingDistance { get => 1; set { } }
+    public override int AttackDistance { get => 0; set { } }
     public override float MoveSpeed { get => 0.7f; set { } }
 
     public bool start = true;
@@ -12,22 +15,21 @@ public class Robot : Monster
     protected override void Awake()
     {
         base.Awake();
-        monsterIdleState = new RobotIdleState(monsterMovement);
-        monsterMovingState = new RobotMovingState(monsterMovement);
-        monsterSkillCastingState = GetComponent<RobotSkillCastingState>();
+        monsterIdleState = new RobotKnifeIdleState(monsterMovement);
+        monsterMovingState = new RobotKnifeMovingState(monsterMovement);
+        monsterSkillCastingState = GetComponent<RobotKnifeSkillCastingState>();
         monsterStateMachine.Initialize(monsterIdleState);
     }
-
     protected override void UpdateMonster()
     {
         // 몬스터 턴이되면 한번만 작동, Authority를 통해 권한이 있을경우 움직임
         if (Instance.monsterTurn && start && Authority)
         {
-            if(MoveCount < 1)
+            if (MoveCount < 1)
             {
                 monsterMovement.MonsterPathFinding(Instance.PlayerPositionInt);
             }
-            
+
             string returnType = monsterMovement.AttackNavigation();
             // 사거리 안에 있으면 스킬 아니면 움직임
             if (returnType == "AttackRange")
@@ -50,7 +52,7 @@ public class Robot : Monster
                 if (MoveCount == 1)
                 {
                     TurnPass();
-                    return; 
+                    return;
                 }
                 state = State.Move;
                 MoveCount++;

@@ -23,7 +23,7 @@ public class MonsterSpawner : MonoBehaviour
     void Start()
     {
         CreateBorder();
-        SpawnMonster(1);
+        SpawnMonster(5);
     }
     void AddPoint(int x, int y)
     {
@@ -54,10 +54,10 @@ public class MonsterSpawner : MonoBehaviour
         {
             start = true;
         }
-        if(Instance.GameTurnCount % 1 == 0 && Instance.playerTurn && Instance.GameTurnCount != 0 && start)
+        if(Instance.GameTurnCount % 5 == 0 && Instance.playerTurn && Instance.GameTurnCount != 0 && start)
         {
-            //SpawnMonster(5);
-            //SpawnMonster(0);
+            SpawnMonster(3);
+            SpawnMonster(0);
             start = false; 
         }
     }
@@ -110,7 +110,7 @@ public class MonsterSpawner : MonoBehaviour
             int RandomNum = Random.Range(0, points.Count);
             if (verifiedNumber[RandomNum])
             {
-                MyObject monsterObject = Instance.poolManager.SelectPool(Prefabs.Robot).Get();
+                MyObject monsterObject = Instance.poolManager.SelectPool(Prefabs.RobotKnife).Get();
                 monsterObject.transform.GetComponent<Monster>().Initialize();
                 Instance.SummonedMonster.Add(monsterObject.gameObject);
                 monsterObject.transform.position = points[RandomNum].transform.position;

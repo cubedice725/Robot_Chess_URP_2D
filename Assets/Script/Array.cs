@@ -1,8 +1,7 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+#if UNITY_EDITOR // => Ignore from here to next endif if not in editor
 using UnityEditor;
+#endif
 
 public class Array : MonoBehaviour
 {
@@ -20,7 +19,7 @@ public class Array : MonoBehaviour
         }
     }
 }
-
+#if UNITY_EDITOR
 [CustomEditor(typeof(Array))]
 public class ArrayEditor : Editor
 {
@@ -54,3 +53,4 @@ public class ArrayEditor : Editor
         }
     }
 }
+#endif

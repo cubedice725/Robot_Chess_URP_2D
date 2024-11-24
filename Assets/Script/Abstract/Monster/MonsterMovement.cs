@@ -28,7 +28,6 @@ public class MonsterMovement : AStar
     public void Start()
     {
         Instance.Map2D[(int)Mathf.Round(transform.position.x), (int)Mathf.Round(transform.position.y)] = (int)MapObject.moster;
-        
     }
     public void Update()
     {
@@ -98,10 +97,38 @@ public class MonsterMovement : AStar
     // 공격 사거리 확인을 위한 함수
     public string AttackNavigation()
     {
-        // 사거리 안에 있는지 확인
-        if ((int)Mathf.Round(Vector2.Distance(Instance.player.transform.position, transform.position)) <= monster.AttackDistance + 1)
+        // 대각선인지, 사거리 안에 있는지 확인
+        if (!IsDiagonal(new Vector2(monsterPositionInt.x, monsterPositionInt.y),new Vector2(Instance.PlayerPositionInt.x, Instance.PlayerPositionInt.y)) 
+            && (int)Mathf.Round(Vector2.Distance(Instance.player.transform.position, transform.position)) <= monster.AttackDistance + 1)
         {
             return "AttackRange";
+        }
+        if (FinalNodeList.Count == 2 && IsDiagonal(new Vector2(monsterPositionInt.x, monsterPositionInt.y), new Vector2(Instance.PlayerPositionInt.x, Instance.PlayerPositionInt.y)))
+        {
+            // 길을 못찾는 경우 플레이어 근처에 가까운 곳의 길을 유도함
+            // 맵의 가로 세로 모두 돌아갈수 있도록함
+            for (int index = 1; index < Instance.MapSizeX || index < Instance.MapSizeY; index++)
+            {
+                string type;
+                // 플레이어 기준에서 대각선으로 점점 기준점을 낮추고 그 기준점으로 부터 플레이어와 가까운 포인트를 정사각형으로 만듦
+                CreateBorder((2 * index) + 1, (2 * index) + 1, Instance.PlayerPositionInt + ((Vector3Int.left + Vector3Int.down) * index));
+
+                type = NewPathFinding(true);
+                if (type == "Warten")
+                {
+                    Instance.poolManager.AllDistroyMyObject(Prefabs.PlayerPoint);
+                    return "NotFindPath";
+                }
+                if (type == "FindPath")
+                {
+                    Instance.poolManager.AllDistroyMyObject(Prefabs.PlayerPoint);
+                    return "FindPath";
+                }
+                Instance.poolManager.AllDistroyMyObject(Prefabs.PlayerPoint);
+            }
+            // 모든곳의 포인트를 찍어도 길을 못찾을 경우 길을 못찾는것으로 판정
+            return "NotFindPath";
+            // 새로은 길을 찾는걸 시도
         }
         if (FinalNodeList.Count == 0)
         {
@@ -109,11 +136,11 @@ public class MonsterMovement : AStar
             // 맵의 가로 세로 모두 돌아갈수 있도록함
             for (int index = 1; index < Instance.MapSizeX || index < Instance.MapSizeY; index++)
             {
+                string type;
                 // 플레이어 기준에서 대각선으로 점점 기준점을 낮추고 그 기준점으로 부터 플레이어와 가까운 포인트를 정사각형으로 만듦
                 CreateBorder((2 * index) + 1, (2 * index) + 1, Instance.PlayerPositionInt + ((Vector3Int.left + Vector3Int.down) * index));
                 
-                // 새로은 길을 찾는걸 시도
-                string type = NewPathFinding();
+                type = NewPathFinding(false);
                 if(type == "Warten")
                 {
                     Instance.poolManager.AllDistroyMyObject(Prefabs.PlayerPoint);
@@ -131,7 +158,9 @@ public class MonsterMovement : AStar
         }
         return "FindPath";
     }
-    string NewPathFinding()
+    // 플레이어와 가까우면 대각선에 있는 몬스터가 공격하기 플레이어 앞이 아닌 플레이어 한테 다가간다.
+    // 이를 방지하기 위해 해당 조건에 있는 경우 isTooClose를 ture로 하면 가만히 있지 않고 다른곳으로 이동하여 대각선이 아니게 되어 공격할 수 있다.
+    string NewPathFinding(bool isTooClose)
     {
         float closeDistance = float.MaxValue;
         int num = 0;
@@ -141,9 +170,10 @@ public class MonsterMovement : AStar
             for (int index = 0; index < Instance.poolManager.MyObjectLists[(int)Prefabs.PlayerPoint].Count; index++)
             {
                 // 가장 가까운 곳이 현 위치이면 그냥 대기
-                if((int)Mathf.Round(Instance.poolManager.MyObjectLists[(int)Prefabs.PlayerPoint][index].transform.position.x) == monsterPositionInt.x &&
+                if(!isTooClose && (int)Mathf.Round(Instance.poolManager.MyObjectLists[(int)Prefabs.PlayerPoint][index].transform.position.x) == monsterPositionInt.x &&
                     (int)Mathf.Round(Instance.poolManager.MyObjectLists[(int)Prefabs.PlayerPoint][index].transform.position.y) == monsterPositionInt.y)
                 {
+                    print("이거 작동함");
                     return "Warten";
                 }
                 // 가까운 곳에서 몬스터가 없는것을 확인
@@ -212,7 +242,7 @@ public class MonsterMovement : AStar
             new Vector3Int(Instance.MapSizeX, Instance.MapSizeY, 0),
             isWall
             );
-
+        
         Instance.Map2D[monsterPositionInt.x, monsterPositionInt.y] = (int)MapObject.moster;
     }
     // 가만히 있을때 플레이어를 바라보는 애니메이션
@@ -255,6 +285,18 @@ public class MonsterMovement : AStar
             // 오른쪽 방향
             transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
         }
+    }
+    bool IsDiagonal(Vector2 point1, Vector2 point2)
+    {
+        Vector2 direction = point2 - point1;
+        direction.Normalize();
+
+        float threshold = 0.01f; // 오차 허용 범위
+
+        bool isHorizontal = Mathf.Abs(direction.x) > (1 - threshold) && Mathf.Abs(direction.y) < threshold;
+        bool isVertical = Mathf.Abs(direction.y) > (1 - threshold) && Mathf.Abs(direction.x) < threshold;
+
+        return !(isHorizontal || isVertical);
     }
     public void Die()
     {

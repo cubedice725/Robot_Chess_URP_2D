@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using static GameManager;
 
 [RequireComponent(typeof(PlayerMovement))]
@@ -6,13 +7,14 @@ public class Player : MonoBehaviour
 {
     private PlayerStateMachine playerStateMachine;
     private PlayerMovement playerMovement;
-
+    public int Hp = 1;
     public int MoveCount { get; set; } = 0;
     public int AttackCount { get; set; } = 0;
     // 이동거리
     public int MoveDistance { get; set; } = 1;
     // 이동 속도
     public float PlayerMoveSpeed { get; set; } = 1f;
+    private bool start = true;
     private void Awake()
     {
         playerMovement = GetComponent<PlayerMovement>();
@@ -25,6 +27,11 @@ public class Player : MonoBehaviour
     }
     private void Update()
     {
+        if(start && Hp <= 0)
+        {
+            GetComponent<Animator>().SetTrigger("die");
+            start = false;
+        }
         //현재 상태를 통해 동작을 바꿔줌
         if (Instance.playerState == State.Idle) 
         {
