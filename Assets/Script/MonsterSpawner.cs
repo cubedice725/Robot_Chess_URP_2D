@@ -22,6 +22,7 @@ public class MonsterSpawner : MonoBehaviour
     }
     void Start()
     {
+        Instance.SummonedMonster.Clear();
         CreateBorder();
         SpawnMonster(5);
     }

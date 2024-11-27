@@ -1,8 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using Unity.VisualScripting;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
+using static PoolManager;
 
 [Serializable]
 public class Hit
@@ -48,6 +52,7 @@ public class GameManager : MonoBehaviour
     public int monsterTurnCount = 0;
     public Player player { get; set; }
     public PoolManager poolManager { get; set; }
+    public MonsterSpawner monsterSpawner { get; set; }
     public Hit hit;
     public bool ButtonLock { get; set; } = false;
 
@@ -74,6 +79,23 @@ public class GameManager : MonoBehaviour
             return _instance;
         }
     }
+    public void Reset()
+    {
+        playerState = State.Idle;
+
+        playerSkillUse = false;
+        monsterTurn = false;
+        playerTurn = true;
+        changePlayerTurn = false;
+        changeMonsterTurn = false;
+        monsterTurnCount = 0;
+        GameScore = 0;
+        GameTurnCount = 0;
+        for (int i = 0; i < MapSizeX * MapSizeY; i++)
+        {
+            Map2D[i / MapSizeY, i % MapSizeY] = (int)MapObject.noting;
+        }
+    }
     private void Awake()
     {
         if (_instance == null)
@@ -97,11 +119,20 @@ public class GameManager : MonoBehaviour
         }
         hit = new Hit("", Vector3Int.zero);
         player = FindObjectOfType<Player>();
-        poolManager = GetComponent<PoolManager>();
+        poolManager = FindObjectOfType<PoolManager>();
+        monsterSpawner = FindObjectOfType<MonsterSpawner>();
     }
-    
     private void Update()
     {
+        if (player == null)
+        {
+            player = FindObjectOfType<Player>();
+        }
+        if (poolManager == null)
+        {
+            poolManager = FindObjectOfType<PoolManager>();
+        }
+
         PlayerPositionInt = new Vector3Int(
             (int)Mathf.Round(player.transform.position.x),
             (int)Mathf.Round(player.transform.position.y),

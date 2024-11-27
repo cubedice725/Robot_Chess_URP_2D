@@ -34,7 +34,6 @@ public class SideButton : MonoBehaviour
         {
             Instance.playerState = State.Idle;
         }
-
         if (Instance.player.transform.Find("SideSkill").transform.childCount > 0)
         {
             NextImg = Instance.player.transform.Find("SideSkill").transform.GetChild(0).GetComponent<SpriteRenderer>().sprite;

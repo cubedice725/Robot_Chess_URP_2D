@@ -35,7 +35,6 @@ public class MainButton : MonoBehaviour
         {
             Instance.playerState = State.Idle;
         }
-        
         if (Instance.player.transform.Find("MainSkill").transform.childCount > 0)
         {
             NextImg = Instance.player.transform.Find("MainSkill").transform.GetChild(0).GetComponent<SpriteRenderer>().sprite;

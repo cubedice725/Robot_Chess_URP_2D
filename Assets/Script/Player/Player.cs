@@ -54,13 +54,12 @@ public class Player : MonoBehaviour
         
 
         playerStateMachine.PlayerStateMachineUpdate();
-        if (Instance.hit != null && Instance.hit.name == "Player")
+        if (Instance.hit != null && Instance.hit.name.StartsWith("Player"))
         {
             if (!Instance.playerTurn) return;
             
             Instance.playerState = State.Move;
             Instance.hit.name = "";
-
         }
     }
 }

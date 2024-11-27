@@ -16,7 +16,6 @@ public class BuyButton : MonoBehaviour
     public Item item;
     public void OnClickBuy()
     {
-        
         switch (item)
         {
             case Item.Knife:

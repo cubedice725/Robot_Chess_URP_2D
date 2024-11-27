@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -27,7 +28,14 @@ public class PoolManager : MonoBehaviour
     public List<GameObject> myObjectlPrefabs = new List<GameObject>();
 
     private Prefabs prefabs;
-
+    public void Reset()
+    {
+        foreach (Prefabs pref in Enum.GetValues(typeof(Prefabs)))
+        {
+            AllDistroyMyObject(pref);
+            pools[(int)pref].Clear();
+        }
+    }
     public void Awake()
     {
         NewPoolAdd("Prefab/Object/movePlane", 500);
