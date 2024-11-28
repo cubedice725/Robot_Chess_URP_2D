@@ -1,12 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Threading;
-using Unity.VisualScripting;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.SceneManagement;
-using static PoolManager;
 
 [Serializable]
 public class Hit
@@ -53,13 +48,14 @@ public class GameManager : MonoBehaviour
     public Player player { get; set; }
     public PoolManager poolManager { get; set; }
     public MonsterSpawner monsterSpawner { get; set; }
+    
+    [SerializeField]
     public Hit hit;
     public bool ButtonLock { get; set; } = false;
-
     public int MapSizeX { get; set; } = 12;
     public int MapSizeY { get; set; } = 12;
     public int[,] Map2D { get; set; }
-    public int GameScore { get; set; } = 0;
+    public int GameScore { get; set; } = 1000;
     public int GameTurnCount { get; set; } = 0;
     // 필드에 오브젝트 존재여부 확인
     public bool MyObjectActivate  = false;
@@ -194,6 +190,7 @@ public class GameManager : MonoBehaviour
             playerTurn = true;
         }
 
+        if (player.Die) return;
         if (Input.GetMouseButtonDown(0))
         {
             RaycastHit2D[] hits = Physics2D.RaycastAll(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);

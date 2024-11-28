@@ -20,7 +20,8 @@ public class PoolManager : MonoBehaviour
         RobotKnife,
         Pistol,
         Sniper,
-        AK47Bullet
+        AK47Bullet,
+        Guest
     }
     // 생성된 물체를 컨트롤하기 위한 리스트, 풀로 되돌아온 즉 비활성화된 오브젝트는 관리 안함
     public List<List<MyObject>> MyObjectLists { get; private set; } = new List<List<MyObject>>();
@@ -53,6 +54,8 @@ public class PoolManager : MonoBehaviour
         NewPoolAdd("Prefab/Skill/Sniper", 2);
 
         NewPoolAdd("Prefab/SkillObject/AK47Bullet", 20);
+
+        NewPoolAdd("Prefab/UI/Guest", 100);
     }
     public ObjectPool<MyObject> SelectPool(Prefabs _prefabs)
     {
