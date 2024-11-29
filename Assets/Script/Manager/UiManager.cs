@@ -4,12 +4,14 @@ using System.IO;
 using UnityEngine;
 using System.Linq;
 using UnityEngine.UI;
+using TMPro;
 using UnityEngine.SceneManagement;
 public class UiManager : MonoBehaviour
 {
-    public InputField affiliation;
-    public InputField guestName;
+    public TMP_InputField affiliation;
+    public TMP_InputField guestName;
     public GameObject guestRank;
+    public Guests guests;
     public string PlayerName;
     public string PlayserAffiliation;
     private string fileName = "Rank.csv";
@@ -36,23 +38,33 @@ public class UiManager : MonoBehaviour
     }
     private void Awake()
     {
+        if (_instance == null)
+        {
+            _instance = this;
+        }
+        else if (_instance != this)
+        {
+            // 인스턴스가 존재하는 경우 새로생기는 인스턴스를 삭제한다.
+            Destroy(gameObject);
+        }
         DontDestroyOnLoad(gameObject);
 
-        if (SceneManager.GetActiveScene().name != "GameScene")
-        {
-            affiliation = GameObject.Find("Affiliation").GetComponent<InputField>();
-            guestName = GameObject.Find("GuestName").GetComponent<InputField>();
-            GameObject.Find("GuestInformation").SetActive(false);
-        }
+    }
+    public void Reset()
+    {
+        start = true;
+        end = false;
     }
     private void Update()
     {
         if (start && SceneManager.GetActiveScene().name == "GameScene")
         {
             guestRank = GameObject.Find("GuestRank");
-            start = false;
-            if (guestRank != null) 
+            guests = FindObjectOfType<Guests>();
+            if (guestRank != null)
             {
+                start = false;
+
                 guestRank.SetActive(false);
             }
         }
@@ -63,8 +75,9 @@ public class UiManager : MonoBehaviour
             {
                 if (guestRank != null)
                 {
-                    FindObjectOfType<Guests>().Initialize();
+                    guests.Initialize();
                     guestRank.SetActive(true);
+                    time = 0;
                 }
                 end = true;
             }
@@ -91,7 +104,6 @@ public class UiManager : MonoBehaviour
                 }
             }
         }
-        GameManager.Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.Guest);
         // 새로운 데이터를 저장할 문자열 생성
         string newData = PlayerName + "," + PlayserAffiliation + "," + GameManager.Instance.GameTurnCount + "," + GameManager.Instance.GameScore;
 
@@ -108,8 +120,11 @@ public class UiManager : MonoBehaviour
         }
 
         Debug.Log("Data saved to " + path);
-        affiliation.text = "";
-        guestName.text = "";
+        if(affiliation != null)
+        {
+            affiliation.text = "";
+            guestName.text = "";
+        }
     }
 
     public List<string> LoadFromCSV()

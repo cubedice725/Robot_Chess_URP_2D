@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 [Serializable]
 public class Hit
@@ -47,7 +48,6 @@ public class GameManager : MonoBehaviour
     public int monsterTurnCount = 0;
     public Player player { get; set; }
     public PoolManager poolManager { get; set; }
-    public MonsterSpawner monsterSpawner { get; set; }
     
     [SerializeField]
     public Hit hit;
@@ -55,7 +55,7 @@ public class GameManager : MonoBehaviour
     public int MapSizeX { get; set; } = 12;
     public int MapSizeY { get; set; } = 12;
     public int[,] Map2D { get; set; }
-    public int GameScore { get; set; } = 1000;
+    public int GameScore { get; set; } = 0;
     public int GameTurnCount { get; set; } = 0;
     // 필드에 오브젝트 존재여부 확인
     public bool MyObjectActivate  = false;
@@ -78,7 +78,7 @@ public class GameManager : MonoBehaviour
     public void Reset()
     {
         playerState = State.Idle;
-
+        ButtonLock = false;
         playerSkillUse = false;
         monsterTurn = false;
         playerTurn = true;
@@ -116,10 +116,10 @@ public class GameManager : MonoBehaviour
         hit = new Hit("", Vector3Int.zero);
         player = FindObjectOfType<Player>();
         poolManager = FindObjectOfType<PoolManager>();
-        monsterSpawner = FindObjectOfType<MonsterSpawner>();
     }
     private void Update()
     {
+        if (SceneManager.GetActiveScene().name != "GameScene") return;
         if (player == null)
         {
             player = FindObjectOfType<Player>();
@@ -165,6 +165,11 @@ public class GameManager : MonoBehaviour
         }
         else if (SummonedMonster.Count == 0)
         {
+            GameTurnCount++;
+            GameScore += 10;
+            monsterTurnCount = 0;
+            SummonedMonsterAuthorityCount = 0;
+            ResetMonsterMovements();
             FromMonsterToPlayer();
         }
 
