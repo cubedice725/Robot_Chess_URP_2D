@@ -29,6 +29,7 @@ public abstract class Monster : MonoBehaviour
     protected Rigidbody2D rigi2D;
     protected MyObject myObject;
 
+    public bool fuck = false;
     public State state { get;  set; } = State.Idle;
     protected IState monsterSkillCastingState;
     protected IState monsterMovingState;
@@ -70,6 +71,11 @@ public abstract class Monster : MonoBehaviour
     }
     protected void Update()
     {
+        if (fuck)
+        {
+            print(state);
+
+        }
         // 어떠한 경우에 상태 변환이 될지 모르기에 상태 변환을 가장 먼저 해야함
         if (state == State.Idle)
         {

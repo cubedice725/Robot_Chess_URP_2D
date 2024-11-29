@@ -55,10 +55,11 @@ public class GameManager : MonoBehaviour
     public int MapSizeX { get; set; } = 12;
     public int MapSizeY { get; set; } = 12;
     public int[,] Map2D { get; set; }
-    public int GameScore { get; set; } = 0;
+    public int GameScore { get; set; } = 10000;
     public int GameTurnCount { get; set; } = 0;
     // 필드에 오브젝트 존재여부 확인
     public bool MyObjectActivate  = false;
+    
     public Vector3Int PlayerPositionInt { get; set; }
     public static GameManager Instance
     {
@@ -138,6 +139,8 @@ public class GameManager : MonoBehaviour
         // 몬스터의 움직임의 규칙을 담당하는 알고리즘
         if (monsterTurn && SummonedMonster.Count > 0)
         {
+            
+            ButtonLock = true;
             // 몬스터가 N번 행동 할수 있도록 함
             if (monsterTurnCount < 2)
             {
@@ -155,6 +158,7 @@ public class GameManager : MonoBehaviour
             }
             else
             {
+                ButtonLock = false;
                 GameTurnCount++;
                 GameScore += 10;
                 monsterTurnCount = 0;
@@ -239,17 +243,20 @@ public class GameManager : MonoBehaviour
     // 몬스터가 전부 플레그를 올렸는지 확인
     private bool CheckMonsterFlag()
     {
-        
         if (SummonedMonster.Count > 0)
         {
             for (int index = 0; index < SummonedMonster.Count; index++)
             {
                 if (SummonedMonster[index].GetComponent<Monster>().Flag)
                 {
-                    if (index + 1 == SummonedMonster.Count)
+                    if (index == SummonedMonster.Count - 1)
                     {
                         return true;
                     }
+                }
+                else
+                {
+                    return false;
                 }
             }
         }

@@ -173,7 +173,6 @@ public class MonsterMovement : AStar
                 if(!isTooClose && (int)Mathf.Round(Instance.poolManager.MyObjectLists[(int)Prefabs.PlayerPoint][index].transform.position.x) == monsterPositionInt.x &&
                     (int)Mathf.Round(Instance.poolManager.MyObjectLists[(int)Prefabs.PlayerPoint][index].transform.position.y) == monsterPositionInt.y)
                 {
-                    print("이거 작동함");
                     return "Warten";
                 }
                 // 가까운 곳에서 몬스터가 없는것을 확인

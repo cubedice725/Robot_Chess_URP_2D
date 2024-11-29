@@ -8,7 +8,7 @@ public class Player : MonoBehaviour
 {
     private PlayerStateMachine playerStateMachine;
     private PlayerMovement playerMovement;
-    public int Hp = 1;
+    public int Hp { get; set; } = 1;
     public int MoveCount { get; set; } = 0;
     public int AttackCount { get; set; } = 0;
     // 이동거리
@@ -59,10 +59,13 @@ public class Player : MonoBehaviour
         }
         
         playerStateMachine.PlayerStateMachineUpdate();
+        if (!Instance.playerTurn) return;
+        if (Input.GetKeyDown(KeyCode.Q)) 
+        {
+            Instance.playerState = State.Move;
+        }
         if (Instance.hit != null && Instance.hit.name.StartsWith("Player"))
         {
-            if (!Instance.playerTurn) return;
-            
             Instance.playerState = State.Move;
             Instance.hit.name = "";
         }

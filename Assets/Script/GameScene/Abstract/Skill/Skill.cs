@@ -112,6 +112,7 @@ public abstract class Skill : MonoBehaviour
                 myObject.transform.localScale = new Vector3(-myObject.transform.localScale.x, myObject.transform.localScale.y, 0);
             }
             myObject.transform.rotation = Quaternion.Euler(Vector3Int.zero);
+            Usage = 0;
             myObject.Destroy();
         }
     }

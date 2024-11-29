@@ -22,6 +22,10 @@ public class KnifeButton : MonoBehaviour
         }
         else
         {
+            if (Input.GetKeyDown(KeyCode.W))
+            {
+                OnClickKnifeButton();
+            }
             button.interactable = true;
         }
         if (changeSkill && Instance.playerState == State.Idle)

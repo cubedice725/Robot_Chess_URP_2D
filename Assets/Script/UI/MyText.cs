@@ -11,7 +11,9 @@ public class MyText : MonoBehaviour
         AttackTurn,
         MoveTurn,
         Score,
-        TurnCount
+        TurnCount,
+        MainCount,
+        SideCount
     }
     public TextMeshProUGUI textMesh;
     public MyTextOption myTextOption;
@@ -42,6 +44,25 @@ public class MyText : MonoBehaviour
             case MyTextOption.TurnCount:
                 {
                     textMesh.text = "Turn Count " + GameManager.Instance.GameTurnCount.ToString();
+                    break;
+                }
+            case MyTextOption.MainCount:
+                {
+                    if (GameManager.Instance.player.transform.Find("MainSkill").transform.childCount > 0)
+                    {
+                        Skill skill = GameManager.Instance.player.transform.Find("MainSkill").transform.GetChild(0).transform.GetComponent<Skill>();
+                        textMesh.text = (skill.UsageLimit - skill.Usage).ToString();
+                    }
+                        
+                    break;
+                }
+            case MyTextOption.SideCount:
+                {
+                    if (GameManager.Instance.player.transform.Find("SideSkill").transform.childCount > 0)
+                    {
+                        Skill skill = GameManager.Instance.player.transform.Find("SideSkill").transform.GetChild(0).transform.GetComponent<Skill>();
+                        textMesh.text = (skill.UsageLimit - skill.Usage).ToString();
+                    }
                     break;
                 }
             default:

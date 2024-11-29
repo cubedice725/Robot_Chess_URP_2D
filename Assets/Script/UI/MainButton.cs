@@ -24,6 +24,10 @@ public class MainButton : MonoBehaviour
         }
         else
         {
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                OnClickMainButtion();
+            }
             button.interactable = true;
         }
         if (changeSkill && Instance.playerState == State.Idle)
@@ -50,6 +54,7 @@ public class MainButton : MonoBehaviour
             GetComponent<Image>().sprite = veto;
             img = veto;
         }
+        
     }
     public void OnClickMainButtion()
     {

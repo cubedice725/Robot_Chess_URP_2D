@@ -23,6 +23,10 @@ public class SideButton : MonoBehaviour
         }
         else
         {
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                OnClickSideButtion();
+            }
             button.interactable = true;
         }
         if (changeSkill && Instance.playerState == State.Idle)
