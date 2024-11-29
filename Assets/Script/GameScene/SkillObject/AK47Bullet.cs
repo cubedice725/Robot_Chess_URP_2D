@@ -2,12 +2,7 @@ using UnityEngine;
 
 public class AK47Bullet : MonoBehaviour
 {
-    MyObject MyObject;
     float speed = 20;
-    private void Awake()
-    {
-        MyObject = GetComponent<MyObject>();
-    }
     void FixedUpdate()
     {
         transform.Translate(speed * Time.fixedDeltaTime, 0,0);
@@ -22,7 +17,7 @@ public class AK47Bullet : MonoBehaviour
                 collision.gameObject.GetComponent<Monster>().HP -= 1;
             }
             GameManager.Instance.MyObjectActivate = false;
-            MyObject.Destroy();
+            GetComponent<MyObject>().Destroy();
         }
     }
 }

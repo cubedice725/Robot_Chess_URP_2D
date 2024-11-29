@@ -8,7 +8,7 @@ public class Pistol : LongSkill, IState
     bool start = false;
     bool skillUse = false;
     float accuracy = 0.001f;
-    public override int UsageLimit { get => 6; set { } }
+    public override int UsageLimit { get => 2; set { } }
 
     public void Entry()
     {
@@ -20,6 +20,8 @@ public class Pistol : LongSkill, IState
         {
             Instance.MyObjectActivate = true;
             Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.Selection);
+            Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.UnSelection);
+
             playerMovement.LookMonsterAnimation(Instance.hit.positionInt.x);
             skillUse = true;
             start = true;
@@ -46,6 +48,8 @@ public class Pistol : LongSkill, IState
     public bool Exit()
     {
         Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.Selection);
+        Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.UnSelection);
+
         if (skillUse)
         {
             skillUse = false;

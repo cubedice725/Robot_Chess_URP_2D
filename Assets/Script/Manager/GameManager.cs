@@ -118,9 +118,17 @@ public class GameManager : MonoBehaviour
         player = FindObjectOfType<Player>();
         poolManager = FindObjectOfType<PoolManager>();
     }
+    private void Start()
+    {
+        poolManager.SelectPool(PoolManager.Prefabs.RangedAttackObject).Get().transform.position = new Vector3(4,4,1);
+    }
     private void Update()
     {
+        //Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+        //print(mousePos);
         if (SceneManager.GetActiveScene().name != "GameScene") return;
+        
         if (player == null)
         {
             player = FindObjectOfType<Player>();

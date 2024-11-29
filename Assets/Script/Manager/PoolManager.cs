@@ -16,11 +16,14 @@ public class PoolManager : MonoBehaviour
         Point,
         PlayerPoint,
         WallObject,
+        UnSelection,
+        DamagedArea,
         Robot,
         RobotKnife,
         Pistol,
         Sniper,
         AK47Bullet,
+        FighterPlaneShadow,
         Guest
     }
     // 생성된 물체를 컨트롤하기 위한 리스트, 풀로 되돌아온 즉 비활성화된 오브젝트는 관리 안함
@@ -46,7 +49,9 @@ public class PoolManager : MonoBehaviour
         NewPoolAdd("Prefab/Object/Point", 20);
         NewPoolAdd("Prefab/Object/PlayerPoint", 20);
         NewPoolAdd("Prefab/Object/WallObject", 100);
-        
+        NewPoolAdd("Prefab/Object/UnSelection", 100);
+        NewPoolAdd("Prefab/Object/DamagedArea", 100);
+
         NewPoolAdd("Prefab/Monster/Robot", 50);
         NewPoolAdd("Prefab/Monster/RobotKnife", 50);
 
@@ -54,6 +59,7 @@ public class PoolManager : MonoBehaviour
         NewPoolAdd("Prefab/Skill/Sniper", 2);
 
         NewPoolAdd("Prefab/SkillObject/AK47Bullet", 20);
+        NewPoolAdd("Prefab/SkillObject/FighterPlaneShadow", 2);
 
         NewPoolAdd("Prefab/UI/Guest", 100);
     }

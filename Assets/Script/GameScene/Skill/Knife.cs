@@ -18,6 +18,8 @@ public class Knife : CloseSkill, IState
         {
             Instance.playerSkillUse = true;
             Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.Selection);
+            Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.UnSelection);
+
             crashBoxObject = Instance.poolManager.SelectPool(PoolManager.Prefabs.CrashBoxObject).Get();
             crashBoxObject.transform.position = new Vector3Int(Instance.hit.positionInt.x, Instance.hit.positionInt.y, 0);
             playerMovement.LookMonsterAnimation(Instance.hit.positionInt.x);
@@ -43,6 +45,8 @@ public class Knife : CloseSkill, IState
     public bool Exit()
     {
         Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.Selection);
+        Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.UnSelection);
+
         if (skillUse)
         {
             Instance.playerSkillUse = false;

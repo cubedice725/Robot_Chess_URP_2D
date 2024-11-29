@@ -76,29 +76,84 @@ public abstract class Skill : MonoBehaviour
         }
         return false;
     }
-    public void AttackRange(int size)
+    public void AttackRange(int size, Vector3Int targetPos = new Vector3Int(), Vector2Int startPos = new Vector2Int(), Vector2Int endPos = new Vector2Int())
     {
+        targetPos = Instance.PlayerPositionInt;
+        startPos = Vector2Int.zero;
+        endPos = new Vector2Int(Instance.MapSizeX, Instance.MapSizeY);
+
+        bool downSide = targetPos.y > startPos.y;
+        bool upSide = targetPos.y < endPos.y;
+        bool leftSide = targetPos.x > startPos.x;
+        bool rightSide = targetPos.x < endPos.x;
+
         for (int index = 1; index <= size; index++)
         {
-            if ((Instance.PlayerPositionInt.y - index > 0)  && Instance.Map2D[Instance.PlayerPositionInt.x, Instance.PlayerPositionInt.y - index] == (int)MapObject.moster)
+            int downPos = targetPos.y - index;
+            int upPos = targetPos.y + index;
+            int leftPos = targetPos.x - index;
+            int rightPos = targetPos.x + index;
+
+            bool downPosSide = downPos > startPos.y && downPos < endPos.y;
+            bool upPosSide = upPos > startPos.y && upPos < endPos.y;
+            bool leftPosSide = leftPos > startPos.x && leftPos < endPos.x;
+            bool rightPosSide = rightPos > startPos.x && rightPos < endPos.x;
+
+
+            if (downPosSide && leftSide && rightSide)
             {
-                Instance.poolManager.SelectPool(PoolManager.Prefabs.Selection).Get().transform.position
-                    = new Vector3(Instance.PlayerPositionInt.x, Instance.PlayerPositionInt.y - index, -1);
+                if (Instance.Map2D[targetPos.x, downPos] == (int)MapObject.moster)
+                {
+                    Instance.poolManager.SelectPool(PoolManager.Prefabs.Selection).Get().transform.position
+                        = new Vector3(targetPos.x, downPos, -1);
+                }
+                else
+                {
+                    Instance.poolManager.SelectPool(PoolManager.Prefabs.UnSelection).Get().transform.position
+                        = new Vector3(targetPos.x, downPos, -1);
+                }
             }
-            if ((Instance.PlayerPositionInt.y + index < Instance.MapSizeY) && Instance.Map2D[Instance.PlayerPositionInt.x, Instance.PlayerPositionInt.y + index] == (int)MapObject.moster)
+
+            if (upPosSide && leftSide && rightSide)
             {
-                Instance.poolManager.SelectPool(PoolManager.Prefabs.Selection).Get().transform.position 
-                    = new Vector3(Instance.PlayerPositionInt.x, Instance.PlayerPositionInt.y + index, -1);
+                if (Instance.Map2D[targetPos.x, upPos] == (int)MapObject.moster)
+                {
+                    Instance.poolManager.SelectPool(PoolManager.Prefabs.Selection).Get().transform.position
+                        = new Vector3(targetPos.x, upPos, -1);
+                }
+                else
+                {
+                    Instance.poolManager.SelectPool(PoolManager.Prefabs.UnSelection).Get().transform.position
+                        = new Vector3(targetPos.x, upPos, -1);
+                }
             }
-            if ((Instance.PlayerPositionInt.x - index > 0) && Instance.Map2D[Instance.PlayerPositionInt.x - index, Instance.PlayerPositionInt.y] == (int)MapObject.moster)
+
+            if (leftPosSide && upSide && downSide)
             {
-                Instance.poolManager.SelectPool(PoolManager.Prefabs.Selection).Get().transform.position
-                    = new Vector3(Instance.PlayerPositionInt.x - index, Instance.PlayerPositionInt.y, -1);
+                if (Instance.Map2D[leftPos, targetPos.y] == (int)MapObject.moster)
+                {
+                    Instance.poolManager.SelectPool(PoolManager.Prefabs.Selection).Get().transform.position
+                        = new Vector3(leftPos, targetPos.y, -1);
+                }
+                else
+                {
+                    Instance.poolManager.SelectPool(PoolManager.Prefabs.UnSelection).Get().transform.position
+                        = new Vector3(targetPos.x - index, targetPos.y, -1);
+                }
             }
-            if ((Instance.PlayerPositionInt.x + index < Instance.MapSizeX) && Instance.Map2D[Instance.PlayerPositionInt.x + index, Instance.PlayerPositionInt.y] == (int)MapObject.moster)
+
+            if (rightPosSide && upSide && downSide)
             {
-                Instance.poolManager.SelectPool(PoolManager.Prefabs.Selection).Get().transform.position
-                    = new Vector3(Instance.PlayerPositionInt.x + index, Instance.PlayerPositionInt.y, -1);
+                if (Instance.Map2D[rightPos, targetPos.y] == (int)MapObject.moster)
+                {
+                    Instance.poolManager.SelectPool(PoolManager.Prefabs.Selection).Get().transform.position
+                        = new Vector3(rightPos, targetPos.y, -1);
+                }
+                else
+                {
+                    Instance.poolManager.SelectPool(PoolManager.Prefabs.UnSelection).Get().transform.position
+                        = new Vector3(rightPos, targetPos.y, -1);
+                }
             }
         }
     }

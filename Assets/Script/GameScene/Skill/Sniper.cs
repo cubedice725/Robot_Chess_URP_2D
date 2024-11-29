@@ -9,7 +9,7 @@ public class Sniper : LongSkill, IState
     bool start = false;
     bool skillUse = false;
     float accuracy = 0.001f;
-    public override int UsageLimit { get => 3; set { } }
+    public override int UsageLimit { get => 4; set { } }
     public void Entry()
     {
         AttackRange(3);
@@ -20,6 +20,8 @@ public class Sniper : LongSkill, IState
         {
             Instance.MyObjectActivate = true;
             Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.Selection);
+            Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.UnSelection);
+
             playerMovement.LookMonsterAnimation(Instance.hit.positionInt.x);
             skillUse = true;
             start = true;
@@ -46,6 +48,8 @@ public class Sniper : LongSkill, IState
     public bool Exit()
     {
         Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.Selection);
+        Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.UnSelection);
+
         if (skillUse)
         {
             skillUse = false;

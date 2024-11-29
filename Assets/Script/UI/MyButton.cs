@@ -51,6 +51,10 @@ public class MyButton : MonoBehaviour
             }
             else
             {
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    GameManager.Instance.FromPlayerToMonster();
+                }
                 button.interactable = true;
             }
         }

@@ -4,7 +4,6 @@ using System.Threading;
 using Unity.VisualScripting;
 using UnityEngine;
 using static GameManager;
-using static PoolManager;
 
 public class MonsterSpawner : MonoBehaviour
 {
@@ -24,11 +23,11 @@ public class MonsterSpawner : MonoBehaviour
     {
         Instance.SummonedMonster.Clear();
         CreateBorder();
-        SpawnMonster(5);
+        SpawnMonster(5, PoolManager.Prefabs.RobotKnife);
     }
     void AddPoint(int x, int y)
     {
-        points.Add(Instance.poolManager.SelectPool(Prefabs.Point).Get());
+        points.Add(Instance.poolManager.SelectPool(PoolManager.Prefabs.Point).Get());
         points[points.Count - 1].transform.position = startPosition + new Vector3Int(x, y, 0);
         points[points.Count - 1].transform.parent = transform;
     }
@@ -57,12 +56,12 @@ public class MonsterSpawner : MonoBehaviour
         }
         if(Instance.GameTurnCount % 5 == 0 && Instance.playerTurn && Instance.GameTurnCount != 0 && start)
         {
-            SpawnMonster(3);
-            SpawnMonster(0);
+            SpawnMonster(3, PoolManager.Prefabs.Robot);
+            SpawnMonster(3, PoolManager.Prefabs.RobotKnife);
             start = false; 
         }
     }
-    private void SpawnMonster(int numMonstersSummon)
+    private void SpawnMonster(int numMonstersSummon, PoolManager.Prefabs prefabs)
     {
         int unavailableNumberCount = 0;
         bool[] verifiedNumber = new bool[points.Count];
@@ -111,7 +110,7 @@ public class MonsterSpawner : MonoBehaviour
             int RandomNum = Random.Range(0, points.Count);
             if (verifiedNumber[RandomNum])
             {
-                MyObject monsterObject = Instance.poolManager.SelectPool(Prefabs.RobotKnife).Get();
+                MyObject monsterObject = Instance.poolManager.SelectPool(prefabs).Get();
                 monsterObject.transform.GetComponent<Monster>().Initialize();
                 Instance.SummonedMonster.Add(monsterObject.gameObject);
                 monsterObject.transform.position = points[RandomNum].transform.position;
