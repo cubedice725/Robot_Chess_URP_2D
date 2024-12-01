@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static GameManager;
+
 [RequireComponent(typeof(MonsterMovement))]
-[RequireComponent(typeof(RobotKnifeSkillCastingState))]
-public class RobotKnife : Monster
+[RequireComponent(typeof(RobotSniperSkillCastingState))]
+public class RobotSniper : Monster
 {
     public override int MovingDistance { get => 1; set { } }
-    public override int AttackDistance { get => 1; set { } }
+    public override int AttackDistance { get => 3; set { } }
     public override float MoveSpeed { get => 0.7f; set { } }
 
     public bool start = true;
@@ -15,9 +16,9 @@ public class RobotKnife : Monster
     protected override void Awake()
     {
         base.Awake();
-        monsterIdleState = new RobotKnifeIdleState(monsterMovement);
-        monsterMovingState = new RobotKnifeMovingState(monsterMovement);
-        monsterSkillCastingState = GetComponent<RobotKnifeSkillCastingState>();
+        monsterIdleState = new RobotSniperIdleState(monsterMovement);
+        monsterMovingState = new RobotSniperMovingState(monsterMovement);
+        monsterSkillCastingState = GetComponent<RobotSniperSkillCastingState>();
         monsterStateMachine.Initialize(monsterIdleState);
     }
     protected override void UpdateMonster()

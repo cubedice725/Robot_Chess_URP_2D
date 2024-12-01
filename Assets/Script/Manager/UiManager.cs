@@ -6,6 +6,7 @@ using System.Linq;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
+using static MyButton;
 public class UiManager : MonoBehaviour
 {
     public TMP_InputField affiliation;

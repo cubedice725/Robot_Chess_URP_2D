@@ -46,6 +46,7 @@ public class GameManager : MonoBehaviour
     public bool changePlayerTurn = false;
     public bool changeMonsterTurn = false;
     public int monsterTurnCount = 0;
+    public int StageCount = 0;
     public Player player { get; set; }
     public PoolManager poolManager { get; set; }
     
@@ -56,7 +57,7 @@ public class GameManager : MonoBehaviour
     public int MapSizeY { get; set; } = 12;
     public int[,] Map2D { get; set; }
     public int GameScore { get; set; } = 10000;
-    public int GameTurnCount { get; set; } = 0;
+    public int GameTurnCount { get; set; } = 1;
     // 필드에 오브젝트 존재여부 확인
     public bool MyObjectActivate  = false;
     
@@ -118,17 +119,9 @@ public class GameManager : MonoBehaviour
         player = FindObjectOfType<Player>();
         poolManager = FindObjectOfType<PoolManager>();
     }
-    private void Start()
-    {
-        poolManager.SelectPool(PoolManager.Prefabs.RangedAttackObject).Get().transform.position = new Vector3(4,4,1);
-    }
     private void Update()
     {
-        //Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
-        //print(mousePos);
         if (SceneManager.GetActiveScene().name != "GameScene") return;
-        
         if (player == null)
         {
             player = FindObjectOfType<Player>();
@@ -172,7 +165,7 @@ public class GameManager : MonoBehaviour
                 monsterTurnCount = 0;
                 SummonedMonsterAuthorityCount = 0;
                 ResetMonsterMovements();
-                FromMonsterToPlayer();
+                changeMonsterTurn = true;
             }
         }
         else if (SummonedMonster.Count == 0)
@@ -182,7 +175,7 @@ public class GameManager : MonoBehaviour
             monsterTurnCount = 0;
             SummonedMonsterAuthorityCount = 0;
             ResetMonsterMovements();
-            FromMonsterToPlayer();
+            changeMonsterTurn = true;
         }
 
         if (changePlayerTurn && !MyObjectActivate)
@@ -205,6 +198,11 @@ public class GameManager : MonoBehaviour
             changeMonsterTurn = false;
             monsterTurn = false;
             playerTurn = true;
+            if(GameTurnCount % 5 == 1)
+            {
+                StageCount++;
+                print(StageCount);
+            }
         }
 
         if (player.Die) return;
@@ -326,10 +324,6 @@ public class GameManager : MonoBehaviour
     {
         Instance.playerState = State.Idle;
         changePlayerTurn = true;
-    }
-    public void FromMonsterToPlayer()
-    {
-        changeMonsterTurn = true;
     }
 
     // 플레이어와 가까운 몬스터 확인

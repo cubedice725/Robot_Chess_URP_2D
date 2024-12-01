@@ -56,7 +56,6 @@ public class PlayerMovement : AStar
             else
             {
                 RunAnimation(false);
-                Instance.Map2D[Instance.PlayerPositionInt.x, Instance.PlayerPositionInt.y] = (int)MapObject.player;
                 count = 1;
                 updateMoveStart = true;
                 return false;

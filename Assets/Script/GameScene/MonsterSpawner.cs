@@ -4,13 +4,22 @@ using System.Threading;
 using Unity.VisualScripting;
 using UnityEngine;
 using static GameManager;
+using static PoolManager;
 
+public class SummoneMonsterStage
+{
+    public SummoneMonsterStage(int _Number, Prefabs _MonsterPrefabs) { Number = _Number; MonsterPrefabs = _MonsterPrefabs; }
+    public int Number;
+    public PoolManager.Prefabs MonsterPrefabs;
+}
 public class MonsterSpawner : MonoBehaviour
 {
     public Vector3Int startPosition;
 
     private Vector2Int size;
     private List<MyObject> points = new List<MyObject>();
+    private List<List<SummoneMonsterStage>> summoneMonsterStage = new List<List<SummoneMonsterStage>>();
+    private List <SummoneMonsterStage> MonsterStage = new List<SummoneMonsterStage>();
 
     private int unspondedMonsters = 0;
     private bool start = false;
@@ -23,7 +32,12 @@ public class MonsterSpawner : MonoBehaviour
     {
         Instance.SummonedMonster.Clear();
         CreateBorder();
-        SpawnMonster(5, PoolManager.Prefabs.RobotKnife);
+        SpawnMonster(5, Prefabs.RobotKnife);
+        summoneMonsterStage[0].Add(new SummoneMonsterStage(3, Prefabs.RobotKnife));
+        summoneMonsterStage[0].Add(new SummoneMonsterStage(1, Prefabs.Pistol));
+        
+        summoneMonsterStage[1].Add(new SummoneMonsterStage(3, Prefabs.RobotKnife));
+        summoneMonsterStage[1].Add(new SummoneMonsterStage(1, Prefabs.RobotSniper));
     }
     void AddPoint(int x, int y)
     {
@@ -54,10 +68,12 @@ public class MonsterSpawner : MonoBehaviour
         {
             start = true;
         }
-        if(Instance.GameTurnCount % 5 == 0 && Instance.playerTurn && Instance.GameTurnCount != 0 && start)
+        if(Instance.GameTurnCount % 5 == 1 && Instance.playerTurn && Instance.GameTurnCount != 0 && start)
         {
-            SpawnMonster(3, PoolManager.Prefabs.Robot);
-            SpawnMonster(3, PoolManager.Prefabs.RobotKnife);
+            for(int index  = 0; index < summoneMonsterStage[Instance.StageCount].Count; index++)
+            {
+                SpawnMonster(summoneMonsterStage[Instance.StageCount][index].Number, summoneMonsterStage[Instance.StageCount][index].MonsterPrefabs);
+            }
             start = false; 
         }
     }
@@ -114,6 +130,7 @@ public class MonsterSpawner : MonoBehaviour
                 monsterObject.transform.GetComponent<Monster>().Initialize();
                 Instance.SummonedMonster.Add(monsterObject.gameObject);
                 monsterObject.transform.position = points[RandomNum].transform.position;
+                Instance.Map2D[(int)points[RandomNum].transform.position.x, (int)points[RandomNum].transform.position.y] = (int)MapObject.moster;
                 verifiedNumber[RandomNum] = false;
                 unavailableNumberCount++;
                 i++;

@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
     public int MoveCount { get; set; } = 0;
     public int AttackCount { get; set; } = 0;
     // 이동거리
-    public int MoveDistance { get; set; } = 1;
+    public int MoveDistance { get; set; } = 10;
     // 이동 속도
     public float PlayerMoveSpeed { get; set; } = 1f;
     public bool Die = false;

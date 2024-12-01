@@ -3,11 +3,18 @@ using static GameManager;
 
 public class ItamSpawner : MonoBehaviour
 {
+    bool start = false;
+    int turnCount = 2;
     private void Update()
     {
-        if (Instance.playerTurn && Instance.poolManager.MyObjectLists[(int)PoolManager.Prefabs.RangedAttackObject].Count < 1 && Instance.GameTurnCount >= 7)
+        if(Instance.GameTurnCount % turnCount == 1)
+        {
+            start = true;
+        }
+        if (start && Instance.playerTurn && Instance.GameTurnCount % turnCount == 0)
         {
             SpawnItem(1);
+            start = false;
         }
     }
     private void SpawnItem(int count)

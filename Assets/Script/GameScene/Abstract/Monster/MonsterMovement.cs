@@ -99,7 +99,7 @@ public class MonsterMovement : AStar
     {
         // 대각선인지, 사거리 안에 있는지 확인
         if (!IsDiagonal(new Vector2(monsterPositionInt.x, monsterPositionInt.y),new Vector2(Instance.PlayerPositionInt.x, Instance.PlayerPositionInt.y)) 
-            && (int)Mathf.Round(Vector2.Distance(Instance.player.transform.position, transform.position)) <= monster.AttackDistance + 1)
+            && (int)Mathf.Round(Vector2.Distance(Instance.player.transform.position, transform.position)) <= monster.AttackDistance)
         {
             return "AttackRange";
         }

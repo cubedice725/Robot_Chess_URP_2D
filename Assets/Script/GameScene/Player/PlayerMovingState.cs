@@ -12,6 +12,7 @@ public class PlayerMovingState : IState
     }
     public void Entry()
     {
+        Instance.Map2D[Instance.PlayerPositionInt.x, Instance.PlayerPositionInt.y] = (int)MapObject.noting;
         _playerMovement.MoveReady();
     }
     public void IStateUpdate()
@@ -35,6 +36,7 @@ public class PlayerMovingState : IState
         Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.MovePlane);
         if (moveUse)
         {
+            Instance.Map2D[Instance.PlayerPositionInt.x, Instance.PlayerPositionInt.y] = (int)MapObject.player;
             moveUse = false;
             Instance.player.MoveCount++;
             Instance.ButtonLock = false;

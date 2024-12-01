@@ -8,12 +8,13 @@ public class CrashBoxObject : MonoBehaviour
     {
         if(collision != null && collision.transform.GetComponent<Monster>() != null)
         {
-            collision.transform.GetComponent<Monster>().HP -= 1;
+            collision.transform.GetComponent<Monster>().Hp -= 1;
+            GetComponent<MyObject>().Destroy();
         }
         if (collision != null && collision.transform.GetComponent<Player>() != null)
         {
             collision.transform.GetComponent<Player>().Hp -= 1;
+            GetComponent<MyObject>().Destroy();
         }
-        GetComponent<MyObject>().Destroy();
     }
 }

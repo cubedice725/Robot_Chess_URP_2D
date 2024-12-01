@@ -16,7 +16,7 @@ public abstract class Monster : MonoBehaviour
     public virtual int AttackDistance { get; set; } = 0;
     public virtual int MovingDistance { get; set; } = 0;
     public virtual float MoveSpeed { get; set; } = 1f;
-    public virtual float HP { get; set; } = 1;
+    public virtual float Hp { get; set; } = 1;
     public int MoveCount { get; set; } = 0;
     public int AttackCount { get; set; } = 0;
     public bool Die { get; private set; } = false;
@@ -29,7 +29,6 @@ public abstract class Monster : MonoBehaviour
     protected Rigidbody2D rigi2D;
     protected MyObject myObject;
 
-    public bool fuck = false;
     public State state { get;  set; } = State.Idle;
     protected IState monsterSkillCastingState;
     protected IState monsterMovingState;
@@ -42,7 +41,7 @@ public abstract class Monster : MonoBehaviour
         rigi2D.simulated = true;
         Flag = false;
         Authority = false;
-        HP = 1;
+        Hp = 1;
         MoveCount = 0;
         AttackCount = 0;
         Die = false;
@@ -71,11 +70,6 @@ public abstract class Monster : MonoBehaviour
     }
     protected void Update()
     {
-        if (fuck)
-        {
-            print(state);
-
-        }
         // 어떠한 경우에 상태 변환이 될지 모르기에 상태 변환을 가장 먼저 해야함
         if (state == State.Idle)
         {
@@ -90,7 +84,7 @@ public abstract class Monster : MonoBehaviour
             monsterStateMachine.TransitionTo(monsterSkillCastingState);
         }
         // 사망판정
-        if (HP <= 0 && !Die)
+        if (Hp <= 0 && !Die)
         {
             // 가만히 있으면 해당 자리에 몬스터가 맵에 남아있는걸 방지하기 위해 만듦
             if (state == State.Idle) 
