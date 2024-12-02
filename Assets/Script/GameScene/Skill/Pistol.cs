@@ -12,24 +12,22 @@ public class Pistol : LongSkill, IState
 
     public void Entry()
     {
+        Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.Selection);
+        Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.UnSelection);
+
         AttackRange(2);
     }
     public void IStateUpdate()
     {
         if (UpdateSelectionCheck())
         {
-            Instance.MyObjectActivate = true;
-            Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.Selection);
-            Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.UnSelection);
-
-            playerMovement.LookMonsterAnimation(Instance.hit.positionInt.x);
             skillUse = true;
             start = true;
         }
 
         if (start)
         {
-            if (!UpdateLookAtTarget(Instance.hit.positionInt, accuracy, 7f))
+            if (!UpdateLookAtTarget(Instance.MyHit.positionInt, accuracy, 7f))
             {
                 Shoot(PoolManager.Prefabs.AK47Bullet);
                 start = false;

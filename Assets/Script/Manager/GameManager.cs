@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 
 [Serializable]
@@ -32,36 +33,37 @@ public class GameManager : MonoBehaviour
         moster
     }
     private static GameManager _instance;
+
     public List<float> monsterDistances = new List<float>();
     public List<GameObject> SummonedMonster = new List<GameObject>();
 
     public State playerState = State.Idle;
     public IState skillState;
 
-    private int SummonedMonsterAuthorityCount = 0;
 
-    public bool playerSkillUse = false;
     public bool monsterTurn = false;
     public bool playerTurn = true;
-    public bool changePlayerTurn = false;
-    public bool changeMonsterTurn = false;
-    public int monsterTurnCount = 0;
-    public int StageCount = 0;
+
+    private int SummonedMonsterAuthorityCount = 0;
+    private bool changePlayerTurn = false;
+    private bool changeMonsterTurn = false;
+    private int monsterTurnCount = 0;
+
+    [SerializeField]
+    public Hit MyHit { get; set; }
+
     public Player player { get; set; }
     public PoolManager poolManager { get; set; }
-    
-    [SerializeField]
-    public Hit hit;
-    public bool ButtonLock { get; set; } = false;
+    public Vector3Int PlayerPositionInt { get; set; }
+    public Vector3Int MousePosInt { get; set; }
+    public Vector3Int MouseDownPosInt { get; set; }
+    public int StageCount { get; set; } = 0;
     public int MapSizeX { get; set; } = 12;
     public int MapSizeY { get; set; } = 12;
     public int[,] Map2D { get; set; }
-    public int GameScore { get; set; } = 10000;
+    public int GameScore { get; set; } = 2000;
     public int GameTurnCount { get; set; } = 1;
-    // 필드에 오브젝트 존재여부 확인
-    public bool MyObjectActivate  = false;
-    
-    public Vector3Int PlayerPositionInt { get; set; }
+    public bool ButtonLock { get; set; } = false;
     public static GameManager Instance
     {
         get
@@ -81,7 +83,6 @@ public class GameManager : MonoBehaviour
     {
         playerState = State.Idle;
         ButtonLock = false;
-        playerSkillUse = false;
         monsterTurn = false;
         playerTurn = true;
         changePlayerTurn = false;
@@ -115,13 +116,14 @@ public class GameManager : MonoBehaviour
         {
             Map2D[i / MapSizeY, i % MapSizeY] = (int)MapObject.noting;
         }
-        hit = new Hit("", Vector3Int.zero);
+        MyHit = new Hit("", Vector3Int.zero);
         player = FindObjectOfType<Player>();
         poolManager = FindObjectOfType<PoolManager>();
     }
     private void Update()
     {
         if (SceneManager.GetActiveScene().name != "GameScene") return;
+
         if (player == null)
         {
             player = FindObjectOfType<Player>();
@@ -140,7 +142,6 @@ public class GameManager : MonoBehaviour
         // 몬스터의 움직임의 규칙을 담당하는 알고리즘
         if (monsterTurn && SummonedMonster.Count > 0)
         {
-            
             ButtonLock = true;
             // 몬스터가 N번 행동 할수 있도록 함
             if (monsterTurnCount < 2)
@@ -177,8 +178,7 @@ public class GameManager : MonoBehaviour
             ResetMonsterMovements();
             changeMonsterTurn = true;
         }
-
-        if (changePlayerTurn && !MyObjectActivate)
+        if (changePlayerTurn)
         {
             ButtonLock = true;
             ResetMonsterMovements();
@@ -189,8 +189,7 @@ public class GameManager : MonoBehaviour
             monsterTurn = true;
             playerTurn = false;
         }
-
-        if (changeMonsterTurn && !MyObjectActivate)
+        if (changeMonsterTurn)
         {
             player.AttackCount = 0;
             player.MoveCount = 0;
@@ -201,14 +200,21 @@ public class GameManager : MonoBehaviour
             if(GameTurnCount % 5 == 1)
             {
                 StageCount++;
-                print(StageCount);
             }
         }
 
         if (player.Die) return;
+
+        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        MousePosInt = new Vector3Int(
+            (int)Mathf.Round(mousePos.x),
+            (int)Mathf.Round(mousePos.y),
+            -1
+        );
         if (Input.GetMouseButtonDown(0))
         {
-            RaycastHit2D[] hits = Physics2D.RaycastAll(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
+            MouseDownPosInt = MousePosInt;
+            RaycastHit2D[] hits = Physics2D.RaycastAll(mousePos, Vector2.zero);
             if (hits.Length > 0)
             {
                 if (EventSystem.current.IsPointerOverGameObject()) return;
@@ -216,8 +222,8 @@ public class GameManager : MonoBehaviour
                 
             }
             try{
-                hit.name = hits[0].collider.name;
-                hit.positionInt = new Vector3Int(
+                MyHit.name = hits[0].collider.name;
+                MyHit.positionInt = new Vector3Int(
                     (int)Mathf.Round(hits[0].collider.transform.position.x),
                     (int)Mathf.Round(hits[0].collider.transform.position.y),
                     (int)Mathf.Round(hits[0].collider.transform.position.z)
@@ -225,7 +231,7 @@ public class GameManager : MonoBehaviour
             }
             catch
             {
-                hit.name = "";
+                MyHit.name = "";
             }
         }
     }

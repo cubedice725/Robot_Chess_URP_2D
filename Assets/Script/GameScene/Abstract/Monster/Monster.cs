@@ -70,19 +70,23 @@ public abstract class Monster : MonoBehaviour
     }
     protected void Update()
     {
-        // 어떠한 경우에 상태 변환이 될지 모르기에 상태 변환을 가장 먼저 해야함
-        if (state == State.Idle)
+        if (!Die) 
         {
-            monsterStateMachine.TransitionTo(monsterIdleState);
+            // 어떠한 경우에 상태 변환이 될지 모르기에 상태 변환을 가장 먼저 해야함
+            if (state == State.Idle)
+            {
+                monsterStateMachine.TransitionTo(monsterIdleState);
+            }
+            else if (state == State.Move)
+            {
+                monsterStateMachine.TransitionTo(monsterMovingState);
+            }
+            else if (state == State.Skill)
+            {
+                monsterStateMachine.TransitionTo(monsterSkillCastingState);
+            }
         }
-        else if (state == State.Move)
-        {
-            monsterStateMachine.TransitionTo(monsterMovingState);
-        }
-        else if (state == State.Skill)
-        {
-            monsterStateMachine.TransitionTo(monsterSkillCastingState);
-        }
+        
         // 사망판정
         if (Hp <= 0 && !Die)
         {

@@ -18,8 +18,12 @@ public class MonsterSpawner : MonoBehaviour
 
     private Vector2Int size;
     private List<MyObject> points = new List<MyObject>();
-    private List<List<SummoneMonsterStage>> summoneMonsterStage = new List<List<SummoneMonsterStage>>();
-    private List <SummoneMonsterStage> MonsterStage = new List<SummoneMonsterStage>();
+    private List<List<SummoneMonsterStage>> summoneMonsterStage = new List<List<SummoneMonsterStage>>()
+    {
+        new List<SummoneMonsterStage> { new SummoneMonsterStage(3, Prefabs.RobotKnife), new SummoneMonsterStage(1, Prefabs.RobotPistol) },
+        new List<SummoneMonsterStage> { new SummoneMonsterStage(3, Prefabs.RobotKnife), new SummoneMonsterStage(1, Prefabs.RobotSniper) }
+    };
+
 
     private int unspondedMonsters = 0;
     private bool start = false;
@@ -33,11 +37,21 @@ public class MonsterSpawner : MonoBehaviour
         Instance.SummonedMonster.Clear();
         CreateBorder();
         SpawnMonster(5, Prefabs.RobotKnife);
-        summoneMonsterStage[0].Add(new SummoneMonsterStage(3, Prefabs.RobotKnife));
-        summoneMonsterStage[0].Add(new SummoneMonsterStage(1, Prefabs.Pistol));
-        
-        summoneMonsterStage[1].Add(new SummoneMonsterStage(3, Prefabs.RobotKnife));
-        summoneMonsterStage[1].Add(new SummoneMonsterStage(1, Prefabs.RobotSniper));
+    }
+    private void Update()
+    {
+        if (Instance.monsterTurn)
+        {
+            start = true;
+        }
+        if (Instance.GameTurnCount % 5 == 1 && Instance.playerTurn && Instance.GameTurnCount != 1 && start)
+        {
+            for (int index = 0; index < summoneMonsterStage[Instance.StageCount - 1].Count; index++)
+            {
+                SpawnMonster(summoneMonsterStage[Instance.StageCount - 1][index].Number, summoneMonsterStage[Instance.StageCount - 1][index].MonsterPrefabs);
+            }
+            start = false;
+        }
     }
     void AddPoint(int x, int y)
     {
@@ -60,21 +74,6 @@ public class MonsterSpawner : MonoBehaviour
         {
             AddPoint(x, 0);
             AddPoint(x, size.y - 1);
-        }
-    }
-    private void Update()
-    {
-        if (Instance.monsterTurn)
-        {
-            start = true;
-        }
-        if(Instance.GameTurnCount % 5 == 1 && Instance.playerTurn && Instance.GameTurnCount != 0 && start)
-        {
-            for(int index  = 0; index < summoneMonsterStage[Instance.StageCount].Count; index++)
-            {
-                SpawnMonster(summoneMonsterStage[Instance.StageCount][index].Number, summoneMonsterStage[Instance.StageCount][index].MonsterPrefabs);
-            }
-            start = false; 
         }
     }
     private void SpawnMonster(int numMonstersSummon, PoolManager.Prefabs prefabs)

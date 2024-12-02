@@ -12,10 +12,12 @@ public class Player : MonoBehaviour
     public int MoveCount { get; set; } = 0;
     public int AttackCount { get; set; } = 0;
     // 이동거리
-    public int MoveDistance { get; set; } = 10;
+    public int MoveDistance { get; set; } = 1;
     // 이동 속도
     public float PlayerMoveSpeed { get; set; } = 1f;
     public bool Die = false;
+    public IState CurrentSkillState { get; private set; }
+
     private void Awake()
     {
         playerMovement = GetComponent<PlayerMovement>();
@@ -55,6 +57,19 @@ public class Player : MonoBehaviour
             if (AttackCount != 1)
             {
                 playerStateMachine.TransitionTo(playerStateMachine.playerSkillCastingState);
+                if (CurrentSkillState != Instance.skillState)
+                {
+                    if(CurrentSkillState == null)
+                    {
+                        CurrentSkillState = Instance.skillState;
+                    }
+                    else
+                    {
+                        CurrentSkillState.Exit();
+                        CurrentSkillState = Instance.skillState;
+                        CurrentSkillState.Entry();
+                    }
+                }
             }
         }
         
@@ -64,10 +79,10 @@ public class Player : MonoBehaviour
         {
             Instance.playerState = State.Move;
         }
-        if (Instance.hit != null && Instance.hit.name.StartsWith("Player"))
+        if (Instance.MyHit != null && Instance.MyHit.name.StartsWith("Player"))
         {
             Instance.playerState = State.Move;
-            Instance.hit.name = "";
+            Instance.MyHit.name = "";
         }
     }
 }

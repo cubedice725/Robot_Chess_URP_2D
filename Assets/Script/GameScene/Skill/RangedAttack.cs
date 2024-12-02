@@ -31,14 +31,15 @@ public class RangedAttack : MonoBehaviour, IState
                 (int)Mathf.Round(mousePos.y),
                 -1
             );
-        if (Instance.hit != null && Instance.hit.name.StartsWith("Selection"))
+        if (Instance.MyHit != null && Instance.MyHit.name.StartsWith("Selection"))
         {
-            Instance.hit.name = "";
+            Instance.MyHit.name = "";
             start = true;
             numZ = mousePosInt.y + mousePosInt.x;
             fighterPlaneShadow = Instance.poolManager.SelectPool(PoolManager.Prefabs.FighterPlaneShadow).Get();
             fighterPlaneShadow.gameObject.transform.position = new Vector3Int(-100, -100, 0);
             fighterPlaneShadow.transform.position = new Vector3Int(-numY + numZ - 4, numY, 0);
+
             Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.Selection);
             Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.DamagedArea);
             Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.UnSelection);

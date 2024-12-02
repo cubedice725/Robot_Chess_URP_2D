@@ -9,6 +9,8 @@ public class Knife : CloseSkill, IState
 
     public void Entry()
     {
+        Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.Selection);
+        Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.UnSelection);
         AttackRange(1);
     }
     public void IStateUpdate()
@@ -16,19 +18,14 @@ public class Knife : CloseSkill, IState
         MyObject crashBoxObject;
         if (UpdateSelectionCheck())
         {
-            Instance.playerSkillUse = true;
-            Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.Selection);
-            Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.UnSelection);
-
             crashBoxObject = Instance.poolManager.SelectPool(PoolManager.Prefabs.CrashBoxObject).Get();
-            crashBoxObject.transform.position = new Vector3Int(Instance.hit.positionInt.x, Instance.hit.positionInt.y, 0);
-            playerMovement.LookMonsterAnimation(Instance.hit.positionInt.x);
+            crashBoxObject.transform.position = new Vector3Int(Instance.MyHit.positionInt.x, Instance.MyHit.positionInt.y, 0);
             skillUse = true;
             start = true;
         }
         if (start)
         {
-            if (!UpdateLookAtTarget(Instance.hit.positionInt, 0.001f, 7f))
+            if (!UpdateLookAtTarget(Instance.MyHit.positionInt, 0.001f, 7f))
             {
                 start = false;
             }
@@ -49,7 +46,6 @@ public class Knife : CloseSkill, IState
 
         if (skillUse)
         {
-            Instance.playerSkillUse = false;
             skillUse = false;
             return true;
         }

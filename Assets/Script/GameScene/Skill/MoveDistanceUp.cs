@@ -1,49 +1,50 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using static GameManager;
 
-public class PlayerMovingState : IState
+public class MoveDistanceUp : Skill, IState
 {
-    private PlayerMovement _playerMovement;
-    private RaycastHit hit;
-    private bool moveUse  = false;  
-    public PlayerMovingState(PlayerMovement playerMovement)
-    {
-        _playerMovement = playerMovement;
-    }
+    public override int UsageLimit { get => 2; set { } }
+    private bool skillUse = false;
     public void Entry()
     {
+        Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.MovePlane);
+
         Instance.Map2D[Instance.PlayerPositionInt.x, Instance.PlayerPositionInt.y] = (int)MapObject.noting;
-        _playerMovement.MoveReady();
+        Instance.player.MoveDistance = 2;
+        playerMovement.MoveReady();
     }
     public void IStateUpdate()
     {
+
         //플레이어 판을 클릭하면
-        if (_playerMovement.UpdateMovePlaneCheck())
+        if (playerMovement.UpdateMovePlaneCheck())
         {
-            moveUse = true;
+            skillUse = true;
         }
-        if (moveUse) 
+        if (skillUse)
         {
-            if (!_playerMovement.UpdateMove())
+            if (!playerMovement.UpdateMove())
             {
                 Instance.playerState = State.Idle;
             }
         }
-
     }
     public bool Exit()
     {
         Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.MovePlane);
-        if (moveUse)
+        Instance.player.MoveDistance = 1;
+
+        if (skillUse)
         {
             Instance.Map2D[Instance.PlayerPositionInt.x, Instance.PlayerPositionInt.y] = (int)MapObject.player;
-            moveUse = false;
+            skillUse = false;
             Instance.player.MoveCount++;
             Instance.ButtonLock = false;
             return true;
         }
         Instance.Map2D[Instance.PlayerPositionInt.x, Instance.PlayerPositionInt.y] = (int)MapObject.player;
-        Instance.ButtonLock = false;
         return false;
     }
 }

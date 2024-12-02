@@ -12,7 +12,7 @@ public abstract class Skill : MonoBehaviour
     public int Usage { get; set; } = 0;
     public void Awake()
     {
-        playerMovement = FindObjectOfType<PlayerMovement>();
+        playerMovement = GameManager.Instance.player.GetComponent<PlayerMovement>();
         myObject = GetComponent<MyObject>();
     }
     public bool UpdateLookAtTarget(Vector3 target, float accuracy, float rotationSpeed)
@@ -68,10 +68,14 @@ public abstract class Skill : MonoBehaviour
 
     public bool UpdateSelectionCheck()
     {
-        if (Instance.hit != null && Instance.hit.name.StartsWith("Selection"))
+        if (Instance.MyHit != null && Instance.MyHit.name.StartsWith("Selection"))
         {
-            Instance.hit.name = "";
+            Instance.MyHit.name = "";
             Instance.ButtonLock = true;
+            Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.Selection);
+            Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.DamagedArea);
+            Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.UnSelection);
+            playerMovement.LookMonsterAnimation(Instance.MyHit.positionInt.x);
             return true;
         }
         return false;

@@ -24,6 +24,8 @@ public class PoolManager : MonoBehaviour
         RobotSniper,
         Pistol,
         Sniper,
+        MoveDistanceUp,
+        Schrotflinte,
         AK47Bullet,
         FighterPlaneShadow,
         FakeBullet,
@@ -62,6 +64,9 @@ public class PoolManager : MonoBehaviour
 
         NewPoolAdd("Prefab/Skill/Pistol", 2);
         NewPoolAdd("Prefab/Skill/Sniper", 2);
+        NewPoolAdd("Prefab/Skill/MoveDistanceUp", 2);
+        NewPoolAdd("Prefab/Skill/Schrotflinte", 2);
+
 
         NewPoolAdd("Prefab/SkillObject/AK47Bullet", 20);
         NewPoolAdd("Prefab/SkillObject/FighterPlaneShadow", 2);

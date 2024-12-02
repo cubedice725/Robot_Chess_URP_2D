@@ -21,16 +21,13 @@ public class AK47 : LongSkill, IState
     {
         if (UpdateSelectionCheck())
         {
-            Instance.MyObjectActivate = true;
-            Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.Selection);
-            playerMovement.LookMonsterAnimation(Instance.hit.positionInt.x);
             skillUse = true;
             start = true;
         }
 
         if(start)
         {
-            if(!UpdateLookAtTarget(Instance.hit.positionInt, accuracy, 7f))
+            if(!UpdateLookAtTarget(Instance.MyHit.positionInt, accuracy, 7f))
             {
                 Shoot(PoolManager.Prefabs.AK47Bullet);
                 start = false;

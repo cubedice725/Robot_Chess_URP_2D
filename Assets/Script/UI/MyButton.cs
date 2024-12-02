@@ -21,7 +21,9 @@ public class MyButton : MonoBehaviour
         None,
         Knife,
         Pistol,
-        Sniper
+        Sniper,
+        MoveDistanceUp,
+        Schrotflinte
     }
     public enum Option
     {
@@ -88,6 +90,16 @@ public class MyButton : MonoBehaviour
                         case Store.Sniper:
                             {
                                 ReadyToMount(PoolManager.Prefabs.Sniper, new Vector3(-0.013f, 0.019f, 0), 200);
+                                break;
+                            }
+                        case Store.MoveDistanceUp:
+                            {
+                                ReadyToMount(PoolManager.Prefabs.MoveDistanceUp, new Vector3(0.026f, 0.178f, 0), 200);
+                                break;
+                            }
+                        case Store.Schrotflinte:
+                            {
+                                ReadyToMount(PoolManager.Prefabs.Schrotflinte, new Vector3(0.0552f, 0, 0), 200);
                                 break;
                             }
                         default:

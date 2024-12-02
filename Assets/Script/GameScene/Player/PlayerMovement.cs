@@ -25,7 +25,7 @@ public class PlayerMovement : AStar
         {
             PathFinding(
                 Instance.PlayerPositionInt,
-                new Vector3Int(Instance.hit.positionInt.x, Instance.hit.positionInt.y, 0),
+                new Vector3Int(Instance.MyHit.positionInt.x, Instance.MyHit.positionInt.y, 0),
                 Vector3Int.zero,
                 new Vector3Int(Instance.MapSizeX, Instance.MapSizeY, 0),
                 isWall
@@ -66,9 +66,9 @@ public class PlayerMovement : AStar
     {
         if (!Instance.playerTurn) return false;
 
-        if (Instance.hit != null && Instance.hit.name.StartsWith("MovePlane"))
+        if (Instance.MyHit != null && Instance.MyHit.name.StartsWith("MovePlane"))
         {
-            Instance.hit.name = "";
+            Instance.MyHit.name = "";
             Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.MovePlane);
             Instance.ButtonLock = true;
 
