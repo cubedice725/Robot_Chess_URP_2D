@@ -22,12 +22,14 @@ public class MoveDistanceUp : Skill, IState
         if (playerMovement.UpdateMovePlaneCheck())
         {
             skillUse = true;
+            Usage++;
         }
         if (skillUse)
         {
             if (!playerMovement.UpdateMove())
             {
                 Instance.playerState = State.Idle;
+                CheckUsage();
             }
         }
     }
@@ -40,8 +42,6 @@ public class MoveDistanceUp : Skill, IState
         {
             Instance.Map2D[Instance.PlayerPositionInt.x, Instance.PlayerPositionInt.y] = (int)MapObject.player;
             skillUse = false;
-            Instance.player.MoveCount++;
-            Instance.ButtonLock = false;
             return true;
         }
         Instance.Map2D[Instance.PlayerPositionInt.x, Instance.PlayerPositionInt.y] = (int)MapObject.player;

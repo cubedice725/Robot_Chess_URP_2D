@@ -30,7 +30,11 @@ public class PlayerMovement : AStar
                 new Vector3Int(Instance.MapSizeX, Instance.MapSizeY, 0),
                 isWall
             );
-            targetPosition = new Vector2(FinalNodeList[count].x, FinalNodeList[count].y);
+            try
+            {
+                targetPosition = new Vector2(FinalNodeList[count].x, FinalNodeList[count].y);
+            }
+            catch { }
             updateMoveStart = false;
         }
 

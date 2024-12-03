@@ -25,7 +25,7 @@ public abstract class AStar : MonoBehaviour
     protected Node[,] NodeArray;
     protected Node StartNode, TargetNode, CurNode;
 
-    protected bool allowDiagonal = true;
+    protected virtual bool AllowDiagonal { get; set; } = true;
     protected bool dontCrossCorner = true;
     protected int sizeX, sizeY;
     protected Vector3Int bottomLeft, topRight, startPos, targetPos;
@@ -96,7 +96,7 @@ public abstract class AStar : MonoBehaviour
 
 
             // ↗↖↙↘
-            if (allowDiagonal)
+            if (AllowDiagonal)
             {
                 OpenListAdd(CurNode.x + 1, CurNode.y + 1);
                 OpenListAdd(CurNode.x - 1, CurNode.y + 1);
@@ -118,7 +118,7 @@ public abstract class AStar : MonoBehaviour
         if (checkX > bottomLeft.x && checkX < topRight.x && checkY > bottomLeft.y && checkY < topRight.y && !NodeArray[checkX - bottomLeft.x, checkY - bottomLeft.y].isWall && !ClosedList.Contains(NodeArray[checkX - bottomLeft.x, checkY - bottomLeft.y]))
         {
             // 대각선 허용시, 벽 사이로 통과 안됨
-            if (allowDiagonal) if (NodeArray[CurNode.x - bottomLeft.x, checkY - bottomLeft.y].isWall && NodeArray[checkX - bottomLeft.x, CurNode.y - bottomLeft.y].isWall) return;
+            if (AllowDiagonal) if (NodeArray[CurNode.x - bottomLeft.x, checkY - bottomLeft.y].isWall && NodeArray[checkX - bottomLeft.x, CurNode.y - bottomLeft.y].isWall) return;
 
             // 코너를 가로질러 가지 않을시, 이동 중에 수직수평 장애물이 있으면 안됨
             if (dontCrossCorner) if (NodeArray[CurNode.x - bottomLeft.x, checkY - bottomLeft.y].isWall || NodeArray[checkX - bottomLeft.x, CurNode.y - bottomLeft.y].isWall) return;

@@ -18,6 +18,10 @@ public class MainButton : MonoBehaviour
     }
     private void Update()
     {
+        if (Instance.monsterTurn)
+        {
+            Instance.player.transform.Find("MainSkill").gameObject.SetActive(false);
+        }
         if (Instance.ButtonLock)
         {
             button.interactable = false;

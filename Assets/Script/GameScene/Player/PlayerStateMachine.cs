@@ -22,14 +22,8 @@ public class PlayerStateMachine
     public void TransitionTo(IState nextState)
     {
         if (nextState == CurrentState) return;
-        
-        if (CurrentState.Exit())
-        {
-            if(Instance.player.AttackCount == 1 && Instance.player.MoveCount == 1)
-            {
-                Instance.FromPlayerToMonster();
-            }
-        }
+
+        CurrentState.Exit();
         CurrentState = nextState;
         nextState.Entry();
     }

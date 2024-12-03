@@ -17,6 +17,10 @@ public class SideButton : MonoBehaviour
     }
     private void Update()
     {
+        if (Instance.monsterTurn)
+        {
+            Instance.player.transform.Find("SideSkill").gameObject.SetActive(false);
+        }
         if (Instance.ButtonLock)
         {
             button.interactable = false;

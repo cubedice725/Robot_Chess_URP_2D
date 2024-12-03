@@ -10,6 +10,7 @@ public class RobotSniper : Monster
     public override int MovingDistance { get => 1; set { } }
     public override int AttackDistance { get => 3; set { } }
     public override float MoveSpeed { get => 0.7f; set { } }
+    public override int ScorePoint => 100;
 
     public bool start = true;
 

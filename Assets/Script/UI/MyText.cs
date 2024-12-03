@@ -13,7 +13,8 @@ public class MyText : MonoBehaviour
         Score,
         TurnCount,
         MainCount,
-        SideCount
+        SideCount,
+        Stage
     }
     public TextMeshProUGUI textMesh;
     public MyTextOption myTextOption;
@@ -63,6 +64,11 @@ public class MyText : MonoBehaviour
                         Skill skill = GameManager.Instance.player.transform.Find("SideSkill").transform.GetChild(0).transform.GetComponent<Skill>();
                         textMesh.text = (skill.UsageLimit - skill.Usage).ToString();
                     }
+                    break;
+                }
+            case MyTextOption.Stage:
+                {
+                    textMesh.text = "스테이지" + GameManager.Instance.StageCount.ToString();
                     break;
                 }
             default:

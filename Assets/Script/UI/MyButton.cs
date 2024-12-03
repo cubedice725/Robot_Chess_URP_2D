@@ -23,7 +23,8 @@ public class MyButton : MonoBehaviour
         Pistol,
         Sniper,
         MoveDistanceUp,
-        Schrotflinte
+        Schrotflinte,
+        LaserGun
     }
     public enum Option
     {
@@ -45,20 +46,24 @@ public class MyButton : MonoBehaviour
     {
         if (SceneManager.GetActiveScene().name != "GameScene") return;
         
-        if (MyButtonOption.TurnEnd == Mybutton)
+        if (MyButtonOption.TurnEnd == Mybutton || MyButtonOption.Store == Mybutton || MyButtonOption.Option == Mybutton)
         {
-            if (Instance.ButtonLock)
+            try
             {
-                button.interactable = false;
-            }
-            else
-            {
-                if (Input.GetKeyDown(KeyCode.Space))
+                if (Instance.ButtonLock)
                 {
-                    GameManager.Instance.FromPlayerToMonster();
+                    button.interactable = false;
                 }
-                button.interactable = true;
+                else
+                {
+                    if (Input.GetKeyDown(KeyCode.Space) && MyButtonOption.TurnEnd == Mybutton)
+                    {
+                        GameManager.Instance.FromPlayerToMonster();
+                    }
+                    button.interactable = true;
+                }
             }
+            catch { }
         }
     }
     public void OnClick()
@@ -84,22 +89,27 @@ public class MyButton : MonoBehaviour
                             }
                         case Store.Pistol:
                             {
-                                ReadyToMount(PoolManager.Prefabs.Pistol, new Vector3(0.045f, 0.025f, 0), 100);
+                                ReadyToMount(PoolManager.Prefabs.Pistol, new Vector3(0.045f, 0.025f, 0), 50);
                                 break;
                             }
                         case Store.Sniper:
                             {
-                                ReadyToMount(PoolManager.Prefabs.Sniper, new Vector3(-0.013f, 0.019f, 0), 200);
+                                ReadyToMount(PoolManager.Prefabs.Sniper, new Vector3(-0.013f, 0.019f, 0), 100);
                                 break;
                             }
                         case Store.MoveDistanceUp:
                             {
-                                ReadyToMount(PoolManager.Prefabs.MoveDistanceUp, new Vector3(0.026f, 0.178f, 0), 200);
+                                ReadyToMount(PoolManager.Prefabs.MoveDistanceUp, new Vector3(0.026f, 0.178f, 0), 100);
                                 break;
                             }
                         case Store.Schrotflinte:
                             {
-                                ReadyToMount(PoolManager.Prefabs.Schrotflinte, new Vector3(0.0552f, 0, 0), 200);
+                                ReadyToMount(PoolManager.Prefabs.Schrotflinte, new Vector3(0.0552f, 0, 0), 150);
+                                break;
+                            }
+                        case Store.LaserGun:
+                            {
+                                ReadyToMount(PoolManager.Prefabs.LaserGun, new Vector3(0, 0, 0), 200);
                                 break;
                             }
                         default:
@@ -116,8 +126,14 @@ public class MyButton : MonoBehaviour
                     if(GameManager.Instance != null)
                     {
                         GameManager.Instance.Reset();
+                        SceneManager.LoadScene("GameScene");
+                        UiManager.Instance.Reset();
                     }
-                    SceneManager.LoadScene("GameScene");
+                    else
+                    {
+                        SceneManager.LoadScene("GameScene");
+                        UiManager.Instance.Reset();
+                    }
                     break;
                 }
             case MyButtonOption.Option:
@@ -141,11 +157,11 @@ public class MyButton : MonoBehaviour
                             }
                         case Option.Close:
                             {
-                                #if UNITY_EDITOR
-                                    UnityEditor.EditorApplication.isPlaying = false;
-                                #else
-                                    Application.Quit();
-                                #endif
+                                //#if UNITY_EDITOR
+                                //    UnityEditor.EditorApplication.isPlaying = false;
+                                //#else
+                                //    Application.Quit();
+                                //#endif
                                 break;
                             }
                         default:

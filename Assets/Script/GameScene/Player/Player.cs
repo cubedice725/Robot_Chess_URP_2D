@@ -54,7 +54,7 @@ public class Player : MonoBehaviour
         }
         else if (Instance.playerState == State.Skill)
         {
-            if (AttackCount != 1)
+            if (AttackCount != 1 || Instance.summonedSkill != null)
             {
                 playerStateMachine.TransitionTo(playerStateMachine.playerSkillCastingState);
                 if (CurrentSkillState != Instance.skillState)

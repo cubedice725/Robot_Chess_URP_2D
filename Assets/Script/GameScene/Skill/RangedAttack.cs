@@ -75,8 +75,7 @@ public class RangedAttack : MonoBehaviour, IState
     }
     public bool Exit()
     {
-        Instance.ButtonLock = false;
-        Instance.skillState = null; 
+        Instance.summonedSkill = null;
         return false;
     }
     IEnumerator Shoot(Vector3Int mousePosInt)

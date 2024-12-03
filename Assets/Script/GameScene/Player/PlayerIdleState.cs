@@ -15,7 +15,11 @@ public class PlayerIdleState : IState
     }
     public void IStateUpdate()
     {
-
+        if(Instance.summonedSkill != null)
+        {
+            Instance.skillState = Instance.summonedSkill;
+            Instance.playerState = State.Skill;
+        }
     }
     public bool Exit()
     {

@@ -33,6 +33,17 @@ public abstract class Skill : MonoBehaviour
         }
         return true;
     }
+    public bool UpdateSkillMove(Transform transObject ,Vector3 targetPos, float accuracy, float speed)
+    {
+        float distance = Vector2.Distance(transObject.position, targetPos);
+        // 최종적으로 움직이는 좌표의 거리, 좌표 오차는 여기서 수정
+        transObject.position = Vector2.MoveTowards(transObject.position, targetPos, speed * Time.deltaTime);
+        if (distance > accuracy)
+        {
+            return true;
+        }
+        return false;
+    }
     // 좌측일경우 반대로 돌림
     public float LeftAbj(float angle)
     {
@@ -84,7 +95,7 @@ public abstract class Skill : MonoBehaviour
     {
         targetPos = Instance.PlayerPositionInt;
         startPos = Vector2Int.zero;
-        endPos = new Vector2Int(Instance.MapSizeX, Instance.MapSizeY);
+        endPos = new Vector2Int(Instance.MapSizeX - 1, Instance.MapSizeY - 1);
 
         bool downSide = targetPos.y > startPos.y;
         bool upSide = targetPos.y < endPos.y;

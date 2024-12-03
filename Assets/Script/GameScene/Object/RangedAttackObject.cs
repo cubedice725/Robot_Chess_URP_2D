@@ -14,10 +14,9 @@ public class RangedAttackObject : MonoBehaviour
     }
     private void Update()
     {
-        if (start && Instance.playerState == GameManager.State.Idle)
+        if (start)
         {
-            Instance.skillState = GetComponent<IState>();
-            Instance.playerState = State.Skill;
+            Instance.summonedSkill = GetComponent<IState>();
             start = false;
         }
     }

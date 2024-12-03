@@ -20,10 +20,16 @@ public class MonsterSpawner : MonoBehaviour
     private List<MyObject> points = new List<MyObject>();
     private List<List<SummoneMonsterStage>> summoneMonsterStage = new List<List<SummoneMonsterStage>>()
     {
-        new List<SummoneMonsterStage> { new SummoneMonsterStage(3, Prefabs.RobotKnife), new SummoneMonsterStage(1, Prefabs.RobotPistol) },
-        new List<SummoneMonsterStage> { new SummoneMonsterStage(3, Prefabs.RobotKnife), new SummoneMonsterStage(1, Prefabs.RobotSniper) }
+        new List<SummoneMonsterStage> { new SummoneMonsterStage(2, Prefabs.RobotPistol), new SummoneMonsterStage(3, Prefabs.RobotKnife) },
+        new List<SummoneMonsterStage> { new SummoneMonsterStage(2, Prefabs.RobotPistol), new SummoneMonsterStage(1, Prefabs.RobotSniper), new SummoneMonsterStage(2, Prefabs.RobotKnife) },
+        new List<SummoneMonsterStage> { new SummoneMonsterStage(2, Prefabs.RobotPistol), new SummoneMonsterStage(1, Prefabs.RobotSniper), new SummoneMonsterStage(4, Prefabs.RobotKnife) },
+        new List<SummoneMonsterStage> { new SummoneMonsterStage(4, Prefabs.RobotPistol), new SummoneMonsterStage(1, Prefabs.RobotSniper), new SummoneMonsterStage(4, Prefabs.RobotKnife) },
+        new List<SummoneMonsterStage> { new SummoneMonsterStage(4, Prefabs.RobotPistol), new SummoneMonsterStage(2, Prefabs.RobotSniper), new SummoneMonsterStage(5, Prefabs.RobotKnife) },
+        new List<SummoneMonsterStage> { new SummoneMonsterStage(5, Prefabs.RobotPistol), new SummoneMonsterStage(3, Prefabs.RobotSniper), new SummoneMonsterStage(6, Prefabs.RobotKnife) },
+        new List<SummoneMonsterStage> { new SummoneMonsterStage(5, Prefabs.RobotPistol), new SummoneMonsterStage(5, Prefabs.RobotSniper), new SummoneMonsterStage(8, Prefabs.RobotKnife) },
+        new List<SummoneMonsterStage> { new SummoneMonsterStage(7, Prefabs.RobotPistol), new SummoneMonsterStage(5, Prefabs.RobotSniper), new SummoneMonsterStage(10, Prefabs.RobotKnife) },
+        new List<SummoneMonsterStage> { new SummoneMonsterStage(7, Prefabs.RobotPistol), new SummoneMonsterStage(7, Prefabs.RobotSniper), new SummoneMonsterStage(12, Prefabs.RobotKnife) }
     };
-
 
     private int unspondedMonsters = 0;
     private bool start = false;
@@ -36,6 +42,10 @@ public class MonsterSpawner : MonoBehaviour
     {
         Instance.SummonedMonster.Clear();
         CreateBorder();
+        if (Instance.poolManager == null)
+        {
+            Instance.poolManager = FindObjectOfType<PoolManager>();
+        }
         SpawnMonster(5, Prefabs.RobotKnife);
     }
     private void Update()

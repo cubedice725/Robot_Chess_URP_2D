@@ -39,15 +39,16 @@ public class GameManager : MonoBehaviour
 
     public State playerState = State.Idle;
     public IState skillState;
-
+    public IState summonedSkill;
 
     public bool monsterTurn = false;
     public bool playerTurn = true;
 
-    private int SummonedMonsterAuthorityCount = 0;
-    private bool changePlayerTurn = false;
-    private bool changeMonsterTurn = false;
-    private int monsterTurnCount = 0;
+    public int SummonedMonsterAuthorityCount = 0;
+    public bool changePlayerTurn = false;
+    public bool changeMonsterTurn = false;
+    public int monsterTurnCount = 0;
+    public float time = 0;
 
     [SerializeField]
     public Hit MyHit { get; set; }
@@ -55,15 +56,16 @@ public class GameManager : MonoBehaviour
     public Player player { get; set; }
     public PoolManager poolManager { get; set; }
     public Vector3Int PlayerPositionInt { get; set; }
+    public Vector3 MousePos { get; set; }
     public Vector3Int MousePosInt { get; set; }
     public Vector3Int MouseDownPosInt { get; set; }
     public int StageCount { get; set; } = 0;
     public int MapSizeX { get; set; } = 12;
     public int MapSizeY { get; set; } = 12;
     public int[,] Map2D { get; set; }
-    public int GameScore { get; set; } = 2000;
-    public int GameTurnCount { get; set; } = 1;
-    public bool ButtonLock { get; set; } = false;
+    public int GameScore { get; set; } = 0;
+    public int GameTurnCount = 1;
+    public bool ButtonLock  = false;
     public static GameManager Instance
     {
         get
@@ -89,7 +91,8 @@ public class GameManager : MonoBehaviour
         changeMonsterTurn = false;
         monsterTurnCount = 0;
         GameScore = 0;
-        GameTurnCount = 0;
+        GameTurnCount = 1;
+        StageCount = 0;
         for (int i = 0; i < MapSizeX * MapSizeY; i++)
         {
             Map2D[i / MapSizeY, i % MapSizeY] = (int)MapObject.noting;
@@ -120,6 +123,7 @@ public class GameManager : MonoBehaviour
         player = FindObjectOfType<Player>();
         poolManager = FindObjectOfType<PoolManager>();
     }
+   
     private void Update()
     {
         if (SceneManager.GetActiveScene().name != "GameScene") return;
@@ -128,11 +132,7 @@ public class GameManager : MonoBehaviour
         {
             player = FindObjectOfType<Player>();
         }
-        if (poolManager == null)
-        {
-            poolManager = FindObjectOfType<PoolManager>();
-        }
-
+        
         PlayerPositionInt = new Vector3Int(
             (int)Mathf.Round(player.transform.position.x),
             (int)Mathf.Round(player.transform.position.y),
@@ -180,14 +180,20 @@ public class GameManager : MonoBehaviour
         }
         if (changePlayerTurn)
         {
+            time += Time.deltaTime;
             ButtonLock = true;
-            ResetMonsterMovements();
-            MonsterDeathProcessing();
-            ResetMonsterFlags();
-            FindNearbyMonsters();
-            changePlayerTurn = false;
-            monsterTurn = true;
-            playerTurn = false;
+
+            if (time > 0.3f)
+            {
+                time = 0;
+                ResetMonsterMovements();
+                MonsterDeathProcessing();
+                ResetMonsterFlags();
+                FindNearbyMonsters();
+                changePlayerTurn = false;
+                monsterTurn = true;
+                playerTurn = false;
+            }
         }
         if (changeMonsterTurn)
         {
@@ -202,19 +208,19 @@ public class GameManager : MonoBehaviour
                 StageCount++;
             }
         }
-
+        
         if (player.Die) return;
 
-        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        MousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         MousePosInt = new Vector3Int(
-            (int)Mathf.Round(mousePos.x),
-            (int)Mathf.Round(mousePos.y),
+            (int)Mathf.Round(MousePos.x),
+            (int)Mathf.Round(MousePos.y),
             -1
         );
         if (Input.GetMouseButtonDown(0))
         {
             MouseDownPosInt = MousePosInt;
-            RaycastHit2D[] hits = Physics2D.RaycastAll(mousePos, Vector2.zero);
+            RaycastHit2D[] hits = Physics2D.RaycastAll(MousePos, Vector2.zero);
             if (hits.Length > 0)
             {
                 if (EventSystem.current.IsPointerOverGameObject()) return;

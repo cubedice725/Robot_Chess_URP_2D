@@ -20,7 +20,7 @@ public abstract class Monster : MonoBehaviour
     public int MoveCount { get; set; } = 0;
     public int AttackCount { get; set; } = 0;
     public bool Die { get; private set; } = false;
-    public int ScorePoint { get; private set; } = 50;
+    public virtual int ScorePoint { get; private set; } = 50;
     public float time = 0;
 
     protected MonsterStateMachine monsterStateMachine;
@@ -62,7 +62,7 @@ public abstract class Monster : MonoBehaviour
         {
             time += Time.fixedDeltaTime;
         }
-        if (time > 5 && Die)
+        if (time > 3 && Die)
         {
             GetComponent<MyObject>().Destroy();
             time = -1;
@@ -86,7 +86,11 @@ public abstract class Monster : MonoBehaviour
                 monsterStateMachine.TransitionTo(monsterSkillCastingState);
             }
         }
-        
+        if (Die)
+        {
+            TurnPass();
+        }
+
         // »ç¸ÁÆÇÁ¤
         if (Hp <= 0 && !Die)
         {

@@ -16,6 +16,10 @@ public class KnifeButton : MonoBehaviour
     }
     private void Update()
     {
+        if (Instance.monsterTurn)
+        {
+            Instance.player.transform.Find("KnifeSkill").gameObject.SetActive(false);
+        }
         if (Instance.ButtonLock)
         {
             button.interactable = false;

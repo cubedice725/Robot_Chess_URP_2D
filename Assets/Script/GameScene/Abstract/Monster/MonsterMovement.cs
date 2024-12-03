@@ -13,7 +13,7 @@ public class MonsterMovement : AStar
 
     protected Vector3Int monsterPositionInt;
     protected Vector2 targetPosition;
-
+    protected override bool AllowDiagonal => false;
     private float xAxis = 0;
     protected bool updateMoveStart = true;
     protected int count = 1;
