@@ -14,7 +14,7 @@ public class Sniper : LongSkill, IState
     {
         Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.Selection);
         Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.UnSelection);
-        AttackRange(3);
+        UnifiedAttackRange(3, AttackType.Normal);
     }
     public void IStateUpdate()
     {
@@ -26,7 +26,7 @@ public class Sniper : LongSkill, IState
 
         if (start)
         {
-            if (!UpdateLookAtTarget(Instance.MyHit.positionInt, accuracy, 7f))
+            if (!Instance.action.UpdateLookAtTarget(Instance.MyHit.positionInt, transform, accuracy, 7f))
             {
                 Shoot(PoolManager.Prefabs.AK47Bullet);
                 start = false;
@@ -35,7 +35,7 @@ public class Sniper : LongSkill, IState
         }
         else if (skillUse)
         {
-            if (SkillArray(Vector3.zero, 7f))
+            if (Instance.action.TurnAngle(Vector3.zero, transform,7f))
             {
                 Instance.playerState = State.Idle;
                 CheckUsage();
@@ -46,6 +46,7 @@ public class Sniper : LongSkill, IState
     {
         Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.Selection);
         Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.UnSelection);
+        Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.DamagedArea);
 
         if (skillUse)
         {

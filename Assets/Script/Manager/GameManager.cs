@@ -55,6 +55,7 @@ public class GameManager : MonoBehaviour
 
     public Player player { get; set; }
     public PoolManager poolManager { get; set; }
+    public Action action { get; set; }
     public Vector3Int PlayerPositionInt { get; set; }
     public Vector3 MousePos { get; set; }
     public Vector3Int MousePosInt { get; set; }
@@ -63,7 +64,7 @@ public class GameManager : MonoBehaviour
     public int MapSizeX { get; set; } = 12;
     public int MapSizeY { get; set; } = 12;
     public int[,] Map2D { get; set; }
-    public int GameScore { get; set; } = 0;
+    public int GameScore { get; set; } = 1000;
     public int GameTurnCount = 1;
     public bool ButtonLock  = false;
     public static GameManager Instance
@@ -122,6 +123,7 @@ public class GameManager : MonoBehaviour
         MyHit = new Hit("", Vector3Int.zero);
         player = FindObjectOfType<Player>();
         poolManager = FindObjectOfType<PoolManager>();
+        action = GetComponent<Action>();
     }
    
     private void Update()

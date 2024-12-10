@@ -70,7 +70,7 @@ public class PoolManager : MonoBehaviour
         NewPoolAdd("Prefab/Skill/LaserGun", 2);
 
 
-        NewPoolAdd("Prefab/SkillObject/AK47Bullet", 20);
+        NewPoolAdd("Prefab/SkillObject/AK47Bullet", 200);
         NewPoolAdd("Prefab/SkillObject/FighterPlaneShadow", 2);
         NewPoolAdd("Prefab/SkillObject/FakeBullet", 50);
 

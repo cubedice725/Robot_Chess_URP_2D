@@ -20,7 +20,7 @@ public class LaserGun : Skill, IState
     public void Entry()
     {
         laserPoint = GameObject.Find("LaserPoint");
-        LaserGunAttackRange(1);
+        UnifiedAttackRange(Instance.MapSizeX, AttackType.LaserGun);
     }
     public void IStateUpdate()
     {
@@ -30,7 +30,7 @@ public class LaserGun : Skill, IState
             transform.position = new Vector3(
                 Instance.player.transform.position.x + (Instance.player.transform.position.x - Instance.MousePos.x),
                 Instance.player.transform.position.y + (Instance.player.transform.position.y - Instance.MousePos.y), 0);
-            UpdateLookAtTarget(Instance.MousePos, 0.001f, 30f);
+            Instance.action.UpdateLookAtTarget(Instance.MousePos, transform, 0.001f, 30f);
         }
         if (!start && UpdateSelectionCheck())
         {
@@ -56,8 +56,8 @@ public class LaserGun : Skill, IState
         }
         if (start)
         {
-            bool move = !UpdateSkillMove(transform, targetPos, 0.001f, 30f);
-            bool look = !UpdateLookAtTarget(Instance.MyHit.positionInt, 0.001f, 30f);
+            bool move = !Instance.action.UpdateMove(transform, targetPos, 0.001f, 30f);
+            bool look = !Instance.action.UpdateLookAtTarget(Instance.MyHit.positionInt, transform, 0.001f, 30f);
             laserPoint.transform.position = Instance.MyHit.positionInt;
             if (move && look)
             {
@@ -85,10 +85,10 @@ public class LaserGun : Skill, IState
         }
         if (skillUse)
         {
-            UpdateSkillMove(laserPoint.transform, targetPos, 0.001f, 10f);
+            Instance.action.UpdateMove(laserPoint.transform, targetPos, 0.001f, 10f);
             float line = Vector2.Distance(transform.position, laserPoint.transform.position);
             transform.GetChild(0).transform.localScale = new Vector3(line /2 + 0.5f, 0.15f, 0);
-            UpdateLookAtTarget(laserPoint.transform.position, 0.001f, 10f);
+            Instance.action.UpdateLookAtTarget(laserPoint.transform.position, transform,0.001f, 10f);
             
             Vector3Int laserPointrPosInt = new Vector3Int(
                 (int)Mathf.Round(laserPoint.transform.position.x),
@@ -118,6 +118,7 @@ public class LaserGun : Skill, IState
     {
         Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.Selection);
         Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.UnSelection);
+        Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.DamagedArea);
 
         if (skillUse)
         {
@@ -126,55 +127,7 @@ public class LaserGun : Skill, IState
         }
         return false;
     }
-    public void LaserGunAttackRange(int size, Vector3Int targetPos = new Vector3Int(), Vector2Int startPos = new Vector2Int(), Vector2Int endPos = new Vector2Int())
-    {
-        targetPos = Instance.PlayerPositionInt;
-        startPos = Vector2Int.zero;
-        endPos = new Vector2Int(Instance.MapSizeX - 1, Instance.MapSizeY - 1);
-
-        bool downSide = targetPos.y > startPos.y;
-        bool upSide = targetPos.y < endPos.y;
-        bool leftSide = targetPos.x > startPos.x;
-        bool rightSide = targetPos.x < endPos.x;
-
-        for (int index = 1; index <= size; index++)
-        {
-            int downPos = targetPos.y - index;
-            int upPos = targetPos.y + index;
-            int leftPos = targetPos.x - index;
-            int rightPos = targetPos.x + index;
-
-            bool downPosSide = downPos > startPos.y && downPos < endPos.y;
-            bool upPosSide = upPos > startPos.y && upPos < endPos.y;
-            bool leftPosSide = leftPos > startPos.x && leftPos < endPos.x;
-            bool rightPosSide = rightPos > startPos.x && rightPos < endPos.x;
-
-
-            if (downPosSide && leftSide && rightSide)
-            {
-                Instance.poolManager.SelectPool(PoolManager.Prefabs.Selection).Get().transform.position
-                    = new Vector3(targetPos.x, downPos, -1);
-            }
-
-            if (upPosSide && leftSide && rightSide)
-            {
-                Instance.poolManager.SelectPool(PoolManager.Prefabs.Selection).Get().transform.position
-                    = new Vector3(targetPos.x, upPos, -1);
-            }
-
-            if (leftPosSide && upSide && downSide)
-            {
-                Instance.poolManager.SelectPool(PoolManager.Prefabs.Selection).Get().transform.position
-                    = new Vector3(leftPos, targetPos.y, -1);
-            }
-
-            if (rightPosSide && upSide && downSide)
-            {
-                Instance.poolManager.SelectPool(PoolManager.Prefabs.Selection).Get().transform.position
-                    = new Vector3(rightPos, targetPos.y, -1);
-            }
-        }
-    }
+    
 
     public string DirectionCheck(Vector3Int mousePosInt)
     {

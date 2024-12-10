@@ -11,7 +11,7 @@ public class Knife : CloseSkill, IState
     {
         Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.Selection);
         Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.UnSelection);
-        AttackRange(1);
+        UnifiedAttackRange(1, AttackType.Normal);
     }
     public void IStateUpdate()
     {
@@ -25,14 +25,14 @@ public class Knife : CloseSkill, IState
         }
         if (start)
         {
-            if (!UpdateLookAtTarget(Instance.MyHit.positionInt, 0.001f, 7f))
+            if (!Instance.action.UpdateLookAtTarget(Instance.MyHit.positionInt, transform, 0.001f, 7f))
             {
                 start = false;
             }
         }
         else if (skillUse)
         {
-            if (SkillArray(new Vector3(0,0,LeftAbj(90)), 7f))
+            if (Instance.action.TurnAngle(new Vector3(0,0, Instance.action.LeftAbj(transform, 90)), transform,7f))
             {
                 Instance.playerState = State.Idle;
                 CheckUsage();
@@ -43,6 +43,7 @@ public class Knife : CloseSkill, IState
     {
         Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.Selection);
         Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.UnSelection);
+        Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.DamagedArea);
 
         if (skillUse)
         {

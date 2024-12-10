@@ -12,7 +12,7 @@ public abstract class LongSkill : Skill
         ThrowableObject.GetComponent<AK47Bullet>().isMonster = false;
         ThrowableObject.gameObject.SetActive(false);
         ThrowableObject.transform.position = transform.GetChild(0).transform.position;
-        ThrowableObject.transform.rotation = Quaternion.Euler(new Vector3(0, 0, LeftAbj(transform.eulerAngles.z)));
+        ThrowableObject.transform.rotation = Quaternion.Euler(new Vector3(0, 0, Instance.action.LeftAbj(transform, transform.eulerAngles.z)));
         ThrowableObject.gameObject.SetActive(true);
 
     }

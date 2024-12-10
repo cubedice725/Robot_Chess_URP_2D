@@ -16,7 +16,7 @@ public class Schrotflinte : Skill, IState
 
     public void Entry()
     {
-        SchrotflinteAttackRange(1);
+        UnifiedAttackRange(1, AttackType.Schrotflinte);
     }
     public void IStateUpdate()
     {
@@ -27,7 +27,7 @@ public class Schrotflinte : Skill, IState
 
         if (start)
         {
-            if (!UpdateLookAtTarget(Instance.MyHit.positionInt, accuracy, 7f))
+            if (!Instance.action.UpdateLookAtTarget(Instance.MyHit.positionInt, transform, accuracy, 7f))
             {
                 SchrotShoot(Instance.MouseDownPosInt);
                 skillUse = true;
@@ -37,7 +37,7 @@ public class Schrotflinte : Skill, IState
         }
         else if (skillUse)
         {
-            if (SkillArray(Vector3.zero, 7f))
+            if (Instance.action.TurnAngle(Vector3.zero, transform, 7f))
             {
                 Instance.playerState = State.Idle;
                 CheckUsage();
@@ -118,55 +118,6 @@ public class Schrotflinte : Skill, IState
         fakeBullet.GetComponent<FakeBullet>().targetPos = targetPos;
         fakeBullet.transform.position = transform.GetChild(0).transform.position;
         fakeBullet.transform.rotation = Quaternion.Euler(new Vector3(
-            0, 0, TargetToAngle(targetPos)));
-    }
-    public void SchrotflinteAttackRange(int size, Vector3Int targetPos = new Vector3Int(), Vector2Int startPos = new Vector2Int(), Vector2Int endPos = new Vector2Int())
-    {
-        targetPos = Instance.PlayerPositionInt;
-        startPos = Vector2Int.zero;
-        endPos = new Vector2Int(Instance.MapSizeX - 1, Instance.MapSizeY - 1);
-
-        bool downSide = targetPos.y > startPos.y;
-        bool upSide = targetPos.y < endPos.y;
-        bool leftSide = targetPos.x > startPos.x;
-        bool rightSide = targetPos.x < endPos.x;
-
-        for (int index = 1; index <= size; index++)
-        {
-            int downPos = targetPos.y - index;
-            int upPos = targetPos.y + index;
-            int leftPos = targetPos.x - index;
-            int rightPos = targetPos.x + index;
-
-            bool downPosSide = downPos > startPos.y && downPos < endPos.y;
-            bool upPosSide = upPos > startPos.y && upPos < endPos.y;
-            bool leftPosSide = leftPos > startPos.x && leftPos < endPos.x;
-            bool rightPosSide = rightPos > startPos.x && rightPos < endPos.x;
-
-
-            if (downPosSide && leftSide && rightSide)
-            {
-                Instance.poolManager.SelectPool(PoolManager.Prefabs.Selection).Get().transform.position
-                    = new Vector3(targetPos.x, downPos, -1);
-            }
-
-            if (upPosSide && leftSide && rightSide)
-            {
-                Instance.poolManager.SelectPool(PoolManager.Prefabs.Selection).Get().transform.position
-                    = new Vector3(targetPos.x, upPos, -1);
-            }
-
-            if (leftPosSide && upSide && downSide)
-            {
-                Instance.poolManager.SelectPool(PoolManager.Prefabs.Selection).Get().transform.position
-                    = new Vector3(leftPos, targetPos.y, -1);
-            }
-
-            if (rightPosSide && upSide && downSide)
-            {
-                Instance.poolManager.SelectPool(PoolManager.Prefabs.Selection).Get().transform.position
-                    = new Vector3(rightPos, targetPos.y, -1);
-            }
-        }
+            0, 0, Instance.action.TargetToAngle(transform, targetPos)));
     }
 }

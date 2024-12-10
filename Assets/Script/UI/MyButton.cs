@@ -157,6 +157,9 @@ public class MyButton : MonoBehaviour
                             }
                         case Option.Close:
                             {
+                                GameManager.Instance.Reset();
+                                UiManager.Instance.Reset();
+                                SceneManager.LoadScene("MainScene");
                                 //#if UNITY_EDITOR
                                 //    UnityEditor.EditorApplication.isPlaying = false;
                                 //#else

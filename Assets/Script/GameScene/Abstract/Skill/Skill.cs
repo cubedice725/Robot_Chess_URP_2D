@@ -1,10 +1,18 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static GameManager;
 
-public abstract class Skill : MonoBehaviour
+public class Skill : MonoBehaviour
 {
+    public enum AttackType
+    {
+        Normal,
+        Schrotflinte,
+        LaserGun
+    }
+
     public PlayerMovement playerMovement;
     public MyObject myObject;
     public virtual int UsageLimit { get; set; }
@@ -15,68 +23,6 @@ public abstract class Skill : MonoBehaviour
         playerMovement = GameManager.Instance.player.GetComponent<PlayerMovement>();
         myObject = GetComponent<MyObject>();
     }
-    public bool UpdateLookAtTarget(Vector3 target, float accuracy, float rotationSpeed)
-    {
-        Quaternion targetRotation = Quaternion.Euler(new Vector3(0, 0, LeftAbj(TargetToAngle(target))));
-
-        // 현재 회전 각도와 목표 각도 차이 계산
-        float angleDifference = Quaternion.Angle(transform.rotation, targetRotation);
-        // 각도 차이가 임계값보다 클 경우에만 회전
-        if (angleDifference > accuracy)
-        {
-            // 부드럽게 회전
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-        }
-        else
-        {
-            return false;
-        }
-        return true;
-    }
-    public bool UpdateSkillMove(Transform transObject ,Vector3 targetPos, float accuracy, float speed)
-    {
-        float distance = Vector2.Distance(transObject.position, targetPos);
-        // 최종적으로 움직이는 좌표의 거리, 좌표 오차는 여기서 수정
-        transObject.position = Vector2.MoveTowards(transObject.position, targetPos, speed * Time.deltaTime);
-        if (distance > accuracy)
-        {
-            return true;
-        }
-        return false;
-    }
-    // 좌측일경우 반대로 돌림
-    public float LeftAbj(float angle)
-    {
-        // 좌측일경우 물체를 반대로 돌림
-        if (Mathf.Sign(Instance.player.transform.localScale.x) < 0)
-        {
-            angle -= 180;
-        }
-        return angle;
-    }
-    public bool SkillArray(Vector3 position, float rotationSpeed)
-    {
-        if (transform.rotation != Quaternion.Euler(position))
-        {
-            transform.rotation = Quaternion.Slerp(
-            transform.rotation,
-            Quaternion.Euler(position),
-            rotationSpeed * Time.deltaTime);
-            return false;
-        }
-        return true;
-    }
-
-    // 타겟에 각도 계산
-    public float TargetToAngle(Vector3 target)
-    {
-        float angle;
-        Vector3 direction = target - transform.position;
-        direction.Normalize(); // 방향 벡터 정규화
-        angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        return angle;
-    }
-
     public bool UpdateSelectionCheck()
     {
         if (Instance.MyHit != null && Instance.MyHit.name.StartsWith("Selection"))
@@ -90,87 +36,6 @@ public abstract class Skill : MonoBehaviour
             return true;
         }
         return false;
-    }
-    public void AttackRange(int size, Vector3Int targetPos = new Vector3Int(), Vector2Int startPos = new Vector2Int(), Vector2Int endPos = new Vector2Int())
-    {
-        targetPos = Instance.PlayerPositionInt;
-        startPos = Vector2Int.zero;
-        endPos = new Vector2Int(Instance.MapSizeX - 1, Instance.MapSizeY - 1);
-
-        bool downSide = targetPos.y > startPos.y;
-        bool upSide = targetPos.y < endPos.y;
-        bool leftSide = targetPos.x > startPos.x;
-        bool rightSide = targetPos.x < endPos.x;
-
-        for (int index = 1; index <= size; index++)
-        {
-            int downPos = targetPos.y - index;
-            int upPos = targetPos.y + index;
-            int leftPos = targetPos.x - index;
-            int rightPos = targetPos.x + index;
-
-            bool downPosSide = downPos > startPos.y && downPos < endPos.y;
-            bool upPosSide = upPos > startPos.y && upPos < endPos.y;
-            bool leftPosSide = leftPos > startPos.x && leftPos < endPos.x;
-            bool rightPosSide = rightPos > startPos.x && rightPos < endPos.x;
-
-
-            if (downPosSide && leftSide && rightSide)
-            {
-                if (Instance.Map2D[targetPos.x, downPos] == (int)MapObject.moster)
-                {
-                    Instance.poolManager.SelectPool(PoolManager.Prefabs.Selection).Get().transform.position
-                        = new Vector3(targetPos.x, downPos, -1);
-                }
-                else
-                {
-                    Instance.poolManager.SelectPool(PoolManager.Prefabs.UnSelection).Get().transform.position
-                        = new Vector3(targetPos.x, downPos, -1);
-                }
-            }
-
-            if (upPosSide && leftSide && rightSide)
-            {
-                if (Instance.Map2D[targetPos.x, upPos] == (int)MapObject.moster)
-                {
-                    Instance.poolManager.SelectPool(PoolManager.Prefabs.Selection).Get().transform.position
-                        = new Vector3(targetPos.x, upPos, -1);
-                }
-                else
-                {
-                    Instance.poolManager.SelectPool(PoolManager.Prefabs.UnSelection).Get().transform.position
-                        = new Vector3(targetPos.x, upPos, -1);
-                }
-            }
-
-            if (leftPosSide && upSide && downSide)
-            {
-                if (Instance.Map2D[leftPos, targetPos.y] == (int)MapObject.moster)
-                {
-                    Instance.poolManager.SelectPool(PoolManager.Prefabs.Selection).Get().transform.position
-                        = new Vector3(leftPos, targetPos.y, -1);
-                }
-                else
-                {
-                    Instance.poolManager.SelectPool(PoolManager.Prefabs.UnSelection).Get().transform.position
-                        = new Vector3(targetPos.x - index, targetPos.y, -1);
-                }
-            }
-
-            if (rightPosSide && upSide && downSide)
-            {
-                if (Instance.Map2D[rightPos, targetPos.y] == (int)MapObject.moster)
-                {
-                    Instance.poolManager.SelectPool(PoolManager.Prefabs.Selection).Get().transform.position
-                        = new Vector3(rightPos, targetPos.y, -1);
-                }
-                else
-                {
-                    Instance.poolManager.SelectPool(PoolManager.Prefabs.UnSelection).Get().transform.position
-                        = new Vector3(rightPos, targetPos.y, -1);
-                }
-            }
-        }
     }
     public void CheckUsage()
     {
@@ -186,4 +51,160 @@ public abstract class Skill : MonoBehaviour
             myObject.Destroy();
         }
     }
+    public void UnifiedAttackRange(int size, AttackType attackType, Vector3Int targetPos = new Vector3Int(), Vector2Int startPos = new Vector2Int(), Vector2Int endPos = new Vector2Int())
+    {
+        targetPos = Instance.PlayerPositionInt;
+        startPos = Vector2Int.zero;
+        endPos = new Vector2Int(Instance.MapSizeX - 1, Instance.MapSizeY - 1);
+
+        bool downSide = targetPos.y > startPos.y;
+        bool upSide = targetPos.y < endPos.y;
+        bool leftSide = targetPos.x > startPos.x;
+        bool rightSide = targetPos.x < endPos.x;
+
+        // Up, Down, Left, Right
+        bool[] isDamagedArea = new bool[4] { true, true, true, true };
+        for (int index = 1; index <= size; index++)
+        {
+            int downPos = targetPos.y - index;
+            int upPos = targetPos.y + index;
+            int leftPos = targetPos.x - index;
+            int rightPos = targetPos.x + index;
+
+            bool downPosSide = downPos > startPos.y && downPos < endPos.y;
+            bool upPosSide = upPos > startPos.y && upPos < endPos.y;
+            bool leftPosSide = leftPos > startPos.x && leftPos < endPos.x;
+            bool rightPosSide = rightPos > startPos.x && rightPos < endPos.x;
+
+            switch (attackType)
+            {
+                case AttackType.Normal:
+                    {
+                        if (isDamagedArea[0])
+                        {
+                            isDamagedArea[0] = CheckAndPlaceSelection(upPosSide && leftSide && rightSide, targetPos.x, upPos, isDamagedArea[0]);
+                        }
+                        else
+                        {
+                            CheckAndPlaceSelection(upPosSide && leftSide && rightSide, targetPos.x, upPos, isDamagedArea[0]);
+                        }
+                        if (isDamagedArea[1])
+                        {
+                            isDamagedArea[1] = CheckAndPlaceSelection(downPosSide && leftSide && rightSide, targetPos.x, downPos, isDamagedArea[1]);
+                        }
+                        else
+                        {
+                            CheckAndPlaceSelection(downPosSide && leftSide && rightSide, targetPos.x, downPos, isDamagedArea[1]);
+                        }
+                        if (isDamagedArea[2])
+                        {
+                            isDamagedArea[2] = CheckAndPlaceSelection(leftPosSide && upSide && downSide, leftPos, targetPos.y, isDamagedArea[2]);
+                        }
+                        else
+                        {
+                            CheckAndPlaceSelection(leftPosSide && upSide && downSide, leftPos, targetPos.y, isDamagedArea[2]);
+                        }
+                        if (isDamagedArea[3])
+                        {
+                            isDamagedArea[3] = CheckAndPlaceSelection(rightPosSide && upSide && downSide, rightPos, targetPos.y, isDamagedArea[3]);
+                        }
+                        else
+                        {
+                            CheckAndPlaceSelection(rightPosSide && upSide && downSide, rightPos, targetPos.y, isDamagedArea[3]);
+                        }
+                        break;
+                    }
+                case AttackType.LaserGun:
+                    {
+                        CheckAndPlaceSelection(upPosSide && leftSide && rightSide, targetPos.x, upPos, index);
+                        CheckAndPlaceSelection(downPosSide && leftSide && rightSide, targetPos.x, downPos, index);
+                        CheckAndPlaceSelection(leftPosSide && upSide && downSide, leftPos, targetPos.y, index);
+                        CheckAndPlaceSelection(rightPosSide && upSide && downSide, rightPos, targetPos.y, index);
+                        break;
+                    }
+                case AttackType.Schrotflinte:
+                    {
+                        CheckAndPlaceSelection(upPosSide && leftSide && rightSide, targetPos.x, upPos, index);
+                        CheckAndPlaceSelection(downPosSide && leftSide && rightSide, targetPos.x, downPos, index);
+                        CheckAndPlaceSelection(leftPosSide && upSide && downSide, leftPos, targetPos.y, index);
+                        CheckAndPlaceSelection(rightPosSide && upSide && downSide, rightPos, targetPos.y, index);
+
+                        upPos = targetPos.y + index + 1;
+                        upPosSide = upPos > startPos.y && upPos < endPos.y;
+                        CheckAndPlaceSelection(leftPosSide && upSide && downSide, leftPos, targetPos.y + 1, true, false);
+
+                        downPos = targetPos.y - index - 1;
+                        downPosSide = downPos > startPos.y && downPos < endPos.y;
+                        CheckAndPlaceSelection(leftPosSide && upSide && downSide, leftPos, targetPos.y - 1, true, false);
+
+
+                        upPos = targetPos.y + index + 1;
+                        upPosSide = upPos > startPos.y && upPos < endPos.y;
+                        CheckAndPlaceSelection(rightPosSide && upSide && downSide, rightPos, targetPos.y + 1, true, false);
+
+                        downPos = targetPos.y - index - 1;
+                        downPosSide = downPos > startPos.y && downPos < endPos.y;
+                        CheckAndPlaceSelection(rightPosSide && upSide && downSide, rightPos, targetPos.y - 1, true, false);
+
+                        break;
+                    }
+                default:
+                    break;
+            }
+        }
+    }
+    // 물체가 앞에 있어 막히는 경우 사용
+    private bool CheckAndPlaceSelection(bool condition, int x, int y, bool isDamagedArea, bool isSelection = true)
+    {
+        if (condition)
+        {
+            if (Instance.Map2D[x, y] == (int)MapObject.moster)
+            {
+                if (isDamagedArea)
+                {
+                    PlaceSelection(x, y, PoolManager.Prefabs.DamagedArea);
+                }
+                if (isSelection)
+                {
+                    PlaceSelection(x, y, PoolManager.Prefabs.Selection);
+                }
+                return false;
+            }
+            else
+            {
+                PlaceSelection(x, y, PoolManager.Prefabs.UnSelection);
+            }
+        }
+        return true;
+    }
+    // 직선 범위공격시
+    private void CheckAndPlaceSelection(bool condition, int x, int y, int index)
+    {
+        if (condition)
+        {
+            if (index == 1)
+            {
+                if (Instance.Map2D[x, y] == (int)MapObject.moster)
+                {
+                    PlaceSelection(x, y, PoolManager.Prefabs.DamagedArea);
+                }
+                PlaceSelection(x, y, PoolManager.Prefabs.Selection);
+            }
+            else if(Instance.Map2D[x, y] == (int)MapObject.moster)
+            {
+                PlaceSelection(x, y, PoolManager.Prefabs.DamagedArea);
+            }
+            else
+            {
+                PlaceSelection(x, y, PoolManager.Prefabs.UnSelection);
+            }
+        }
+    }
+    
+    private void PlaceSelection(int x, int y, PoolManager.Prefabs prefabType)
+    {
+        Instance.poolManager.SelectPool(prefabType).Get().transform.position = new Vector3(x, y, -1);
+    }
+
+    
 }

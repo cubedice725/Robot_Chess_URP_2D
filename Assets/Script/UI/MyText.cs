@@ -68,11 +68,22 @@ public class MyText : MonoBehaviour
                 }
             case MyTextOption.Stage:
                 {
-                    textMesh.text = "스테이지" + GameManager.Instance.StageCount.ToString();
+                    if(GameManager.Instance.StageCount == 1)
+                    {
+                        StartCoroutine(Show());
+                    }
                     break;
                 }
             default:
                 break;
         }
     }
+    IEnumerator Show()
+    {
+        transform.position = new Vector3(0, 0, 0);
+        textMesh.text = "스테이지" + GameManager.Instance.StageCount.ToString();
+        yield return new WaitForSeconds(0.5f);
+        transform.position = new Vector3(-10000, -10000, 0);
+    }
+
 }
