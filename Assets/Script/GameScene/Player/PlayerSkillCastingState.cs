@@ -4,6 +4,9 @@ public class PlayerSkillCastingState : IState
 {
     public void Entry()
     {
+        Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.Selection);
+        Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.UnSelection);
+        Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.DamagedArea);
         Instance.skillState.Entry();
     }
     public void IStateUpdate()
@@ -12,6 +15,9 @@ public class PlayerSkillCastingState : IState
     }
     public bool Exit()
     {
+        Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.Selection);
+        Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.UnSelection);
+        Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.DamagedArea);
         if (Instance.skillState.Exit())
         {
             Instance.player.AttackCount++;

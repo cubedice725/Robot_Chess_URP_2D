@@ -12,8 +12,6 @@ public class Pistol : LongSkill, IState
 
     public void Entry()
     {
-        Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.Selection);
-        Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.UnSelection);
         UnifiedAttackRange(2, AttackType.Normal);
     }
     public void IStateUpdate()
@@ -44,10 +42,6 @@ public class Pistol : LongSkill, IState
     }
     public bool Exit()
     {
-        Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.Selection);
-        Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.UnSelection);
-        Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.DamagedArea);
-
         if (skillUse)
         {
             skillUse = false;

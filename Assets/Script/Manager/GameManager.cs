@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 
 [Serializable]
@@ -179,12 +178,13 @@ public class GameManager : MonoBehaviour
             SummonedMonsterAuthorityCount = 0;
             ResetMonsterMovements();
             changeMonsterTurn = true;
-        }
+        }// 몬스터가 없음 턴이 자동적으로 올라감
         if (changePlayerTurn)
         {
             time += Time.deltaTime;
             ButtonLock = true;
 
+            // 플레이어에서 몬트터로 넘어갈시 몬스터 사망처리 전에 동작하는것을 방지하기 위한 타임 딜레이
             if (time > 0.3f)
             {
                 time = 0;
@@ -222,12 +222,12 @@ public class GameManager : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             MouseDownPosInt = MousePosInt;
+
             RaycastHit2D[] hits = Physics2D.RaycastAll(MousePos, Vector2.zero);
             if (hits.Length > 0)
             {
                 if (EventSystem.current.IsPointerOverGameObject()) return;
                 print(hits[0].transform.name);
-                
             }
             try{
                 MyHit.name = hits[0].collider.name;
@@ -319,7 +319,7 @@ public class GameManager : MonoBehaviour
             }
         }
     }
-    //몬스터의 거리확인
+    // 몬스터의 거리확인
     public void FindNearbyMonsters()
     {
         monsterDistances = new List<float>();
@@ -333,13 +333,12 @@ public class GameManager : MonoBehaviour
             SummonedMonster[0].GetComponent<Monster>().Authority = true;
         }
     }
- 
+    // 플레이어에서 몬스터로
     public void FromPlayerToMonster()
     {
         Instance.playerState = State.Idle;
         changePlayerTurn = true;
     }
-
     // 플레이어와 가까운 몬스터 확인
     public void InsertionSort()
     {

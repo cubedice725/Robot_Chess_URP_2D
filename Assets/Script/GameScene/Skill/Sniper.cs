@@ -10,10 +10,9 @@ public class Sniper : LongSkill, IState
     bool skillUse = false;
     float accuracy = 0.001f;
     public override int UsageLimit { get => 2; set { } }
+
     public void Entry()
     {
-        Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.Selection);
-        Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.UnSelection);
         UnifiedAttackRange(3, AttackType.Normal);
     }
     public void IStateUpdate()
@@ -35,7 +34,7 @@ public class Sniper : LongSkill, IState
         }
         else if (skillUse)
         {
-            if (Instance.action.TurnAngle(Vector3.zero, transform,7f))
+            if (Instance.action.TurnAngle(Vector3.zero, transform, 7f))
             {
                 Instance.playerState = State.Idle;
                 CheckUsage();
@@ -44,10 +43,6 @@ public class Sniper : LongSkill, IState
     }
     public bool Exit()
     {
-        Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.Selection);
-        Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.UnSelection);
-        Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.DamagedArea);
-
         if (skillUse)
         {
             skillUse = false;

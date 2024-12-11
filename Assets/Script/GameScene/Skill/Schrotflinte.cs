@@ -46,9 +46,6 @@ public class Schrotflinte : Skill, IState
     }
     public bool Exit()
     {
-        Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.Selection);
-        Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.UnSelection);
-
         if (skillUse)
         {
             skillUse = false;

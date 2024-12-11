@@ -1,7 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using static GameManager;
 public class LaserGun : Skill, IState
@@ -116,10 +112,6 @@ public class LaserGun : Skill, IState
 
     public bool Exit()
     {
-        Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.Selection);
-        Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.UnSelection);
-        Instance.poolManager.AllDistroyMyObject(PoolManager.Prefabs.DamagedArea);
-
         if (skillUse)
         {
             skillUse = false;

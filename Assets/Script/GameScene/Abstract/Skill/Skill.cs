@@ -129,22 +129,13 @@ public class Skill : MonoBehaviour
                         CheckAndPlaceSelection(leftPosSide && upSide && downSide, leftPos, targetPos.y, index);
                         CheckAndPlaceSelection(rightPosSide && upSide && downSide, rightPos, targetPos.y, index);
 
-                        upPos = targetPos.y + index + 1;
-                        upPosSide = upPos > startPos.y && upPos < endPos.y;
-                        CheckAndPlaceSelection(leftPosSide && upSide && downSide, leftPos, targetPos.y + 1, true, false);
+                        CheckAndPlaceSelection(leftPosSide && targetPos.y + 1 < endPos.y && downSide, leftPos, targetPos.y + 1, true, false);
 
-                        downPos = targetPos.y - index - 1;
-                        downPosSide = downPos > startPos.y && downPos < endPos.y;
-                        CheckAndPlaceSelection(leftPosSide && upSide && downSide, leftPos, targetPos.y - 1, true, false);
+                        CheckAndPlaceSelection(leftPosSide && upSide && targetPos.y - 1 > startPos.y, leftPos, targetPos.y - 1, true, false);
 
+                        CheckAndPlaceSelection(rightPosSide && targetPos.y + 1 < endPos.y && downSide, rightPos, targetPos.y + 1, true, false);
 
-                        upPos = targetPos.y + index + 1;
-                        upPosSide = upPos > startPos.y && upPos < endPos.y;
-                        CheckAndPlaceSelection(rightPosSide && upSide && downSide, rightPos, targetPos.y + 1, true, false);
-
-                        downPos = targetPos.y - index - 1;
-                        downPosSide = downPos > startPos.y && downPos < endPos.y;
-                        CheckAndPlaceSelection(rightPosSide && upSide && downSide, rightPos, targetPos.y - 1, true, false);
+                        CheckAndPlaceSelection(rightPosSide && upSide && targetPos.y - 1 > startPos.y, rightPos, targetPos.y - 1, true, false);
 
                         break;
                     }

@@ -21,16 +21,12 @@ public class RangedAttack : MonoBehaviour, IState
 
     public void IStateUpdate()
     {
-        Vector3 mousePos = Vector3.zero;
+        Vector3Int mousePosInt = Vector3Int.zero;
         if (!start)
         {
-            mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            mousePosInt = Instance.MousePosInt;
         }
-        Vector3Int mousePosInt = new Vector3Int(
-                (int)Mathf.Round(mousePos.x),
-                (int)Mathf.Round(mousePos.y),
-                -1
-            );
+        
         if (Instance.MyHit != null && Instance.MyHit.name.StartsWith("Selection"))
         {
             Instance.MyHit.name = "";
@@ -248,6 +244,4 @@ public class RangedAttack : MonoBehaviour, IState
             }
         }
     }
-
-    
 }

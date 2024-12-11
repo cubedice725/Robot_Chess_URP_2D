@@ -14,7 +14,7 @@ public class Player : MonoBehaviour
     // 이동거리
     public int MoveDistance { get; set; } = 100;
     // 이동 속도
-    public float PlayerMoveSpeed { get; set; } = 1f;
+    public float PlayerMoveSpeed { get; set; } = 1.7f;
     public bool Die = false;
     public IState CurrentSkillState { get; private set; }
 

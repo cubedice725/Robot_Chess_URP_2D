@@ -30,6 +30,7 @@ public class PlayerMovement : AStar
                 new Vector3Int(Instance.MapSizeX, Instance.MapSizeY, 0),
                 isWall
             );
+            // 가끔씩 2번 동작이 들어가는 경우가 있음 이때 오류 방지를 위한 try catch
             try
             {
                 targetPosition = new Vector2(FinalNodeList[count].x, FinalNodeList[count].y);
