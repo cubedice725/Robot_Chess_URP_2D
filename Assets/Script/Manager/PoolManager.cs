@@ -35,7 +35,7 @@ public class PoolManager : MonoBehaviour
     // 생성된 물체를 컨트롤하기 위한 리스트, 풀로 되돌아온 즉 비활성화된 오브젝트는 관리 안함
     public List<List<MyObject>> MyObjectLists { get; private set; } = new List<List<MyObject>>();
     public List<ObjectPool<MyObject>> pools = new List<ObjectPool<MyObject>>();
-    public List<GameObject> myObjectlPrefabs = new List<GameObject>();
+    public List<GameObject> myObjectPrefabs = new List<GameObject>();
 
     private Prefabs prefabs;
     public void Reset()
@@ -91,7 +91,7 @@ public class PoolManager : MonoBehaviour
     }
     private void NewPoolAdd(string prefabsName, int _maxSize)
     {
-        myObjectlPrefabs.Add(Resources.Load(prefabsName, typeof(GameObject)) as GameObject);
+        myObjectPrefabs.Add(Resources.Load(prefabsName, typeof(GameObject)) as GameObject);
         pools.Add(new ObjectPool<MyObject>
             (
             CreateMyObject,
@@ -104,7 +104,7 @@ public class PoolManager : MonoBehaviour
     }
     private MyObject CreateMyObject()
     {
-        MyObject myObject = Instantiate(myObjectlPrefabs[(int)prefabs]).GetComponent<MyObject>();
+        MyObject myObject = Instantiate(myObjectPrefabs[(int)prefabs]).GetComponent<MyObject>();
         myObject.Prefabs = prefabs;
         myObject.SetManagedPool(pools[(int)prefabs]);
         return myObject;

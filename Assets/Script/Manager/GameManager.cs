@@ -42,10 +42,10 @@ public class GameManager : MonoBehaviour
 
     public bool monsterTurn = false;
     public bool playerTurn = true;
-
-    public int SummonedMonsterAuthorityCount = 0;
     public bool changePlayerTurn = false;
     public bool changeMonsterTurn = false;
+
+    public int SummonedMonsterAuthorityCount = 0;
     public int monsterTurnCount = 0;
     public float time = 0;
 
@@ -56,9 +56,10 @@ public class GameManager : MonoBehaviour
     public PoolManager poolManager { get; set; }
     public Action action { get; set; }
     public Vector3Int PlayerPositionInt { get; set; }
-    public Vector3 MousePos { get; set; }
-    public Vector3Int MousePosInt { get; set; }
     public Vector3Int MouseDownPosInt { get; set; }
+    public Vector3Int MousePosInt { get; set; }
+    public Vector3 MousePos { get; set; }
+
     public int StageCount { get; set; } = 0;
     public int MapSizeX { get; set; } = 12;
     public int MapSizeY { get; set; } = 12;
