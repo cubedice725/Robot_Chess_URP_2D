@@ -18,9 +18,12 @@ public class MyText : MonoBehaviour
     }
     public TextMeshProUGUI textMesh;
     public MyTextOption myTextOption;
-
+    private int CurrentStageCount = 0;
+    private Vector3 stageTextPos = Vector3.zero;
     private void Awake()
     {
+        stageTextPos = transform.position;
+
         textMesh = GetComponent<TextMeshProUGUI>();
     }
     void Update()
@@ -68,22 +71,19 @@ public class MyText : MonoBehaviour
                 }
             case MyTextOption.Stage:
                 {
-                    if(GameManager.Instance.StageCount == 1)
+                    if (CurrentStageCount == GameManager.Instance.StageCount) return;
+                    textMesh.text = "스테이지" + GameManager.Instance.StageCount.ToString();
+
+                    if (!GameManager.Instance.action.UpdateMove(transform, new Vector3(-10000, transform.position.y, transform.position.z), 0.001f, 1500))
                     {
-                        StartCoroutine(Show());
+                        CurrentStageCount = GameManager.Instance.StageCount;
+                        transform.position = new Vector3(stageTextPos.x, transform.position.y, transform.position.z);
                     }
+
                     break;
                 }
             default:
                 break;
         }
     }
-    IEnumerator Show()
-    {
-        transform.position = new Vector3(0, 0, 0);
-        textMesh.text = "스테이지" + GameManager.Instance.StageCount.ToString();
-        yield return new WaitForSeconds(0.5f);
-        transform.position = new Vector3(-10000, -10000, 0);
-    }
-
 }

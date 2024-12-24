@@ -28,6 +28,7 @@ public class Action : MonoBehaviour
         float distance = Vector2.Distance(transObject.position, targetPos);
         // 최종적으로 움직이는 좌표의 거리, 좌표 오차는 여기서 수정
         transObject.position = Vector2.MoveTowards(transObject.position, targetPos, speed * Time.deltaTime);
+        // 정확도 보다 거리가 크면 아직 도착하지 않은것으로 판단
         if (distance > accuracy)
         {
             return true;

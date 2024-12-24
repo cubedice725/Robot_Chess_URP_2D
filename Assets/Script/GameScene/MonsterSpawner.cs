@@ -46,7 +46,7 @@ public class MonsterSpawner : MonoBehaviour
         {
             Instance.poolManager = FindObjectOfType<PoolManager>();
         }
-        SpawnMonster(5, Prefabs.RobotKnife);
+        SpawnMonster(1, Prefabs.RobotKnife);
     }
     private void Update()
     {

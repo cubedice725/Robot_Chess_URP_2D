@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
-using static GameManager;   
+using static GameManager;
 public class MyButton : MonoBehaviour
 {
     public enum MyButtonOption
@@ -45,7 +45,7 @@ public class MyButton : MonoBehaviour
     private void Update()
     {
         if (SceneManager.GetActiveScene().name != "GameScene") return;
-        
+
         if (MyButtonOption.TurnEnd == Mybutton || MyButtonOption.Store == Mybutton || MyButtonOption.Option == Mybutton)
         {
             try
@@ -119,11 +119,7 @@ public class MyButton : MonoBehaviour
                 }
             case MyButtonOption.Check:
                 {
-                    UiManager.Instance.affiliation = GameObject.Find("Affiliation").GetComponent<TMP_InputField>();
-                    UiManager.Instance.guestName = GameObject.Find("GuestName").GetComponent<TMP_InputField>();
-                    UiManager.Instance.PlayerName = UiManager.Instance.guestName.text;
-                    UiManager.Instance.PlayserAffiliation = UiManager.Instance.affiliation.text;
-                    if(GameManager.Instance != null)
+                    if (GameManager.Instance != null)
                     {
                         GameManager.Instance.Reset();
                         SceneManager.LoadScene("GameScene");
@@ -157,14 +153,11 @@ public class MyButton : MonoBehaviour
                             }
                         case Option.Close:
                             {
-                                GameManager.Instance.Reset();
-                                UiManager.Instance.Reset();
-                                SceneManager.LoadScene("MainScene");
-                                //#if UNITY_EDITOR
-                                //    UnityEditor.EditorApplication.isPlaying = false;
-                                //#else
-                                //    Application.Quit();
-                                //#endif
+                                #if UNITY_EDITOR
+                                    UnityEditor.EditorApplication.isPlaying = false;
+                                #else
+                                    Application.Quit();
+                                #endif
                                 break;
                             }
                         default:

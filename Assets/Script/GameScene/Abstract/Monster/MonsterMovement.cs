@@ -98,7 +98,7 @@ public class MonsterMovement : AStar
     public string AttackNavigation()
     {
         // 대각선인지, 사거리 안에 있는지 확인
-        if (!IsDiagonal(new Vector2(monsterPositionInt.x, monsterPositionInt.y),new Vector2(Instance.PlayerPositionInt.x, Instance.PlayerPositionInt.y)) 
+        if (!IsDiagonal(new Vector2(monsterPositionInt.x, monsterPositionInt.y), new Vector2(Instance.PlayerPositionInt.x, Instance.PlayerPositionInt.y))
             && (int)Mathf.Round(Vector2.Distance(Instance.player.transform.position, transform.position)) <= monster.AttackDistance)
         {
             return "AttackRange";
@@ -139,9 +139,9 @@ public class MonsterMovement : AStar
                 string type;
                 // 플레이어 기준에서 대각선으로 점점 기준점을 낮추고 그 기준점으로 부터 플레이어와 가까운 포인트를 정사각형으로 만듦
                 CreateBorder((2 * index) + 1, (2 * index) + 1, Instance.PlayerPositionInt + ((Vector3Int.left + Vector3Int.down) * index));
-                
+
                 type = NewPathFinding(false);
-                if(type == "Warten")
+                if (type == "Warten")
                 {
                     Instance.poolManager.AllDistroyMyObject(Prefabs.PlayerPoint);
                     return "NotFindPath";
@@ -170,7 +170,7 @@ public class MonsterMovement : AStar
             for (int index = 0; index < Instance.poolManager.MyObjectLists[(int)Prefabs.PlayerPoint].Count; index++)
             {
                 // 가장 가까운 곳이 현 위치이면 그냥 대기
-                if(!isTooClose && (int)Mathf.Round(Instance.poolManager.MyObjectLists[(int)Prefabs.PlayerPoint][index].transform.position.x) == monsterPositionInt.x &&
+                if (!isTooClose && (int)Mathf.Round(Instance.poolManager.MyObjectLists[(int)Prefabs.PlayerPoint][index].transform.position.x) == monsterPositionInt.x &&
                     (int)Mathf.Round(Instance.poolManager.MyObjectLists[(int)Prefabs.PlayerPoint][index].transform.position.y) == monsterPositionInt.y)
                 {
                     return "Warten";
@@ -195,7 +195,7 @@ public class MonsterMovement : AStar
                 (int)Mathf.Round(Instance.poolManager.MyObjectLists[(int)Prefabs.PlayerPoint][num].transform.position.x),
                 (int)Mathf.Round(Instance.poolManager.MyObjectLists[(int)Prefabs.PlayerPoint][num].transform.position.y),
                 (int)Mathf.Round(Instance.poolManager.MyObjectLists[(int)Prefabs.PlayerPoint][num].transform.position.z)));
-            
+
             if (FinalNodeList.Count == 0)
             {
                 return "NotFindPath";
@@ -206,7 +206,7 @@ public class MonsterMovement : AStar
     }
     void AddPoint(int sizeX, int sizeY, Vector3Int startPosition)
     {
-        if(startPosition.x + sizeX > 0 && startPosition.y + sizeY > 0 && startPosition.x + sizeX < Instance.MapSizeX - 1 && startPosition.y + sizeY < Instance.MapSizeY - 1)
+        if (startPosition.x + sizeX > 0 && startPosition.y + sizeY > 0 && startPosition.x + sizeX < Instance.MapSizeX - 1 && startPosition.y + sizeY < Instance.MapSizeY - 1)
         {
             Instance.poolManager.SelectPool(Prefabs.PlayerPoint).Get().transform.position = startPosition + new Vector3Int(sizeX, sizeY, 0);
         }
@@ -241,7 +241,7 @@ public class MonsterMovement : AStar
             new Vector3Int(Instance.MapSizeX, Instance.MapSizeY, 0),
             isWall
             );
-        
+
         Instance.Map2D[monsterPositionInt.x, monsterPositionInt.y] = (int)MapObject.moster;
     }
     // 가만히 있을때 플레이어를 바라보는 애니메이션
@@ -289,7 +289,6 @@ public class MonsterMovement : AStar
     {
         Vector2 direction = point2 - point1;
         direction.Normalize();
-
         float threshold = 0.01f; // 오차 허용 범위
 
         bool isHorizontal = Mathf.Abs(direction.x) > (1 - threshold) && Mathf.Abs(direction.y) < threshold;
