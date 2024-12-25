@@ -11,7 +11,7 @@ public class MonsterMovement : AStar
     protected Animator animator;
     protected Monster monster;
 
-    protected Vector3Int monsterPositionInt;
+    protected Vector3Int monsterPosInt;
     protected Vector2 targetPosition;
     protected override bool AllowDiagonal => false;
     private float xAxis = 0;
@@ -31,7 +31,7 @@ public class MonsterMovement : AStar
     }
     public void Update()
     {
-        monsterPositionInt = new Vector3Int((int)Mathf.Round(transform.position.x), (int)Mathf.Round(transform.position.y), (int)Mathf.Round(transform.position.z));
+        monsterPosInt = new Vector3Int((int)Mathf.Round(transform.position.x), (int)Mathf.Round(transform.position.y), (int)Mathf.Round(transform.position.z));
     }
     // 실제 몬스터가 움직임
     public virtual bool UpdateMove()
@@ -46,7 +46,7 @@ public class MonsterMovement : AStar
         if (start)
         {
             // 몬스터 벽취급이기에 자신의 자리를 비운후 자신이 갈 곳을 미리 지정하여 겹치지 않게함
-            Instance.Map2D[monsterPositionInt.x, monsterPositionInt.y] = (int)MapObject.noting;
+            Instance.Map2D[monsterPosInt.x, monsterPosInt.y] = (int)MapObject.noting;
             Instance.Map2D[FinalNodeList[monster.MovingDistance].x, FinalNodeList[monster.MovingDistance].y] = (int)MapObject.moster;
             Authority(false);
             start = false;
@@ -98,12 +98,12 @@ public class MonsterMovement : AStar
     public string AttackNavigation()
     {
         // 대각선인지, 사거리 안에 있는지 확인
-        if (!IsDiagonal(new Vector2(monsterPositionInt.x, monsterPositionInt.y), new Vector2(Instance.PlayerPositionInt.x, Instance.PlayerPositionInt.y))
+        if (!IsDiagonal(new Vector2(monsterPosInt.x, monsterPosInt.y), new Vector2(Instance.PlayerPositionInt.x, Instance.PlayerPositionInt.y))
             && (int)Mathf.Round(Vector2.Distance(Instance.player.transform.position, transform.position)) <= monster.AttackDistance)
         {
             return "AttackRange";
         }
-        if (FinalNodeList.Count == 2 && IsDiagonal(new Vector2(monsterPositionInt.x, monsterPositionInt.y), new Vector2(Instance.PlayerPositionInt.x, Instance.PlayerPositionInt.y)))
+        if (FinalNodeList.Count == 2 && IsDiagonal(new Vector2(monsterPosInt.x, monsterPosInt.y), new Vector2(Instance.PlayerPositionInt.x, Instance.PlayerPositionInt.y)))
         {
             // 길을 못찾는 경우 플레이어 근처에 가까운 곳의 길을 유도함
             // 맵의 가로 세로 모두 돌아갈수 있도록함
@@ -160,7 +160,7 @@ public class MonsterMovement : AStar
     }
     // 플레이어와 가까우면 대각선에 있는 몬스터가 공격하기 플레이어 앞이 아닌 플레이어 한테 다가간다.
     // 이를 방지하기 위해 해당 조건에 있는 경우 isTooClose를 ture로 하면 가만히 있지 않고 다른곳으로 이동하여 대각선이 아니게 되어 공격할 수 있다.
-    string NewPathFinding(bool isTooClose)
+    private string NewPathFinding(bool isTooClose)
     {
         float closeDistance = float.MaxValue;
         int num = 0;
@@ -170,8 +170,8 @@ public class MonsterMovement : AStar
             for (int index = 0; index < Instance.poolManager.MyObjectLists[(int)Prefabs.PlayerPoint].Count; index++)
             {
                 // 가장 가까운 곳이 현 위치이면 그냥 대기
-                if (!isTooClose && (int)Mathf.Round(Instance.poolManager.MyObjectLists[(int)Prefabs.PlayerPoint][index].transform.position.x) == monsterPositionInt.x &&
-                    (int)Mathf.Round(Instance.poolManager.MyObjectLists[(int)Prefabs.PlayerPoint][index].transform.position.y) == monsterPositionInt.y)
+                if (!isTooClose && (int)Mathf.Round(Instance.poolManager.MyObjectLists[(int)Prefabs.PlayerPoint][index].transform.position.x) == monsterPosInt.x &&
+                    (int)Mathf.Round(Instance.poolManager.MyObjectLists[(int)Prefabs.PlayerPoint][index].transform.position.y) == monsterPosInt.y)
                 {
                     return "Warten";
                 }
@@ -231,23 +231,23 @@ public class MonsterMovement : AStar
     public void MonsterPathFinding(Vector3Int target)
     {
         // 몬스터의 경우 자기 위치가 비어있어야 탐색 가능
-        Instance.Map2D[monsterPositionInt.x, monsterPositionInt.y] = (int)MapObject.noting;
+        Instance.Map2D[monsterPosInt.x, monsterPosInt.y] = (int)MapObject.noting;
 
         // 탐색
         PathFinding(
-            monsterPositionInt,
+            monsterPosInt,
             target,
             Vector3Int.zero,
             new Vector3Int(Instance.MapSizeX, Instance.MapSizeY, 0),
             isWall
             );
 
-        Instance.Map2D[monsterPositionInt.x, monsterPositionInt.y] = (int)MapObject.moster;
+        Instance.Map2D[monsterPosInt.x, monsterPosInt.y] = (int)MapObject.moster;
     }
     // 가만히 있을때 플레이어를 바라보는 애니메이션
     public void LookPlayerAnimation()
     {
-        float direction = Instance.player.transform.position.x - monsterPositionInt.x;
+        float direction = Instance.player.transform.position.x - monsterPosInt.x;
 
         if (direction == 0) return;
         if (xAxis == Mathf.Sign(direction)) return;

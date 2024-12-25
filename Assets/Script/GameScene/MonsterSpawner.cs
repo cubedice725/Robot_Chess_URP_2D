@@ -1,7 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
-using Unity.VisualScripting;
 using UnityEngine;
 using static GameManager;
 using static PoolManager;
@@ -21,18 +18,20 @@ public class MonsterSpawner : MonoBehaviour
     private List<List<SummoneMonsterStage>> summoneMonsterStage = new List<List<SummoneMonsterStage>>()
     {
         new List<SummoneMonsterStage> { new SummoneMonsterStage(2, Prefabs.RobotPistol), new SummoneMonsterStage(3, Prefabs.RobotKnife) },
-        new List<SummoneMonsterStage> { new SummoneMonsterStage(2, Prefabs.RobotPistol), new SummoneMonsterStage(1, Prefabs.RobotSniper), new SummoneMonsterStage(2, Prefabs.RobotKnife) },
-        new List<SummoneMonsterStage> { new SummoneMonsterStage(2, Prefabs.RobotPistol), new SummoneMonsterStage(1, Prefabs.RobotSniper), new SummoneMonsterStage(4, Prefabs.RobotKnife) },
-        new List<SummoneMonsterStage> { new SummoneMonsterStage(4, Prefabs.RobotPistol), new SummoneMonsterStage(1, Prefabs.RobotSniper), new SummoneMonsterStage(4, Prefabs.RobotKnife) },
-        new List<SummoneMonsterStage> { new SummoneMonsterStage(4, Prefabs.RobotPistol), new SummoneMonsterStage(2, Prefabs.RobotSniper), new SummoneMonsterStage(5, Prefabs.RobotKnife) },
-        new List<SummoneMonsterStage> { new SummoneMonsterStage(5, Prefabs.RobotPistol), new SummoneMonsterStage(3, Prefabs.RobotSniper), new SummoneMonsterStage(6, Prefabs.RobotKnife) },
-        new List<SummoneMonsterStage> { new SummoneMonsterStage(5, Prefabs.RobotPistol), new SummoneMonsterStage(5, Prefabs.RobotSniper), new SummoneMonsterStage(8, Prefabs.RobotKnife) },
-        new List<SummoneMonsterStage> { new SummoneMonsterStage(7, Prefabs.RobotPistol), new SummoneMonsterStage(5, Prefabs.RobotSniper), new SummoneMonsterStage(10, Prefabs.RobotKnife) },
-        new List<SummoneMonsterStage> { new SummoneMonsterStage(7, Prefabs.RobotPistol), new SummoneMonsterStage(7, Prefabs.RobotSniper), new SummoneMonsterStage(12, Prefabs.RobotKnife) }
+        new List<SummoneMonsterStage> { new SummoneMonsterStage(1, Prefabs.RobotSniper), new SummoneMonsterStage(2, Prefabs.RobotPistol), new SummoneMonsterStage(2, Prefabs.RobotKnife) },
+        new List<SummoneMonsterStage> { new SummoneMonsterStage(1, Prefabs.RobotSniper), new SummoneMonsterStage(2, Prefabs.RobotPistol), new SummoneMonsterStage(4, Prefabs.RobotKnife) },
+        new List<SummoneMonsterStage> { new SummoneMonsterStage(1, Prefabs.RobotSniper), new SummoneMonsterStage(4, Prefabs.RobotPistol), new SummoneMonsterStage(4, Prefabs.RobotKnife) },
+        new List<SummoneMonsterStage> { new SummoneMonsterStage(2, Prefabs.RobotSniper), new SummoneMonsterStage(4, Prefabs.RobotPistol), new SummoneMonsterStage(5, Prefabs.RobotKnife) },
+        new List<SummoneMonsterStage> { new SummoneMonsterStage(3, Prefabs.RobotSniper), new SummoneMonsterStage(5, Prefabs.RobotPistol), new SummoneMonsterStage(6, Prefabs.RobotKnife) },
+        new List<SummoneMonsterStage> { new SummoneMonsterStage(5, Prefabs.RobotSniper), new SummoneMonsterStage(5, Prefabs.RobotPistol), new SummoneMonsterStage(8, Prefabs.RobotKnife) },
+        new List<SummoneMonsterStage> { new SummoneMonsterStage(5, Prefabs.RobotSniper), new SummoneMonsterStage(7, Prefabs.RobotPistol), new SummoneMonsterStage(10, Prefabs.RobotKnife) },
+        new List<SummoneMonsterStage> { new SummoneMonsterStage(7, Prefabs.RobotSniper), new SummoneMonsterStage(7, Prefabs.RobotPistol), new SummoneMonsterStage(12, Prefabs.RobotKnife) }
     };
 
-    private int unspondedMonsters = 0;
     private bool start = false;
+    bool[] isAvailable;
+    List<int> RandomNum = new List<int>();
+
     private void Awake()
     {
         size.x = Instance.MapSizeX - 2;
@@ -46,7 +45,28 @@ public class MonsterSpawner : MonoBehaviour
         {
             Instance.poolManager = FindObjectOfType<PoolManager>();
         }
-        SpawnMonster(1, Prefabs.RobotKnife);
+        isAvailable = new bool[points.Count];
+
+        //UsageChecks();
+        //print(CheckAvailableCount());
+        //print(CheckMonstersSummonCount());
+        //SelectSummoningArea(5);
+        //print(RandomNum[0]);
+        //print(RandomNum[1]);
+        //print(RandomNum[2]);
+        //print(RandomNum[3]);
+        //print(RandomNum[4]);
+        UsageChecks();
+        SelectSummoningArea(1);
+
+        for (int index = 0; index < 1; index++)
+        {
+            SummoningMonsters(index, Prefabs.RobotKnife);
+        }
+
+        UsageChecks();
+        SelectSummoningArea(CheckMonstersSummonCount());
+        PredictingMonsterSpawnAreas();
     }
     private void Update()
     {
@@ -54,18 +74,117 @@ public class MonsterSpawner : MonoBehaviour
         {
             start = true;
         }
-        if (Instance.GameTurnCount % 5 == 1 && Instance.playerTurn && Instance.GameTurnCount != 1 && start)
+
+        if (start && Instance.playerTurn)
         {
-            for (int index = 0; index < summoneMonsterStage[Instance.StageCount - 1].Count; index++)
+            print(1);
+            int monstersSummonCount = CheckMonstersSummonCount();
+            if (Instance.GameTurnCount % 5 == 1)
             {
-                SpawnMonster(summoneMonsterStage[Instance.StageCount - 1][index].Number, summoneMonsterStage[Instance.StageCount - 1][index].MonsterPrefabs);
+                // 여기 수정해야함
+                for (int index1 = 0; index1 < monstersSummonCount; index1++)
+                {
+                    int summone = 0;
+                    for (int index2 = 0; index2 < summoneMonsterStage[Instance.StageCount].Count;)
+                    {
+                        SummoningMonsters(index1, summoneMonsterStage[Instance.StageCount][index2].MonsterPrefabs);
+                        summone++;
+                        if(summone < summoneMonsterStage[Instance.StageCount][index2].Number)
+                        {
+                            index2++;
+                        }
+                    }
+                }
+                UsageChecks();
+                SelectSummoningArea(monstersSummonCount);
+                PredictingMonsterSpawnAreas();
             }
             start = false;
         }
     }
+    private void PredictingMonsterSpawnAreas()
+    {
+        int AvailableCount = CheckAvailableCount();
+        int MonstersSummonCount = CheckMonstersSummonCount();
+        if (AvailableCount >= MonstersSummonCount)
+        {
+            for (int index = 0; index < MonstersSummonCount; index++)
+            {
+                Instance.poolManager.SelectPool(Prefabs.DamagedArea).Get().transform.position = points[RandomNum[index]].transform.position;
+            }
+        }
+        else if (AvailableCount < MonstersSummonCount)
+        {
+            for (int index = 0; index < AvailableCount; index++)
+            {
+                Instance.poolManager.SelectPool(Prefabs.DamagedArea).Get().transform.position = points[RandomNum[index]].transform.position;
+            }
+        }
+    }
+    private void UsageChecks()
+    {
+        // 실제 몬스터가 있는지 혹은 플레이어가 있는지 확인
+        for (int index = 0; index < points.Count; index++)
+        {
+            if (Instance.Map2D[(int)Mathf.Round(points[index].transform.position.x), (int)Mathf.Round(points[index].transform.position.y)] != (int)MapObject.player
+                && Instance.Map2D[(int)Mathf.Round(points[index].transform.position.x), (int)Mathf.Round(points[index].transform.position.y)] != (int)MapObject.moster)
+            {
+                isAvailable[index] = true;
+            }
+            else
+            {
+                isAvailable[index] = false;
+            }
+        }
+    }
+    private int CheckAvailableCount()
+    {
+        int AvailableCount = 0;
+        foreach (bool available in isAvailable) 
+        {
+            if (available)
+            {
+                AvailableCount++;
+            }
+        }
+        return AvailableCount;
+    }
+    private int CheckMonstersSummonCount()
+    {
+        int MonstersSummonCount = 0;
+        for (int index = 0; index < summoneMonsterStage[Instance.StageCount].Count; index++)
+        {
+            MonstersSummonCount += summoneMonsterStage[Instance.StageCount][index].Number;
+        }
+        return MonstersSummonCount;
+    }
+    private void SelectSummoningArea(int _MonstersSummonCount)
+    {
+        int Num;
+        RandomNum.Clear();
+        for (int index = 0; index < _MonstersSummonCount;)
+        {
+            Num = Random.Range(0, points.Count);
+            if (isAvailable[Num])
+            {
+                RandomNum.Add(Num);
+                isAvailable[Num] = false;
+                index++;
+            }
+        }
+    }
+    private void SummoningMonsters(int index, Prefabs prefabs)
+    {
+        MyObject monsterObject = Instance.poolManager.SelectPool(prefabs).Get();
+        monsterObject.transform.GetComponent<Monster>().Initialize();
+        Instance.SummonedMonster.Add(monsterObject.gameObject);
+        monsterObject.transform.position = points[RandomNum[index]].transform.position;
+        Instance.Map2D[(int)points[RandomNum[index]].transform.position.x, (int)points[RandomNum[index]].transform.position.y] = (int)MapObject.moster;
+        isAvailable[RandomNum[index]] = false;
+    }
     void AddPoint(int x, int y)
     {
-        points.Add(Instance.poolManager.SelectPool(PoolManager.Prefabs.Point).Get());
+        points.Add(Instance.poolManager.SelectPool(Prefabs.Point).Get());
         points[points.Count - 1].transform.position = startPosition + new Vector3Int(x, y, 0);
         points[points.Count - 1].transform.parent = transform;
     }
@@ -84,66 +203,6 @@ public class MonsterSpawner : MonoBehaviour
         {
             AddPoint(x, 0);
             AddPoint(x, size.y - 1);
-        }
-    }
-    private void SpawnMonster(int numMonstersSummon, PoolManager.Prefabs prefabs)
-    {
-        int unavailableNumberCount = 0;
-        bool[] verifiedNumber = new bool[points.Count];
-        for (int index = 0; index < points.Count; index++)
-        {
-            if (Instance.Map2D[(int)Mathf.Round(points[index].transform.position.x), (int)Mathf.Round(points[index].transform.position.y)] != (int)MapObject.player
-                && Instance.Map2D[(int)Mathf.Round(points[index].transform.position.x), (int)Mathf.Round(points[index].transform.position.y)] != (int)MapObject.moster)
-            {
-                verifiedNumber[index] = true;
-            }
-            else
-            {
-                unavailableNumberCount++;
-            }
-            //print(verifiedNumber[20]);
-
-        }
-        if (numMonstersSummon == 0)
-        {
-            if(unavailableNumberCount == points.Count)
-            {
-                // print("점검");
-                unspondedMonsters += unavailableNumberCount - points.Count;
-               // print("재소환" + unspondedMonsters);
-                numMonstersSummon = points.Count - unavailableNumberCount;
-            }
-        }
-        if (points.Count - unavailableNumberCount <= 0)
-        {
-            // print("소환 못하여 다 들어감");
-            unspondedMonsters += numMonstersSummon;
-            // print("소환못한 몬스터" + unspondedMonsters);
-
-            return;
-        }
-        for (int i = 0; i < numMonstersSummon;)
-        {
-            if (unavailableNumberCount == points.Count)
-            {
-                // print("소환한 몬스터" + i);
-                // print("들어가는 몬스터" + (numMonstersSummon - i));
-                unspondedMonsters += numMonstersSummon - i;
-                // print("소환못한 몬스터" + unspondedMonsters);
-                return;
-            }
-            int RandomNum = Random.Range(0, points.Count);
-            if (verifiedNumber[RandomNum])
-            {
-                MyObject monsterObject = Instance.poolManager.SelectPool(prefabs).Get();
-                monsterObject.transform.GetComponent<Monster>().Initialize();
-                Instance.SummonedMonster.Add(monsterObject.gameObject);
-                monsterObject.transform.position = points[RandomNum].transform.position;
-                Instance.Map2D[(int)points[RandomNum].transform.position.x, (int)points[RandomNum].transform.position.y] = (int)MapObject.moster;
-                verifiedNumber[RandomNum] = false;
-                unavailableNumberCount++;
-                i++;
-            }
         }
     }
 }
