@@ -13,7 +13,7 @@ public class ItamSpawner : MonoBehaviour
         }
         if (start && Instance.playerTurn && Instance.GameTurnCount % turnCount == 0)
         {
-            SpawnItem(10);
+            SpawnItem(1);
             start = false;
         }
     }

@@ -47,7 +47,7 @@ public class MyText : MonoBehaviour
                 }
             case MyTextOption.TurnCount:
                 {
-                    textMesh.text = "Turn Count " + GameManager.Instance.GameTurnCount.ToString();
+                    textMesh.text = "스테이지 " + GameManager.Instance.StageCount.ToString();
                     break;
                 }
             case MyTextOption.MainCount:
