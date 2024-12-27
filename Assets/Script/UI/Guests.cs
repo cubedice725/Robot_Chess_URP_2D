@@ -22,7 +22,6 @@ public class Guests : MonoBehaviour
     }
     public void Initialize()
     {
-        guests = UiManager.Instance.LoadFromCSV();
         while (GameManager.Instance.poolManager.MyObjectLists[(int)PoolManager.Prefabs.Guest].Count < guests.Count)
         {
             MyObject myObject;

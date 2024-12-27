@@ -4,7 +4,7 @@ using static GameManager;
 public class ItamSpawner : MonoBehaviour
 {
     bool start = false;
-    int turnCount = 2;
+    int turnCount = 7;
     private void Update()
     {
         if(Instance.GameTurnCount % turnCount == 1)

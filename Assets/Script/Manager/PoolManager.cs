@@ -18,6 +18,7 @@ public class PoolManager : MonoBehaviour
         WallObject,
         UnSelection,
         DamagedArea,
+        MonsterSummoningArea,
         Robot,
         RobotKnife,
         RobotPistol,
@@ -57,6 +58,7 @@ public class PoolManager : MonoBehaviour
         NewPoolAdd("Prefab/Object/WallObject", 100);
         NewPoolAdd("Prefab/Object/UnSelection", 100);
         NewPoolAdd("Prefab/Object/DamagedArea", 100);
+        NewPoolAdd("Prefab/Object/MonsterSummoningArea", 100);
 
         NewPoolAdd("Prefab/Monster/Robot", 50);
         NewPoolAdd("Prefab/Monster/RobotKnife", 50);

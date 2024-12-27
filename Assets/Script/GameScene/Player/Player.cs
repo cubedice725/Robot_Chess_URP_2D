@@ -8,7 +8,7 @@ public class Player : MonoBehaviour
 {
     private PlayerStateMachine playerStateMachine;
     private PlayerMovement playerMovement;
-    public int Hp { get; set; } = 1;
+    public int Hp { get; set; } = 10000;
     public int MoveCount { get; set; } = 0;
     public int AttackCount { get; set; } = 0;
     // 이동거리
@@ -32,7 +32,6 @@ public class Player : MonoBehaviour
     {
         if(!Die && Hp <= 0)
         {
-            UiManager.Instance.SaveToCSV();
             GetComponent<Animator>().SetTrigger("die");
             Die = true;
         }

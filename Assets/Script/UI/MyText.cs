@@ -32,12 +32,12 @@ public class MyText : MonoBehaviour
         {
             case MyTextOption.AttackTurn:
                 {
-                    textMesh.text = GameManager.Instance.player.AttackCount.ToString() + "/1";
+                    textMesh.text = (1 - GameManager.Instance.player.AttackCount).ToString();
                     break;
                 }
             case MyTextOption.MoveTurn:
                 {
-                    textMesh.text = GameManager.Instance.player.MoveCount.ToString() + "/1";
+                    textMesh.text = (1 - GameManager.Instance.player.MoveCount).ToString();
                     break;
                 }
             case MyTextOption.Score:

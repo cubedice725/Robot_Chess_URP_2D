@@ -64,7 +64,7 @@ public class GameManager : MonoBehaviour
     public int MapSizeX { get; set; } = 12;
     public int MapSizeY { get; set; } = 12;
     public int[,] Map2D { get; set; }
-    public int GameScore { get; set; } = 1000;
+    public int GameScore { get; set; } = 0;
     public int GameTurnCount = 1;
     public bool ButtonLock  = false;
     public static GameManager Instance

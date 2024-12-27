@@ -7,15 +7,14 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
 using static MyButton;
+using UnityEditor;
 public class UiManager : MonoBehaviour
 {
     public TMP_InputField affiliation;
     public TMP_InputField guestName;
-    public GameObject guestRank;
-    public Guests guests;
+    public GameObject GameOver;
     public string PlayerName;
     public string PlayserAffiliation;
-    private string fileName = "Rank.csv";
     private bool start = true;
     private bool end = false;
 
@@ -60,82 +59,42 @@ public class UiManager : MonoBehaviour
     {
         if (start && SceneManager.GetActiveScene().name == "GameScene")
         {
-            guestRank = GameObject.Find("GuestRank");
-            guests = FindObjectOfType<Guests>();
-            if (guestRank != null)
+            GameOver = GameObject.Find("GameOver");
+            if (GameOver != null)
             {
                 start = false;
-
-                guestRank.SetActive(false);
+                GameOver.SetActive(false);
             }
         }
         if (!end && SceneManager.GetActiveScene().name == "GameScene" && GameManager.Instance.player.Die == true)
         {
             time += Time.deltaTime;
-            if (time > 3f)
+            if (time > 2f)
             {
-                if (guestRank != null)
+                print(2);
+                if (GameManager.Instance != null)
                 {
-                    guests.Initialize();
-                    guestRank.SetActive(true);
-                    time = 0;
+                    GameManager.Instance.Reset();
+                    SceneManager.LoadScene("GameScene");
+                    UiManager.Instance.Reset();
                 }
+                else
+                {
+                    SceneManager.LoadScene("GameScene");
+                    UiManager.Instance.Reset();
+                }
+                time = 0;
                 end = true;
             }
-        }
-    }
-
-    public void SaveToCSV()
-    {
-        string score;
-        string path = Path.Combine(Application.persistentDataPath, fileName);
-        List<string> guests = LoadFromCSV();
-        int count = guests.Count; // 기본값으로 리스트의 끝을 설정
-
-        for (int index = 0; index < guests.Count; index++)
-        {
-            string[] parts = guests[index].Split(',');
-            if (parts.Length > 3)
+            else if (time > 3f)
             {
-                score = parts[3].Trim();
-                if (GameManager.Instance.GameScore > int.Parse(score))
+                print(1);
+                if (GameOver != null)
                 {
-                    count = index;
-                    break;
+                    GameOver.SetActive(true);
                 }
             }
+            
         }
-        // 새로운 데이터를 저장할 문자열 생성
-        string newData = PlayerName + "," + PlayserAffiliation + "," + GameManager.Instance.GameTurnCount + "," + GameManager.Instance.GameScore;
-
-        // count 위치에 새로운 데이터 삽입
-        guests.Insert(count, newData);
-
-        // 전체 리스트를 다시 파일에 쓰기
-        using (StreamWriter writer = new StreamWriter(path, false)) // false로 설정하여 파일을 덮어쓰기
-        {
-            foreach (string guest in guests)
-            {
-                writer.WriteLine(guest);
-            }
-        }
-
-        Debug.Log("Data saved to " + path);
-        if(affiliation != null)
-        {
-            affiliation.text = "";
-            guestName.text = "";
-        }
-    }
-
-    public List<string> LoadFromCSV()
-    {
-        string path = Path.Combine(Application.persistentDataPath, fileName);
-        List<string> lines = new List<string>();
-        if (File.Exists(path))
-        {
-            lines = File.ReadAllLines(path).ToList();
-        }
-        return lines;
     }
 }

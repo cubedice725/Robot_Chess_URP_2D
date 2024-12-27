@@ -18,8 +18,8 @@ public class MonsterSpawner : MonoBehaviour
     private List<List<SummoneMonsterStage>> summoneMonsterStage = new List<List<SummoneMonsterStage>>()
     {
         new List<SummoneMonsterStage> { new SummoneMonsterStage(3, Prefabs.RobotKnife) },
-        new List<SummoneMonsterStage> { new SummoneMonsterStage(2, Prefabs.RobotPistol), new SummoneMonsterStage(4, Prefabs.RobotKnife) },
-        new List<SummoneMonsterStage> { new SummoneMonsterStage(1, Prefabs.RobotSniper), new SummoneMonsterStage(2, Prefabs.RobotPistol), new SummoneMonsterStage(2, Prefabs.RobotKnife) },
+        new List<SummoneMonsterStage> { new SummoneMonsterStage(2, Prefabs.RobotPistol), new SummoneMonsterStage(3, Prefabs.RobotKnife) },
+        new List<SummoneMonsterStage> { new SummoneMonsterStage(10, Prefabs.RobotSniper), new SummoneMonsterStage(20, Prefabs.RobotPistol), new SummoneMonsterStage(20, Prefabs.RobotKnife) },
         new List<SummoneMonsterStage> { new SummoneMonsterStage(1, Prefabs.RobotSniper), new SummoneMonsterStage(2, Prefabs.RobotPistol), new SummoneMonsterStage(4, Prefabs.RobotKnife) },
         new List<SummoneMonsterStage> { new SummoneMonsterStage(1, Prefabs.RobotSniper), new SummoneMonsterStage(4, Prefabs.RobotPistol), new SummoneMonsterStage(4, Prefabs.RobotKnife) },
         new List<SummoneMonsterStage> { new SummoneMonsterStage(2, Prefabs.RobotSniper), new SummoneMonsterStage(4, Prefabs.RobotPistol), new SummoneMonsterStage(5, Prefabs.RobotKnife) },
@@ -48,15 +48,13 @@ public class MonsterSpawner : MonoBehaviour
         }
         isAvailable = new bool[points.Count];
 
-        UsageChecks();
         SelectSummoningArea(CheckMonstersSummonCount(Instance.StageCount));
 
-        for (int index = 0; index < 1; index++)
+        for (int index = 0; index < 3; index++)
         {
             SummoningMonsters(index, Prefabs.RobotKnife);
         }
 
-        UsageChecks();
         SelectSummoningArea(CheckMonstersSummonCount(Instance.StageCount + 1));
         PredictingMonsterSpawnAreas();
     }
@@ -69,52 +67,112 @@ public class MonsterSpawner : MonoBehaviour
 
         if (start && Instance.playerTurn)
         {
-            int monstersSummonCount = CheckMonstersSummonCount(Instance.StageCount);
             if (Instance.GameTurnCount % 5 == 1)
             {
                 int summone = 0;
                 int monsterindex = 0;
-                for (int index = 0; index < monstersSummonCount; )
+                int AvailableCount = CheckAvailableCount();
+                int MonstersSummonCount = CheckMonstersSummonCount(Instance.StageCount);
+                int count = MonstersSummonCount;
+                if (AvailableCount < MonstersSummonCount)
                 {
-                    if(summone < summoneMonsterStage[Instance.StageCount][monsterindex].Number)
-                    {
-                        SummoningMonsters(index, summoneMonsterStage[Instance.StageCount][monsterindex].MonsterPrefabs);
-                        summone++;
-                        index++;
-                    }
-                    else
-                    {
-                        summone = 0;
-                        monsterindex++;
-                    }
+                    count = AvailableCount;
                 }
-                UsageChecks();
-                SelectSummoningArea(monstersSummonCount);
+                //for (int index = 0; index < count; index++)
+                //{
+                //    if (summone < summoneMonsterStage[Instance.StageCount][monsterindex].Number)
+                //    {
+                        
+                //    }
+                //    else
+                //    {
+                //        summone = 0;
+                //        monsterindex++;
+                //    }
+                //    SummoningMonsters(index, summoneMonsterStage[Instance.StageCount][monsterindex].MonsterPrefabs);
+                //    summone++;
+                //}
+                SelectSummoningArea(CheckMonstersSummonCount(Instance.StageCount + 1));
                 PredictingMonsterSpawnAreas();
             }
             start = false;
         }
     }
-    private void PredictingMonsterSpawnAreas()
+    private void FixedUpdate()
+    {
+        for(int index = 0; index < RandomNum.Count; index++)
+        {
+            if (Instance.Map2D[(int)Mathf.Round(points[RandomNum[index]].transform.position.x), (int)Mathf.Round(points[RandomNum[index]].transform.position.y)] == (int)MapObject.player
+                    || Instance.Map2D[(int)Mathf.Round(points[RandomNum[index]].transform.position.x), (int)Mathf.Round(points[RandomNum[index]].transform.position.y)] == (int)MapObject.moster)
+            {
+                IntegrityCheck();
+                break;
+            }
+        }
+    }
+    private void IntegrityCheck()
     {
         int AvailableCount = CheckAvailableCount();
         int MonstersSummonCount = CheckMonstersSummonCount(Instance.StageCount + 1);
         if (AvailableCount >= MonstersSummonCount)
         {
+            print("지속적으로 몬스터가 적음");
+
+            for (int index1 = 0; index1 < RandomNum.Count; )
+            {
+                if (Instance.Map2D[(int)Mathf.Round(points[RandomNum[index1]].transform.position.x), (int)Mathf.Round(points[RandomNum[index1]].transform.position.y)] == (int)MapObject.player
+                    || Instance.Map2D[(int)Mathf.Round(points[RandomNum[index1]].transform.position.x), (int)Mathf.Round(points[RandomNum[index1]].transform.position.y)] == (int)MapObject.moster)
+                {
+                    int num = Random.Range(0, points.Count);
+                    if (RandomIntegrityCheck(num))
+                    {
+                        RandomNum[index1] = num;
+                        index1++;
+                    }
+                }
+            }
+        }
+        else
+        {
+            print("지속적으로 몬스터가 많음");
+
+        }
+        PredictingMonsterSpawnAreas();
+    }
+    private bool RandomIntegrityCheck(int num)
+    {
+        foreach (int randomNum in RandomNum)
+        {
+            if (randomNum == num)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+    private void PredictingMonsterSpawnAreas()
+    {
+        Instance.poolManager.AllDistroyMyObject(Prefabs.MonsterSummoningArea);
+        int AvailableCount = CheckAvailableCount();
+        int MonstersSummonCount = CheckMonstersSummonCount(Instance.StageCount + 1);
+        if (AvailableCount >= MonstersSummonCount)
+        {
+            print("현재 몬스터가 적음");
             for (int index = 0; index < MonstersSummonCount; index++)
             {
-                Instance.poolManager.SelectPool(Prefabs.DamagedArea).Get().transform.position = points[RandomNum[index]].transform.position;
+                Instance.poolManager.SelectPool(Prefabs.MonsterSummoningArea).Get().transform.position = points[RandomNum[index]].transform.position;
             }
         }
         else if (AvailableCount < MonstersSummonCount)
         {
+            print("현재 몬스터가 많음");
             for (int index = 0; index < AvailableCount; index++)
             {
-                Instance.poolManager.SelectPool(Prefabs.DamagedArea).Get().transform.position = points[RandomNum[index]].transform.position;
+                Instance.poolManager.SelectPool(Prefabs.MonsterSummoningArea).Get().transform.position = points[RandomNum[index]].transform.position;
             }
         }
     }
-    private void UsageChecks()
+    private void AvailableChecks()
     {
         // 실제 몬스터가 있는지 혹은 플레이어가 있는지 확인
         for (int index = 0; index < points.Count; index++)
@@ -132,8 +190,10 @@ public class MonsterSpawner : MonoBehaviour
     }
     private int CheckAvailableCount()
     {
+        AvailableChecks();
+
         int AvailableCount = 0;
-        foreach (bool available in isAvailable) 
+        foreach (bool available in isAvailable)
         {
             if (available)
             {
@@ -153,6 +213,8 @@ public class MonsterSpawner : MonoBehaviour
     }
     private void SelectSummoningArea(int _MonstersSummonCount)
     {
+        AvailableChecks();
+
         int Num;
         RandomNum.Clear();
         for (int index = 0; index < _MonstersSummonCount;)
