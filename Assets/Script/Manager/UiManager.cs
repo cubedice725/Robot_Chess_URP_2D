@@ -13,12 +13,10 @@ public class UiManager : MonoBehaviour
     public TMP_InputField affiliation;
     public TMP_InputField guestName;
     public GameObject GameOver;
-    public string PlayerName;
-    public string PlayserAffiliation;
-    private bool start = true;
-    private bool end = false;
+    public bool start = true;
+    public bool end = false;
 
-    private float time;
+    public float time;
 
     private static UiManager _instance;
     public static UiManager Instance
@@ -69,9 +67,8 @@ public class UiManager : MonoBehaviour
         if (!end && SceneManager.GetActiveScene().name == "GameScene" && GameManager.Instance.player.Die == true)
         {
             time += Time.deltaTime;
-            if (time > 2f)
+            if (time > 3f)
             {
-                print(2);
                 if (GameManager.Instance != null)
                 {
                     GameManager.Instance.Reset();
@@ -84,11 +81,11 @@ public class UiManager : MonoBehaviour
                     UiManager.Instance.Reset();
                 }
                 time = 0;
-                end = true;
+                end = false;
             }
-            else if (time > 3f)
+
+            else if (time > 2f)
             {
-                print(1);
                 if (GameOver != null)
                 {
                     GameOver.SetActive(true);

@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
     public int MoveCount { get; set; } = 0;
     public int AttackCount { get; set; } = 0;
     // 이동거리
-    public int MoveDistance { get; set; } = 100;
+    public int MoveDistance { get; set; } = 1;
     // 이동 속도
     public float PlayerMoveSpeed { get; set; } = 1.7f;
     public bool Die = false;
@@ -26,6 +26,8 @@ public class Player : MonoBehaviour
     }
     private void Start()
     {
+        Die = false;
+        Instance.ButtonLock = false;
         Instance.Map2D[(int)Mathf.Round(transform.position.x), (int)Mathf.Round(transform.position.y)] = (int)MapObject.player;
     }
     private void Update()
